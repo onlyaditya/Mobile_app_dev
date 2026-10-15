@@ -1,0 +1,851 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Lists, Notches and Native Scrolling</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a fixed 1280x720 stage scaled to fit; dark "device lab" bench. Amber = ScrollView / everything mounted, cyan = FlatList / virtual window, coral = problems. */
+:root{
+  color-scheme: dark;
+  --bg:#0c1318; --bench:#111b22; --panel:#16232c; --line:#263742; --fg:#e7eef2; --muted:#8aa0ac; --dim:#4f6572;
+  --amber:#f2a93b; --amber-soft:rgba(242,169,59,.16);
+  --cyan:#47d1c3; --cyan-soft:rgba(71,209,195,.15);
+  --coral:#f0675d; --coral-soft:rgba(240,103,93,.16);
+  --ios-bg:#f6f8f9; --ios-fg:#13212b; --ios-muted:#6d7d87; --ios-line:#e3e8eb; --ios-blue:#1f7aec;
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);overflow:hidden;
+  padding-left:max(0px, env(safe-area-inset-left,0px));padding-right:max(0px, env(safe-area-inset-right,0px))}
+.viewport{position:fixed;inset:0;bottom:calc(52px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+.holder{position:relative;flex:none}
+#stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;background:var(--bench);border-radius:18px;overflow:hidden;
+  box-shadow:0 0 0 1px var(--line), 0 40px 80px -40px #000;
+  background-image:radial-gradient(circle at 1px 1px, rgba(138,160,172,.09) 1px, transparent 0);background-size:24px 24px}
+.slide{position:absolute;inset:0;padding:48px 64px;display:none}
+.slide.active{display:block;animation:enter .55s cubic-bezier(.2,.7,.2,1)}
+@keyframes enter{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.kicker{font:600 13px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;gap:12px;align-items:center}
+.kicker b{color:var(--cyan);font-weight:600}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance}
+h2{font-size:44px;font-weight:800;letter-spacing:-.02em;margin-top:12px;line-height:1.05}
+h3{font-size:22px;font-weight:700}
+p{margin:0;line-height:1.5}
+.lead{font-size:19px;color:var(--muted);max-width:56ch;margin-top:12px}
+.amber{color:var(--amber)} .cyan{color:var(--cyan)} .coral{color:var(--coral)}
+code,.mono{font-family:var(--f-mono)}
+.ic{font-family:var(--f-mono);font-size:.88em;background:var(--panel);border:1px solid var(--line);padding:1px 6px;border-radius:5px}
+
+[data-at]{opacity:0;transform:translateY(14px);transition:opacity .45s ease, transform .55s cubic-bezier(.2,.7,.2,1)}
+[data-at].on{opacity:1;transform:none}
+
+/* code */
+pre.code{margin:0;background:#0a1116;border:1px solid var(--line);border-radius:12px;padding:16px 18px;font:13.5px/1.6 var(--f-mono);color:#cfdbe1;overflow:auto;white-space:pre}
+pre.code .t-k{color:#c792ea} pre.code .t-s{color:#a5d6a7} pre.code .t-c{color:#5d7480;font-style:italic}
+pre.code .t-tag{color:var(--cyan)} pre.code .t-a{color:var(--amber)} pre.code .t-n{color:#f78c6c}
+.code-title{font:600 11px/1 var(--f-mono);letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+
+/* phone */
+.phone{position:relative;width:262px;height:568px;border-radius:44px;background:#04080b;padding:9px;flex:none;
+  box-shadow:0 0 0 2px #2c3d48, inset 0 0 0 1px #1a252c, 0 30px 60px -24px #000}
+.screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--ios-bg);color:var(--ios-fg)}
+.island{position:absolute;top:10px;left:50%;width:82px;height:24px;border-radius:14px;background:#000;transform:translateX(-50%);z-index:6}
+.sbar{position:absolute;top:0;left:0;right:0;height:39px;display:flex;justify-content:space-between;align-items:center;padding:4px 22px 0 26px;font:600 12px var(--f-body);z-index:5;color:var(--ios-fg);pointer-events:none}
+.sbar svg{display:block}
+.app{position:absolute;inset:0;display:flex;flex-direction:column;padding-top:var(--pt,39px);padding-bottom:var(--pb,0px);transition:padding .9s cubic-bezier(.2,.7,.2,1)}
+.app-h{flex:none;height:46px;display:flex;align-items:flex-end;padding:0 16px 6px;font:800 24px/1 var(--f-display);letter-spacing:-.02em;border-bottom:1px solid var(--ios-line);background:var(--ios-bg);position:relative;z-index:2}
+.app-h small{font:600 12px var(--f-body);color:var(--ios-blue);margin-left:auto;padding-bottom:3px}
+.vp{position:relative;flex:1;overflow:hidden}
+.track{will-change:transform}
+.row{height:48px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--ios-line);background:var(--ios-bg)}
+.av{width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 11px var(--f-body);color:#fff}
+.rb{flex:1;min-width:0}
+.rn{font:700 12.5px/1.2 var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rm{font:400 11px/1.3 var(--f-body);color:var(--ios-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rt{display:flex;flex-direction:column;align-items:flex-end;gap:3px;font:500 9.5px var(--f-body);color:var(--ios-muted)}
+.ub{min-width:16px;height:16px;border-radius:8px;background:var(--ios-blue);color:#fff;font:700 9px/16px var(--f-body);text-align:center;padding:0 4px}
+.home-ind{position:absolute;bottom:7px;left:50%;width:96px;height:4px;border-radius:2px;background:#13212b;transform:translateX(-50%);z-index:6;opacity:.85}
+
+/* buttons / bottom bar */
+.bar{position:fixed;left:0;right:0;bottom:0;height:calc(52px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));
+  display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);background:var(--bg)}
+.btn{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:600 13px var(--f-body);padding:7px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn:focus-visible,input:focus-visible,.node:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.bar .title{font:600 13px var(--f-body);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.prog{flex:none;display:flex;gap:4px}
+.prog i{display:block;width:14px;height:4px;border-radius:2px;background:var(--line)}
+.prog i.done{background:var(--dim)} .prog i.now{background:var(--cyan)}
+.count{font:600 12px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+@media (max-width:640px){.prog,.bar .hide-sm{display:none}}
+.notes{position:fixed;right:max(16px, env(safe-area-inset-right,0px));bottom:calc(64px + env(safe-area-inset-bottom,0px));width:min(420px, calc(100vw - 32px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.5;color:var(--fg);box-shadow:0 20px 40px -20px #000}
+.notes h4{margin:0 0 6px;font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--amber)}
+.hint{font:500 12px var(--f-mono);color:var(--dim);position:absolute;right:28px;bottom:18px}
+
+/* ---------- slide: title ---------- */
+.title-wrap{display:grid;grid-template-columns:1fr 300px;gap:40px;height:100%;align-items:center}
+.title-wrap h1{font-size:84px;font-weight:800;line-height:.95;letter-spacing:-.035em}
+.title-wrap h1 em{font-style:normal;color:var(--cyan)}
+.title-wrap h1 span{color:var(--amber)}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.chip{font:600 12px var(--f-mono);border:1px solid var(--line);padding:6px 10px;border-radius:999px;color:var(--muted)}
+
+/* ---------- roadmap ---------- */
+.road{position:absolute;left:40px;right:40px;top:150px;height:500px}
+.road svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.road path.track-line{fill:none;stroke:var(--line);stroke-width:3}
+.road path.draw{fill:none;stroke:url(#roadGrad);stroke-width:4;stroke-linecap:round}
+.node{position:absolute;transform:translate(-50%,-50%) scale(0);width:46px;height:46px;border-radius:50%;background:var(--panel);border:2px solid var(--cyan);display:grid;place-items:center;font:800 18px var(--f-display);color:var(--fg);cursor:pointer;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.node.pop{transform:translate(-50%,-50%) scale(1)}
+.node:hover{background:var(--cyan);color:#06211e}
+.node .lbl{position:absolute;width:170px;left:50%;transform:translateX(-50%);font:600 14px/1.3 var(--f-body);color:var(--fg);text-align:center;pointer-events:none}
+.node .lbl small{display:block;color:var(--muted);font-weight:500;font-size:12px}
+.node.up .lbl{bottom:58px} .node.down .lbl{top:58px}
+
+/* ---------- setup ---------- */
+.setup{position:absolute;left:64px;right:64px;top:170px;height:500px}
+.setup svg{position:absolute;inset:0;width:100%;height:100%}
+.card{position:absolute;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.card h3{font-size:18px;display:flex;align-items:center;gap:10px}
+.card ol{margin:10px 0 0;padding-left:20px;font-size:14px;line-height:1.55;color:var(--fg)}
+.card ol li::marker{color:var(--muted);font-family:var(--f-mono)}
+.tag{font:600 10px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:5px}
+.tag.c{background:var(--cyan-soft);color:var(--cyan)} .tag.a{background:var(--amber-soft);color:var(--amber)} .tag.r{background:var(--coral-soft);color:var(--coral)}
+.mac{left:0;top:150px;width:320px}
+.term{background:#070c10;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:10px;font:13px/1.6 var(--f-mono);color:#cfdbe1}
+.term .p{color:var(--cyan)}
+.sim{right:0;top:0;width:420px}
+.gophone{right:0;top:262px;width:420px;display:grid;grid-template-columns:1fr 84px;gap:14px}
+.gophone canvas{width:84px;height:84px;border-radius:8px;background:#fff;align-self:center}
+.flow-cap{position:absolute;left:0;bottom:0;width:470px;font-size:15px;color:var(--muted)}
+.flow-cap b{color:var(--fg)}
+
+/* ---------- create app ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:34px;align-items:start}
+.termbig{background:#070c10;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.termbig .tb{display:flex;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.termbig .tb i{width:11px;height:11px;border-radius:50%;background:var(--line)}
+.termbig .tb i:nth-child(1){background:#f0675d}.termbig .tb i:nth-child(2){background:#f2a93b}.termbig .tb i:nth-child(3){background:#47d1c3}
+.termbig .body{padding:18px;font:15px/1.8 var(--f-mono);min-height:250px;color:#cfdbe1;white-space:pre-wrap}
+.termbig .p{color:var(--cyan)} .termbig .ok{color:#8fd694} .termbig .dimt{color:var(--dim)}
+.caret{display:inline-block;width:8px;height:17px;background:var(--cyan);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.tree{font:15px/2 var(--f-mono);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.tree div{opacity:0;transform:translateX(-10px);transition:all .35s ease}
+.tree.show div{opacity:1;transform:none}
+.tree .hl{color:var(--amber)} .tree .nw{color:var(--cyan)} .tree .mut{color:var(--dim)}
+.tree em{font-style:normal;font-family:var(--f-body);font-size:13px;color:var(--muted);margin-left:10px}
+
+/* ---------- data ---------- */
+.data-grid{display:grid;grid-template-columns:520px 1fr 262px;gap:28px;margin-top:26px;align-items:start}
+.json{background:#0a1116;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font:12.5px/1.5 var(--f-mono);color:#cfdbe1}
+.json .obj{border-radius:6px;padding:2px 6px;margin:0 -6px;transition:background .3s}
+.json .obj.hot{background:var(--cyan-soft);box-shadow:inset 3px 0 0 var(--cyan)}
+.json .k{color:#82aaff} .json .s{color:#a5d6a7} .json .n{color:#f78c6c}
+.mid-explain{display:flex;flex-direction:column;gap:18px;padding-top:30px}
+.mid-explain .step{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.45}
+.mid-explain .step b{font:700 12px var(--f-mono);color:var(--cyan);border:1px solid var(--cyan);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;flex:none}
+#dataPhone .row{opacity:0;transform:translateX(-20px);transition:all .4s ease}
+#dataPhone .row.in{opacity:1;transform:none}
+.flychip{position:absolute;z-index:50;background:var(--cyan);color:#062320;font:700 11px var(--f-mono);padding:5px 9px;border-radius:7px;pointer-events:none;box-shadow:0 8px 20px -6px rgba(71,209,195,.7)}
+
+/* ---------- map problem ---------- */
+.map-grid{display:grid;grid-template-columns:430px 300px 1fr;gap:36px;margin-top:22px;align-items:start}
+.spillwrap{position:relative;height:600px;-webkit-mask-image:linear-gradient(#000 82%, transparent 100%);mask-image:linear-gradient(#000 82%, transparent 100%)}
+#mapPhone .screen{overflow:visible;border-radius:36px}
+#mapPhone .vp{overflow:visible}
+#mapPhone .row{opacity:0;transform:translateY(-30px)}
+#mapPhone .row.in{opacity:1;transform:none;transition:all .35s cubic-bezier(.3,1.4,.5,1)}
+#mapPhone .row.ghost{background:transparent;border:1px dashed var(--coral);color:var(--fg);margin:4px 0;border-radius:8px}
+#mapPhone .row.ghost .rm,#mapPhone .row.ghost .rt{color:var(--muted)}
+.jiggle{animation:jig .9s ease}
+@keyframes jig{0%,100%{transform:none}30%{transform:translateY(-10px)}55%{transform:translateY(4px)}75%{transform:translateY(-2px)}}
+.finger{position:absolute;left:150px;top:420px;width:38px;height:38px;border-radius:50%;background:rgba(240,103,93,.35);border:2px solid var(--coral);z-index:20;opacity:0}
+.finger.go{animation:swipe 1.6s ease-in-out}
+@keyframes swipe{0%{opacity:0;transform:translateY(0)}15%{opacity:1}70%{opacity:1;transform:translateY(-220px)}100%{opacity:0;transform:translateY(-240px)}}
+.stamp{position:absolute;left:30px;top:250px;z-index:21;background:var(--coral);color:#2a0805;font:800 22px var(--f-display);padding:8px 14px;border-radius:10px;transform:rotate(-8deg) scale(.6);opacity:0;transition:all .4s cubic-bezier(.3,1.6,.5,1)}
+.stamp.on2{opacity:1;transform:rotate(-8deg) scale(1)}
+.offlabel{position:absolute;left:276px;top:540px;font:600 12px var(--f-mono);color:var(--coral);width:140px;line-height:1.4}
+.offlabel::before{content:"";position:absolute;left:-16px;top:-30px;width:10px;height:90px;border:2px solid var(--coral);border-left:none;border-radius:0 6px 6px 0}
+.why{display:flex;flex-direction:column;gap:14px}
+.why .w{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.why .w h3{font-size:17px;margin-bottom:4px}
+.why .w p{font-size:14px;color:var(--muted)}
+.webvs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.webvs div{font:12px/1.5 var(--f-mono);padding:10px;border-radius:8px;border:1px solid var(--line)}
+.webvs .ok{border-color:rgba(71,209,195,.4)} .webvs .bad{border-color:rgba(240,103,93,.4)}
+
+/* ---------- list grid viz ---------- */
+.lab{display:grid;grid-template-columns:262px 1fr;gap:44px;margin-top:22px;align-items:start}
+.lab-right{display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start}
+.mgrid-wrap{position:relative}
+.mgrid{position:relative;display:grid;grid-template-columns:repeat(10,16px);gap:3px}
+.mgrid i{display:block;height:11px;border-radius:2px;border:1px dashed var(--line);transition:background .15s, border-color .15s}
+.mgrid i.m-a{background:var(--amber);border:1px solid var(--amber)}
+.mgrid i.m-c{background:var(--cyan-soft);border:1px solid var(--cyan)}
+.mgrid i.m-v{background:var(--cyan);border:1px solid var(--cyan)}
+.mframe{position:absolute;left:-6px;right:-6px;border:2px solid var(--cyan);border-radius:6px;transition:top .12s linear;pointer-events:none}
+.mframe::after{content:"render window";position:absolute;right:-110px;top:50%;transform:translateY(-50%);font:600 11px var(--f-mono);color:var(--cyan)}
+.vrow{position:absolute;left:-12px;right:-12px;height:16px;border:2px solid #fff;border-radius:4px;pointer-events:none;transition:top .12s linear;opacity:.9}
+.mg-cap{font:600 11px var(--f-mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:flex;justify-content:space-between}
+.stat{display:flex;flex-direction:column;gap:6px}
+.big-n{font:800 64px/1 var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.memo{height:12px;border-radius:6px;background:var(--panel);border:1px solid var(--line);overflow:hidden;width:260px}
+.memo i{display:block;height:100%;width:0;transition:width .2s}
+.legend{display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:16px;height:11px;border-radius:2px;display:inline-block}
+.verdict{border-left:3px solid var(--amber);padding:6px 0 6px 14px;font-size:15px;line-height:1.5;max-width:440px}
+.verdict.c{border-color:var(--cyan)}
+.props{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13.5px;align-items:baseline}
+.props code{color:var(--cyan);font-size:13px}
+.props span{color:var(--muted)}
+
+/* ---------- versus ---------- */
+.vs{display:grid;grid-template-columns:auto 1fr;gap:40px;margin-top:20px;align-items:start}
+.vs-phones{display:grid;grid-template-columns:200px 200px;gap:22px}
+.mini{width:200px;height:440px;overflow:hidden}
+.mini .phone{transform:scale(.7634);transform-origin:0 0}
+.vs-col h3{font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.vs-stats{margin-top:12px;display:flex;flex-direction:column;gap:6px;font:12px var(--f-mono);color:var(--muted)}
+.vs-stats b{font:800 28px var(--f-display);color:var(--fg);font-variant-numeric:tabular-nums}
+.vs-stats .memo{width:200px}
+.slider{display:flex;align-items:center;gap:14px;margin-bottom:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.slider label{font:600 13px var(--f-body);color:var(--muted);white-space:nowrap}
+.slider input{flex:1;accent-color:var(--cyan)}
+.slider output{font:800 26px var(--f-display);min-width:80px;text-align:right;font-variant-numeric:tabular-nums}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px}
+table.cmp th{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);color:var(--muted)}
+table.cmp th.a{color:var(--amber)} table.cmp th.c{color:var(--cyan)}
+table.cmp td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4}
+table.cmp td:first-child{color:var(--muted);font-weight:600;width:130px}
+.illus{font:500 11px var(--f-mono);color:var(--dim);margin-top:10px}
+
+/* ---------- notch ---------- */
+.notch-grid{display:grid;grid-template-columns:262px 1fr;gap:56px;margin-top:22px;align-items:start}
+.danger{position:absolute;left:0;right:0;top:0;height:39px;z-index:7;background:repeating-linear-gradient(-45deg, rgba(240,103,93,.55) 0 6px, rgba(240,103,93,.15) 6px 12px);opacity:0;transition:opacity .4s}
+.danger.b{top:auto;bottom:0;height:22px}
+.danger.on2{opacity:1;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.55}}
+.pin{position:absolute;z-index:8;font:700 11px var(--f-mono);color:#fff;background:var(--coral);padding:4px 8px;border-radius:6px;white-space:nowrap;opacity:0;transition:opacity .4s}
+.pin.on2{opacity:1}
+.devices{display:flex;gap:16px;margin-top:20px}
+.dev{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.dev svg{display:block;margin-bottom:8px}
+.dev b{display:block;font-size:14px} .dev span{font-size:12.5px;color:var(--muted)}
+
+/* ---------- safe area ---------- */
+.safe-grid{display:grid;grid-template-columns:600px 1fr;gap:40px;margin-top:20px;align-items:start}
+.stagearea{position:relative;height:580px}
+.inset{position:absolute;left:0;right:0;z-index:7;background:repeating-linear-gradient(-45deg, rgba(71,209,195,.45) 0 6px, rgba(71,209,195,.12) 6px 12px);opacity:0;transition:opacity .5s;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font:700 10px var(--f-mono);color:#063;}
+.inset.t{top:0;height:39px} .inset.bt{bottom:0;height:22px}
+.inset.on2{opacity:1}
+.inset span{background:#062a26;color:var(--cyan);padding:2px 6px;border-radius:4px}
+#safePort{position:absolute;left:0;top:0;transition:transform .9s cubic-bezier(.4,.1,.2,1), opacity .6s}
+#safePort.away{transform:rotate(-90deg) translate(-40px,-60px) scale(.7);opacity:0}
+.land{position:absolute;left:0;top:110px;width:568px;height:262px;border-radius:44px;background:#04080b;padding:9px;box-shadow:0 0 0 2px #2c3d48, 0 30px 60px -24px #000;opacity:0;transform:rotate(90deg) scale(.6);transition:transform .9s cubic-bezier(.4,.1,.2,1), opacity .6s .2s}
+.land.on2{opacity:1;transform:none}
+.land .screen{display:flex}
+.land .island{top:50%;left:10px;width:24px;height:82px;transform:translateY(-50%)}
+.land .ins{position:absolute;top:0;bottom:0;width:39px;z-index:7;background:repeating-linear-gradient(-45deg, rgba(71,209,195,.45) 0 6px, rgba(71,209,195,.12) 6px 12px)}
+.land .ins.l{left:0} .land .ins.r{right:0}
+.land .ins.b{left:0;right:0;top:auto;bottom:0;width:auto;height:14px}
+.land .lapp{position:absolute;left:39px;right:39px;top:0;bottom:14px;display:flex;flex-direction:column}
+.land .lapp .app-h{height:40px;font-size:20px}
+.land .lapp .row{height:40px}
+.land-cap{position:absolute;left:0;top:400px;font:600 12px var(--f-mono);color:var(--cyan);opacity:0;transition:opacity .5s .6s}
+.land-cap.on2{opacity:1}
+.tip{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.5;color:var(--muted)}
+.tip b{color:var(--fg)}
+
+/* ---------- recap ---------- */
+.recap{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}
+.rc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.rc .verdict-tag{align-self:flex-start}
+.rc h3{font-size:19px}
+.rc p{font-size:14px;color:var(--muted)}
+.rc pre.code{font-size:11.5px;padding:10px 12px}
+.try{margin-top:22px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;border:1px dashed var(--dim);border-radius:14px;padding:16px 20px}
+.try h3{font-size:18px;color:var(--amber)}
+.try p{font-size:15px}
+
+@media (prefers-reduced-motion: reduce){
+  .slide.active,.jiggle,.finger.go,.danger.on2,.caret{animation:none!important}
+  [data-at],.node,.tree div,#safePort,.land,.app{transition:none!important}
+}
+</style>
+
+<div class="viewport" id="vp">
+  <div class="holder" id="holder">
+    <div id="stage">
+
+      <!-- 1 TITLE -->
+      <section class="slide" data-id="title" data-steps="1" data-name="Rendering lists in React Native"
+        data-notes="Open the deck on this slide while students settle. Ask: how many chats are in your WhatsApp right now? Hundreds. Today we build that list properly.">
+        <div class="title-wrap">
+          <div>
+            <div class="kicker"><b>Mobile module</b> · React Native · Expo</div>
+            <h1 style="margin-top:22px">Rendering <span>a lot</span> of chats, <em>without</em> melting the phone</h1>
+            <p class="lead" style="margin-top:22px">We build a chat inbox from a JSON file. On the way we find out why <span class="ic">.map()</span> stops being enough, how <span class="ic">ScrollView</span> and <span class="ic">FlatList</span> really work, and how to keep the UI out from under the notch.</p>
+            <div class="meta-row">
+              <span class="chip">iOS Simulator</span><span class="chip">Expo Go</span><span class="chip">ScrollView</span><span class="chip">FlatList</span><span class="chip">Safe area</span>
+            </div>
+          </div>
+          <div class="phone" id="titlePhone"></div>
+        </div>
+        <div class="hint">→ / Space to advance · N for notes</div>
+      </section>
+
+      <!-- 2 ROADMAP -->
+      <section class="slide" data-id="road" data-steps="1" data-name="Today's route"
+        data-notes="Nine stops, in order. Click any node to jump there. Point out the turn at stop 4: that's where the 'it worked in React' assumption breaks.">
+        <div class="kicker"><b>Today's route</b> · 9 stops</div>
+        <h2>From an empty simulator to a notch-safe chat list</h2>
+        <div class="road" id="road">
+          <svg viewBox="0 0 1152 500" preserveAspectRatio="none">
+            <defs><linearGradient id="roadGrad" x1="0" x2="1"><stop offset="0" stop-color="#47d1c3"/><stop offset=".5" stop-color="#f2a93b"/><stop offset="1" stop-color="#47d1c3"/></linearGradient></defs>
+            <path class="track-line" id="roadPath" d="M30,260 C120,260 130,110 250,110 S380,390 500,390 S640,110 760,110 S900,390 1000,390 S1110,260 1125,250"/>
+            <path class="draw" id="roadDraw" d="M30,260 C120,260 130,110 250,110 S380,390 500,390 S640,110 760,110 S900,390 1000,390 S1110,260 1125,250"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- 3 SETUP -->
+      <section class="slide" data-id="setup" data-steps="3" data-name="Step 1 · Setup: iOS Simulator and Expo Go"
+        data-notes="Step 1: simulator lane (Mac only). Step 2: Expo Go lane (works on any phone, same Wi-Fi). Step 3: the packets show Metro shipping the JS bundle. Save a file live and show Fast Refresh.">
+        <div class="kicker"><b>Stop 1</b> · Setup</div>
+        <h2>Two ways to run your app</h2>
+        <div class="setup">
+          <svg viewBox="0 0 1152 500" preserveAspectRatio="none" id="setupSvg">
+            <path id="pSim" d="M320,245 C520,245 560,110 732,110" fill="none" stroke="var(--line)" stroke-width="3" stroke-dasharray="6 6"/>
+            <path id="pGo" d="M320,265 C520,265 560,370 732,370" fill="none" stroke="var(--line)" stroke-width="3" stroke-dasharray="6 6"/>
+            <g id="packets"></g>
+          </svg>
+          <div class="card mac">
+            <h3>Your Mac <span class="tag c">Metro :8081</span></h3>
+            <div class="term"><span class="p">$</span> npx expo start<br><span style="color:var(--dim)">› Press i │ open iOS simulator</span><br><span style="color:var(--dim)">› Scan the QR with Expo Go</span></div>
+          </div>
+          <div class="card sim" data-at="1">
+            <h3>iOS Simulator <span class="tag a">Mac only</span></h3>
+            <ol>
+              <li>Install <b>Xcode</b> from the Mac App Store</li>
+              <li>Xcode → Settings → Components → add an iOS simulator</li>
+              <li>Xcode → Settings → Locations → pick Command Line Tools</li>
+              <li>In the project, run <span class="ic">npx expo start</span> and press <span class="ic">i</span></li>
+            </ol>
+          </div>
+          <div class="card gophone" data-at="2">
+            <div>
+              <h3>Expo Go on a real phone <span class="tag c">Any OS</span></h3>
+              <ol>
+                <li>Install <b>Expo Go</b> (App Store / Play Store)</li>
+                <li>Phone and laptop on the <b>same Wi-Fi</b></li>
+                <li>Scan the QR: iPhone camera, or the scanner inside Expo Go on Android</li>
+              </ol>
+            </div>
+            <canvas id="qr" width="84" height="84"></canvas>
+          </div>
+          <p class="flow-cap" data-at="3"><b>Metro bundles your JavaScript</b> and streams it to every connected device. Save a file and both screens update with Fast Refresh. Expo Go must match your project's SDK version.</p>
+        </div>
+      </section>
+
+      <!-- 4 CREATE -->
+      <section class="slide" data-id="create" data-steps="2" data-name="Step 2 · Create the app (blank template)"
+        data-notes="Type the command live. Point at index.js (registers App) and App.js (where we work). We add chats.json ourselves next.">
+        <div class="kicker"><b>Stop 2</b> · Create the project</div>
+        <h2>One command, blank template</h2>
+        <div class="two">
+          <div class="termbig"><div class="tb"><i></i><i></i><i></i></div><div class="body" id="termBody"></div></div>
+          <div class="tree" id="tree">
+            <div>ChatApp/</div>
+            <div>├─ <span class="hl">App.js</span><em>your root component, we work here</em></div>
+            <div>├─ index.js<em>registers App with the native side</em></div>
+            <div>├─ app.json<em>name, icon, SDK config</em></div>
+            <div>├─ package.json</div>
+            <div>├─ assets/</div>
+            <div>├─ <span class="nw">chats.json</span><em class="cyan">we add this next</em></div>
+            <div class="mut">└─ node_modules/</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 DATA -->
+      <section class="slide" data-id="data" data-steps="2" data-name="Step 3 · From chats.json to rows on screen"
+        data-notes="Step 2 plays the animation: each object becomes one row. Stress: one object → one ChatRow component. The key is the id.">
+        <div class="kicker"><b>Stop 3</b> · The data</div>
+        <h2>Every object becomes one row</h2>
+        <div class="data-grid">
+          <div>
+            <div class="code-title">chats.json</div>
+            <div class="json" id="jsonBox"></div>
+          </div>
+          <div class="mid-explain">
+            <div class="step"><b>1</b><span><span class="ic">import chats from './chats.json'</span>. Metro turns JSON into a plain JS array.</span></div>
+            <div class="step"><b>2</b><span>Write one <span class="ic">&lt;ChatRow chat={…} /&gt;</span> component for a single chat.</span></div>
+            <div class="step"><b>3</b><span>Repeat it for every item in the array. The question for today: <b class="amber">how</b> do we repeat it?</span></div>
+          </div>
+          <div class="phone" id="dataPhone"></div>
+        </div>
+      </section>
+
+      <!-- 6 MAP -->
+      <section class="slide" data-id="map" data-steps="3" data-name="Step 4 · Why .map() in a View doesn't work like React"
+        data-notes="Step 1: rows drop in and spill below the phone. Step 2: try to swipe, nothing moves. Step 3: the two reasons. Ask students: in React, who gave you the scrollbar? (The browser.)">
+        <div class="kicker"><b>Stop 4</b> · The React habit</div>
+        <h2>Same <span class="ic" style="font-size:.6em;vertical-align:middle">.map()</span>, different world</h2>
+        <div class="map-grid">
+          <div>
+            <pre class="code" data-hl>&lt;View style={styles.list}&gt;
+  {chats.map((chat) =&gt; (
+    &lt;ChatRow key={chat.id} chat={chat} /&gt;
+  ))}
+&lt;/View&gt;</pre>
+            <div class="webvs" data-at="3">
+              <div class="ok"><b class="cyan">Web</b><br>Content taller than the window? The browser adds a scrollbar for free.</div>
+              <div class="bad"><b class="coral">Native</b><br>A View is just a box. Overflow is clipped. Nothing scrolls unless you ask for it.</div>
+            </div>
+          </div>
+          <div class="spillwrap">
+            <div class="phone" id="mapPhone"></div>
+            <div class="finger" id="finger"></div>
+            <div class="stamp" id="stamp">Won't scroll</div>
+          </div>
+          <div class="why" data-at="3">
+            <div class="w"><h3 class="coral">1 · View never scrolls</h3><p>Rows 10 onwards exist in the tree, but they sit below the screen. The user can't reach them.</p></div>
+            <div class="w"><h3 class="coral">2 · Everything renders at once</h3><p>500 chats means 500 native views created before the first frame. Slow start, high memory.</p></div>
+            <div class="w"><h3>So we need a component that <span class="cyan">scrolls</span>, and ideally one that <span class="cyan">renders less</span>.</h3></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 SCROLLVIEW -->
+      <section class="slide" data-id="sv" data-steps="3" data-name="Step 5 · ScrollView"
+        data-notes="Step 1: it scrolls, problem 1 solved. Step 2: watch the counter, every one of 300 rows mounts up front. Step 3: when ScrollView is the right choice.">
+        <div class="kicker"><b>Stop 5</b> · ScrollView</div>
+        <h2>It scrolls. But look <span class="amber">behind the screen</span>.</h2>
+        <div class="lab">
+          <div class="phone" id="svPhone"></div>
+          <div>
+            <pre class="code" data-hl style="max-width:520px">&lt;ScrollView&gt;
+  {chats.map((chat) =&gt; (
+    &lt;ChatRow key={chat.id} chat={chat} /&gt;
+  ))}
+&lt;/ScrollView&gt;</pre>
+            <div class="lab-right" style="margin-top:22px" data-at="2">
+              <div class="mgrid-wrap">
+                <div class="mg-cap"><span>300 chats</span><span>1 row = 1 screen</span></div>
+                <div class="mgrid" id="svGrid"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:18px">
+                <div class="stat"><span class="mg-cap">Native views mounted</span><span class="big-n amber" id="svCount">0</span><div class="memo"><i id="svMem" style="background:var(--amber)"></i></div><span style="font-size:12px;color:var(--muted)">memory grows with the list</span></div>
+                <div class="legend"><span><i style="background:var(--amber)"></i>mounted on first render</span></div>
+                <p class="verdict" data-at="3"><b>Good for</b> short, known content: a settings page, a form, a profile.<br><b class="coral">Bad for</b> long or growing lists. It mounts all of it, all the time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 FLATLIST -->
+      <section class="slide" data-id="fl" data-steps="3" data-name="Step 6 · FlatList"
+        data-notes="Step 1: watch the cyan window ride along with the scroll. Only those rows exist; everything else is blank space of the right height. Step 2: the code. Step 3: the props they will actually use.">
+        <div class="kicker"><b>Stop 6</b> · FlatList</div>
+        <h2>Render only <span class="cyan">what's near the screen</span></h2>
+        <div class="lab">
+          <div class="phone" id="flPhone"></div>
+          <div class="lab-right">
+            <div class="mgrid-wrap">
+              <div class="mg-cap"><span>300 chats</span><span>windowSize={5} for demo</span></div>
+              <div class="mgrid" id="flGrid"><div class="mframe" id="flFrame"></div><div class="vrow" id="flVis"></div></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div class="stat"><span class="mg-cap">Native views mounted</span><span class="big-n cyan" id="flCount">0</span><div class="memo"><i id="flMem" style="background:var(--cyan)"></i></div><span style="font-size:12px;color:var(--muted)">roughly flat, however long the list</span></div>
+              <div class="legend">
+                <span><i style="background:var(--cyan)"></i>on screen right now</span>
+                <span><i style="background:var(--cyan-soft);border:1px solid var(--cyan)"></i>mounted buffer above / below</span>
+                <span><i style="border:1px dashed var(--dim)"></i>unmounted, kept as blank space</span>
+              </div>
+              <pre class="code" data-hl data-at="2" style="font-size:12.5px">&lt;FlatList
+  data={chats}
+  keyExtractor={(item) =&gt; item.id}
+  renderItem={({ item }) =&gt; &lt;ChatRow chat={item} /&gt;}
+/&gt;</pre>
+              <div class="props" data-at="3">
+                <code>initialNumToRender</code><span>rows on the first frame (default 10)</span>
+                <code>windowSize</code><span>screens kept mounted (default 21)</span>
+                <code>ItemSeparatorComponent</code><span>divider between rows</span>
+                <code>ListEmptyComponent</code><span>shown when data is empty</span>
+                <code>onEndReached</code><span>load more at the bottom</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 VERSUS -->
+      <section class="slide" data-id="vs" data-steps="1" data-name="Step 7 · ScrollView vs FlatList"
+        data-notes="Drag the slider live. At 50 chats both are fine. At 5000 ScrollView mounts 5000 views; FlatList stays near 210 with default settings. Numbers on the timing bar are illustrative, not benchmarks.">
+        <div class="kicker"><b>Stop 7</b> · Side by side</div>
+        <h2>Same data, very different work</h2>
+        <div class="vs">
+          <div class="vs-phones">
+            <div class="vs-col">
+              <h3><span class="tag a">ScrollView</span></h3>
+              <div class="mini"><div class="phone" id="vsA"></div></div>
+              <div class="vs-stats">
+                <span>mounted</span><b id="vsAc">0</b><div class="memo"><i id="vsAm" style="background:var(--amber)"></i></div>
+                <span>first render ≈ <span id="vsAt">0</span> ms</span>
+              </div>
+            </div>
+            <div class="vs-col">
+              <h3><span class="tag c">FlatList</span></h3>
+              <div class="mini"><div class="phone" id="vsB"></div></div>
+              <div class="vs-stats">
+                <span>mounted</span><b id="vsBc">0</b><div class="memo"><i id="vsBm" style="background:var(--cyan)"></i></div>
+                <span>first render ≈ <span id="vsBt">0</span> ms</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="slider"><label for="nRange">Chats in the inbox</label><input type="range" id="nRange" min="0" max="100" value="55"><output id="nOut">500</output></div>
+            <table class="cmp">
+              <thead><tr><th></th><th class="a">ScrollView</th><th class="c">FlatList</th></tr></thead>
+              <tbody>
+                <tr><td>Renders</td><td>Every child, up front</td><td>A window around the viewport</td></tr>
+                <tr><td>Memory</td><td>Grows with the list</td><td>Stays roughly flat</td></tr>
+                <tr><td>Input</td><td>Children you map yourself</td><td><span class="ic">data</span> + <span class="ic">renderItem</span></td></tr>
+                <tr><td>Extras</td><td>None for lists</td><td>Separators, empty state, header/footer, pull to refresh, load more</td></tr>
+                <tr><td>Use for</td><td>Short, fixed content</td><td>Long, unknown or growing lists</td></tr>
+              </tbody>
+            </table>
+            <p class="illus">Mounted counts follow FlatList defaults (≈10 rows per screen × windowSize 21). Timings are illustrative at 0.35 ms per row.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 NOTCH -->
+      <section class="slide" data-id="notch" data-steps="2" data-name="Step 8 · The notch problem"
+        data-notes="Run the app on an iPhone 15/16 simulator without any safe area handling. The 'Chats' title slides under the Dynamic Island and the clock. Step 2 highlights the danger zones.">
+        <div class="kicker"><b>Stop 8</b> · The bug</div>
+        <h2>Our header is hiding <span class="coral">behind the hardware</span></h2>
+        <div class="notch-grid">
+          <div style="position:relative">
+            <div class="phone" id="notchPhone"></div>
+            <div class="pin" id="pinTop" style="left:180px;top:6px">status bar + island</div>
+            <div class="pin" id="pinBot" style="left:180px;top:536px">home indicator</div>
+          </div>
+          <div>
+            <pre class="code" data-hl style="max-width:560px">export default function App() {
+  return (
+    &lt;View style={{ flex: 1 }}&gt;
+      &lt;Text style={styles.title}&gt;Chats&lt;/Text&gt;
+      &lt;FlatList data={chats} renderItem={renderChat} /&gt;
+    &lt;/View&gt;
+  );
+}</pre>
+            <p class="lead" data-at="2">Your <span class="ic">View</span> starts at pixel 0 of the screen. But the top of the screen is not yours: the clock, the battery and the camera cut-out live there. The bottom has the home indicator.</p>
+            <div class="devices" data-at="2">
+              <div class="dev"><svg width="36" height="22" viewBox="0 0 36 22"><rect x="1" y="1" width="34" height="20" rx="5" fill="none" stroke="var(--muted)" stroke-width="1.5"/><rect x="12" y="3" width="12" height="4" rx="2" fill="var(--coral)"/></svg><b>Dynamic Island</b><span>iPhone 14 Pro and newer</span></div>
+              <div class="dev"><svg width="36" height="22" viewBox="0 0 36 22"><rect x="1" y="1" width="34" height="20" rx="5" fill="none" stroke="var(--muted)" stroke-width="1.5"/><path d="M11 1h14v4a2 2 0 0 1-2 2H13a2 2 0 0 1-2-2z" fill="var(--coral)"/></svg><b>Notch</b><span>iPhone X to 14</span></div>
+              <div class="dev"><svg width="36" height="22" viewBox="0 0 36 22"><rect x="1" y="1" width="34" height="20" rx="5" fill="none" stroke="var(--muted)" stroke-width="1.5"/><circle cx="18" cy="5" r="2" fill="var(--coral)"/></svg><b>Punch hole</b><span>Most Android phones</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 11 SAFE AREA -->
+      <section class="slide" data-id="safe" data-steps="3" data-name="Step 9 · react-native-safe-area-context"
+        data-notes="Step 1: the insets appear and the content moves into the safe area. Step 2: the code, Provider once at the root. Step 3: rotate. Insets move to the sides, your code does not change. Mention RN's own SafeAreaView is iOS-only and deprecated in recent versions, which is why we use the library.">
+        <div class="kicker"><b>Stop 9</b> · The fix</div>
+        <h2>Let the device tell you <span class="cyan">where it's safe</span></h2>
+        <div class="safe-grid">
+          <div class="stagearea">
+            <div id="safePort">
+              <div class="phone" id="safePhone"></div>
+            </div>
+            <div class="land" id="land"><div class="screen"><div class="island"></div><div class="ins l"></div><div class="ins r"></div><div class="ins b"></div><div class="lapp" id="landApp"></div></div></div>
+            <div class="land-cap" id="landCap">Rotated: insets are now left 59 · right 59 · bottom 21. Same code.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <pre class="code" data-hl data-at="2" style="font-size:12.5px">// npx expo install react-native-safe-area-context
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+} from 'react-native-safe-area-context';
+
+export default function App() {
+  return (
+    &lt;SafeAreaProvider&gt;
+      &lt;SafeAreaView style={{ flex: 1 }}&gt;
+        &lt;Text style={styles.title}&gt;Chats&lt;/Text&gt;
+        &lt;FlatList data={chats} renderItem={renderChat} /&gt;
+      &lt;/SafeAreaView&gt;
+    &lt;/SafeAreaProvider&gt;
+  );
+}</pre>
+            <div class="tip" data-at="2"><b>Need the numbers?</b> <span class="ic">const insets = useSafeAreaInsets()</span> gives <span class="ic">top</span>, <span class="ic">bottom</span>, <span class="ic">left</span>, <span class="ic">right</span> for custom padding. Use <span class="ic">edges={['top']}</span> to pad only some sides.</div>
+            <div class="tip" data-at="3"><b>Why not React Native's own SafeAreaView?</b> It only works on iOS and is deprecated in recent versions. The library works on iOS and Android.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12 RECAP -->
+      <section class="slide" data-id="recap" data-steps="1" data-name="Recap"
+        data-notes="Leave this up while they code. The exercise uses refreshing + onRefresh, which FlatList gives for free.">
+        <div class="kicker"><b>Recap</b> · What to reach for</div>
+        <h2>Four rules for today's chat app</h2>
+        <div class="recap">
+          <div class="rc"><span class="tag r verdict-tag">Avoid</span><h3>.map() inside a View</h3><p>No scrolling on native. Overflow is simply cut off.</p></div>
+          <div class="rc"><span class="tag a verdict-tag">Short content</span><h3>ScrollView</h3><p>Scrolls, but mounts every child up front. Fine for forms and settings.</p></div>
+          <div class="rc"><span class="tag c verdict-tag">Long lists</span><h3>FlatList</h3><p>Mounts a window around the screen. Needs <span class="ic">data</span>, <span class="ic">renderItem</span>, <span class="ic">keyExtractor</span>.</p></div>
+          <div class="rc"><span class="tag c verdict-tag">Every screen</span><h3>Safe area</h3><p><span class="ic">SafeAreaProvider</span> once at the root, <span class="ic">SafeAreaView</span> on each screen.</p></div>
+        </div>
+        <div class="try">
+          <h3>Try it now</h3>
+          <p>Add pull-to-refresh to your chat list using FlatList's <span class="ic">refreshing</span> and <span class="ic">onRefresh</span> props, and an empty state with <span class="ic">ListEmptyComponent</span>. Test it on both the simulator and Expo Go.</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <button class="btn" id="prevBtn" aria-label="Previous">←</button>
+  <button class="btn" id="nextBtn" aria-label="Next">→</button>
+  <span class="count" id="count">1/12</span>
+  <span class="title" id="barTitle"></span>
+  <div class="prog" id="prog"></div>
+  <button class="btn hide-sm" id="notesBtn">Notes</button>
+  <button class="btn hide-sm" id="fsBtn">Fullscreen</button>
+</div>
+<div class="notes" id="notes" hidden><h4>Speaker notes</h4><div id="notesText"></div></div>
+
+<script>
+(function(){
+const stage=document.getElementById('stage'), holder=document.getElementById('holder'), vpEl=document.getElementById('vp');
+const RH=48;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- data ---------- */
+const BASE=[
+ ["Priya Sharma","Did you push the lab code?","10:42",2,"#e0736a"],
+ ["Rohan Verma","Viva is shifted to Friday","10:30",0,"#5b8def"],
+ ["CS-2B Class Group","Aman: who has the Expo QR?","10:12",14,"#2bb3a3"],
+ ["Ananya Iyer","Sent the Figma link","09:58",0,"#b072d6"],
+ ["Kabir Singh","bro the simulator is stuck","09:41",1,"#e3a33b"],
+ ["Meera Nair","Thanks! That fixed it","Yesterday",0,"#4fa36b"],
+ ["Arjun Patel","FlatList or ScrollView?","Yesterday",3,"#d65f8f"],
+ ["Hostel Block C","Water off till 6pm","Yesterday",0,"#6a7f8c"],
+ ["Ishita Rao","Capstone standup at 4","Mon",0,"#3f9fc9"],
+ ["Dev Malhotra","Check the PR comments","Mon",0,"#c9733f"],
+ ["Sneha Kulkarni","haha same","Sun",0,"#7a6bd6"],
+ ["Vikram Joshi","Can you share notes?","Sun",1,"#4f9e8f"]
+];
+const chat=i=>{const b=BASE[i%BASE.length];return {id:String(i+1),name:b[0],message:b[1],time:b[2],unread:i<12?b[3]:(i%7===0?1:0),color:b[4]};};
+const initials=n=>n.split(/[\s-]+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function rowHTML(c,extra=''){return `<div class="row ${extra}"><div class="av" style="background:${c.color}">${initials(c.name)}</div><div class="rb"><div class="rn">${esc(c.name)}</div><div class="rm">${esc(c.message)}</div></div><div class="rt">${c.time}${c.unread?`<span class="ub">${c.unread}</span>`:''}</div></div>`;}
+const SICONS=`<svg width="54" height="11" viewBox="0 0 54 11"><g fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="3" width="3" height="8" rx="1"/><rect x="13.5" y="1" width="3" height="10" rx="1"/></g><rect x="31" y="1" width="20" height="9.5" rx="2.5" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="33" y="3" width="14" height="5.5" rx="1.2" fill="currentColor"/><rect x="52" y="4" width="1.5" height="3.5" rx=".7" fill="currentColor" fill-opacity=".5"/></svg>`;
+function buildPhone(el,{rows=300,pt,rowClass=''}={}){
+  let r='';for(let i=0;i<rows;i++) r+=rowHTML(chat(i),rowClass);
+  el.innerHTML=`<div class="screen"><div class="island"></div><div class="sbar"><span>9:41</span>${SICONS}</div><div class="app"${pt!==undefined?` style="--pt:${pt}px"`:''}><div class="app-h">Chats<small>Edit</small></div><div class="vp"><div class="track">${r}</div></div></div><div class="home-ind"></div></div>`;
+  return {el,track:el.querySelector('.track'),app:el.querySelector('.app'),rows};
+}
+const setY=(p,y)=>{p.track.style.transform=`translateY(${-y}px)`;};
+const tri=(t,period)=>{const x=(t%period)/period;return x<.5?x*2:2-x*2;};
+const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+
+/* tiny highlighter */
+function hl(src){
+  const re=/(\/\/.*$)|('[^']*'|"[^"]*")|(<\/?[A-Z][\w.]*|\/?>)|\b(import|from|export|default|function|return|const)\b|\b([a-zA-Z]+)(?==[{'"])|\b(\d+)\b/gm;
+  let out='',last=0,m;
+  while((m=re.exec(src))){out+=esc(src.slice(last,m.index));const t=esc(m[0]);
+    out+= m[1]?`<span class="t-c">${t}</span>`:m[2]?`<span class="t-s">${t}</span>`:m[3]?`<span class="t-tag">${t}</span>`:m[4]?`<span class="t-k">${t}</span>`:m[5]?`<span class="t-a">${t}</span>`:`<span class="t-n">${t}</span>`;
+    last=m.index+m[0].length;}
+  return out+esc(src.slice(last));
+}
+document.querySelectorAll('pre[data-hl]').forEach(p=>{p.innerHTML=hl(p.textContent);});
+
+/* stage scale */
+let K=1;
+function fit(){const r=vpEl.getBoundingClientRect();const w=r.width-32, h=r.height-16;K=Math.min(w/1280,h/720);
+  holder.style.width=1280*K+'px';holder.style.height=720*K+'px';stage.style.transform=`scale(${K})`;}
+addEventListener('resize',fit);fit();
+function rel(el){const a=el.getBoundingClientRect(),s=stage.getBoundingClientRect(),k=s.width/1280;return{x:(a.left-s.left)/k,y:(a.top-s.top)/k,w:a.width/k,h:a.height/k};}
+
+/* ---------- hooks ---------- */
+const H={};
+let timers=[];const later=(f,ms)=>timers.push(setTimeout(f,ms));const clearT=()=>{timers.forEach(clearTimeout);timers=[];};
+
+// title
+const tP=buildPhone(document.getElementById('titlePhone'),{rows:60});
+H.title={tick(t){setY(tP,reduce?0:ease(tri(t,14000))*(60*RH-440));}};
+
+// roadmap
+const STOPS=[["Setup","Simulator + Expo Go",2],["Create app","blank template",3],["Render JSON","chats.json",4],["Why .map() fails","View vs browser",5],["ScrollView","scrolls, mounts all",6],["FlatList","virtualized window",7],["Compare","side by side",8],["Notch bug","hidden header",9],["Safe area","the fix",10]];
+const road=document.getElementById('road'),rp=document.getElementById('roadPath'),rd=document.getElementById('roadDraw');
+const nodes=STOPS.map((s,i)=>{const n=document.createElement('button');n.className='node';n.textContent=i+1;n.setAttribute('aria-label',`Go to stop ${i+1}: ${s[0]}`);
+  n.innerHTML=`${i+1}<span class="lbl">${s[0]}<small>${s[1]}</small></span>`;n.addEventListener('click',()=>go(s[2],1));road.appendChild(n);return n;});
+H.road={enter(){const L=rp.getTotalLength();const bw=road.clientWidth||1072,bh=500;
+  nodes.forEach((n,i)=>{const p=rp.getPointAtLength(L*(0.03+i*0.94/8));n.style.left=(p.x/1152*bw)+'px';n.style.top=p.y+'px';
+    n.classList.toggle('up',p.y>250);n.classList.toggle('down',p.y<=250);n.classList.remove('pop');});
+  rd.style.transition='none';rd.style.strokeDasharray=L;rd.style.strokeDashoffset=L;rd.getBoundingClientRect();
+  rd.style.transition=reduce?'none':'stroke-dashoffset 2.2s cubic-bezier(.4,.1,.2,1)';rd.style.strokeDashoffset=0;
+  nodes.forEach((n,i)=>later(()=>n.classList.add('pop'),reduce?0:250+i*210));}};
+
+// setup
+(function qr(){const c=document.getElementById('qr').getContext('2d');const n=21,s=84/(n+2);c.fillStyle='#fff';c.fillRect(0,0,84,84);c.fillStyle='#0c1318';
+  let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const finder=(x,y)=>{c.fillRect((x+1)*s,(y+1)*s,7*s,7*s);c.fillStyle='#fff';c.fillRect((x+2)*s,(y+2)*s,5*s,5*s);c.fillStyle='#0c1318';c.fillRect((x+3)*s,(y+3)*s,3*s,3*s);};
+  for(let y=0;y<n;y++)for(let x=0;x<n;x++){const inF=(x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12);if(!inF&&rnd()>.52)c.fillRect((x+1)*s,(y+1)*s,s+.3,s+.3);}
+  finder(0,0);finder(14,0);finder(0,14);})();
+const pSim=document.getElementById('pSim'),pGo=document.getElementById('pGo'),pk=document.getElementById('packets');
+let setupStep=0;
+const packs=[];[pSim,pGo].forEach((p,j)=>{for(let k=0;k<4;k++){const c=document.createElementNS('http://www.w3.org/2000/svg','rect');c.setAttribute('width',22);c.setAttribute('height',12);c.setAttribute('rx',3);c.setAttribute('fill',j?'var(--cyan)':'var(--amber)');c.style.opacity=0;pk.appendChild(c);packs.push({c,p,k});}});
+H.setup={step(n){setupStep=n;pSim.setAttribute('stroke',n>=1?'var(--amber)':'var(--line)');pGo.setAttribute('stroke',n>=2?'var(--cyan)':'var(--line)');},
+  tick(t){packs.forEach(({c,p,k})=>{const on=setupStep>=3;c.style.opacity=on?1:0;if(!on)return;const L=p.getTotalLength();const f=((t/2200)+k/4)%1;const q=p.getPointAtLength(f*L);c.setAttribute('x',q.x-11);c.setAttribute('y',q.y-6);c.style.opacity=f<.08?f/.08:f>.92?(1-f)/.08:1;});}};
+
+// create
+const termBody=document.getElementById('termBody'),tree=document.getElementById('tree');
+const CMD1='npx create-expo-app@latest ChatApp --template blank';
+H.create={step(n){clearT();
+  if(n===1){tree.classList.remove('show');let i=0;termBody.innerHTML='<span class="p">$ </span><span id="ty"></span><span class="caret"></span>';const ty=document.getElementById('ty');
+    if(reduce){ty.textContent=CMD1;return;}
+    const typeIt=()=>{if(i<=CMD1.length){ty.textContent=CMD1.slice(0,i++);later(typeIt,38);} };typeIt();}
+  if(n>=2){termBody.innerHTML=`<span class="p">$ </span>${CMD1}\n<span class="ok">✔ Downloaded and extracted project files.</span>\n<span class="ok">✔ Installed JavaScript dependencies.</span>\n<span class="dimt">✅ Your project is ready!</span>\n\n<span class="p">$ </span>cd ChatApp && npx expo start\n<span class="dimt">› Metro waiting on exp://192.168.1.7:8081</span>\n<span class="dimt">› Press i │ open iOS simulator</span> <span class="caret"></span>`;
+    [...tree.children].forEach((d,i)=>d.style.transitionDelay=(i*90)+'ms');tree.classList.add('show');}
+}};
+
+// data
+const SHOW=6;
+const jsonBox=document.getElementById('jsonBox');
+(function(){let h='<div>[</div>';for(let i=0;i<SHOW;i++){const c=chat(i);
+  h+=`<div class="obj" data-i="${i}">  { <span class="k">"id"</span>: <span class="s">"${c.id}"</span>, <span class="k">"name"</span>: <span class="s">"${esc(c.name)}"</span>,<br>    <span class="k">"message"</span>: <span class="s">"${esc(c.message)}"</span>,<br>    <span class="k">"time"</span>: <span class="s">"${c.time}"</span>, <span class="k">"unread"</span>: <span class="n">${c.unread}</span> },</div>`;}
+  h+='<div style="color:var(--dim)">  … 294 more</div><div>]</div>';jsonBox.innerHTML=h;})();
+const dP=buildPhone(document.getElementById('dataPhone'),{rows:SHOW});
+H.data={step(n){clearT();const rows=[...dP.track.children],objs=[...jsonBox.querySelectorAll('.obj')];
+  stage.querySelectorAll('.flychip').forEach(e=>e.remove());
+  rows.forEach(r=>r.classList.remove('in'));objs.forEach(o=>o.classList.remove('hot'));
+  if(n<2)return;
+  rows.forEach((r,i)=>later(()=>{const o=objs[i];o.classList.add('hot');
+    if(reduce){r.classList.add('in');return;}
+    const a=rel(o),b=rel(r);const chip=document.createElement('div');chip.className='flychip';chip.textContent=`{ id: "${i+1}" }`;stage.appendChild(chip);
+    chip.style.left=a.x+'px';chip.style.top=(a.y+a.h/2-12)+'px';
+    const an=chip.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${(b.x+20-a.x)/2}px,${(b.y-a.y)/2-60}px) scale(1.15)`},{transform:`translate(${b.x+20-a.x}px,${b.y+12-(a.y+a.h/2)}px) scale(.6)`,opacity:.2}],{duration:750,easing:'cubic-bezier(.4,.1,.2,1)'});
+    an.onfinish=()=>{chip.remove();r.classList.add('in');o.classList.remove('hot');};
+  },i*520));}};
+
+// map
+const mP=buildPhone(document.getElementById('mapPhone'),{rows:13});
+const finger=document.getElementById('finger'),stamp=document.getElementById('stamp');
+const offlabel=document.createElement('div');offlabel.className='offlabel';offlabel.textContent='rows 10–13 exist, but sit off-screen';
+H.map={step(n){clearT();const rows=[...mP.track.children];
+  if(n===1){stamp.classList.remove('on2');finger.classList.remove('go');offlabel.remove();rows.forEach(r=>r.classList.remove('in','ghost'));
+    rows.forEach((r,i)=>{if(i>=9)r.classList.add('ghost');later(()=>r.classList.add('in'),reduce?0:200+i*130);});
+    later(()=>mP.el.parentNode.appendChild(offlabel),reduce?0:200+13*130);}
+  if(n>=2){rows.forEach((r,i)=>{r.classList.add('in');if(i>=9)r.classList.add('ghost');});if(!offlabel.isConnected)mP.el.parentNode.appendChild(offlabel);
+    if(n===2){finger.classList.remove('go');void finger.offsetWidth;finger.classList.add('go');
+      later(()=>{mP.track.classList.remove('jiggle');void mP.track.offsetWidth;mP.track.classList.add('jiggle');},500);
+      later(()=>stamp.classList.add('on2'),1100);} else stamp.classList.add('on2');}
+}};
+
+// grids
+function makeGrid(el){const cells=[];for(let i=0;i<300;i++){const c=document.createElement('i');el.appendChild(c);cells.push(c);}return cells;}
+const svCells=makeGrid(document.getElementById('svGrid'));
+const flCells=makeGrid(document.getElementById('flGrid'));
+const ROWH=14;
+
+// scrollview
+const sP=buildPhone(document.getElementById('svPhone'),{rows:300});
+let svStart=0,svStep=0;
+const svCount=document.getElementById('svCount'),svMem=document.getElementById('svMem');
+H.sv={step(n,t){svStep=n;if(n>=2){svStart=performance.now();}else{svCells.forEach(c=>c.className='');svCount.textContent=0;svMem.style.width=0;}},
+  tick(t,now){setY(sP,reduce?0:ease(tri(t,26000))*(300*RH-440));
+    if(svStep>=2){const p=reduce?1:Math.min(1,(now-svStart)/1600);const k=Math.floor(p*300);
+      for(let i=0;i<300;i++){const want=i<k?'m-a':'';if(svCells[i].className!==want)svCells[i].className=want;}
+      svCount.textContent=k;svMem.style.width=(p*100)+'%';}}};
+
+// flatlist
+const fP=buildPhone(document.getElementById('flPhone'),{rows:300});
+const flFrame=document.getElementById('flFrame'),flVis=document.getElementById('flVis'),flCount=document.getElementById('flCount'),flMem=document.getElementById('flMem');
+H.fl={tick(t){const y=reduce?0:ease(tri(t,26000))*(300*RH-440);setY(fP,y);
+  const first=Math.floor(y/RH),last=Math.min(299,Math.floor((y+440)/RH));
+  const lo=Math.max(0,first-20),hi=Math.min(299,last+20);let cnt=0;
+  for(let i=0;i<300;i++){const want=(i>=first&&i<=last)?'m-v':(i>=lo&&i<=hi)?'m-c':'';if(want)cnt++;if(flCells[i].className!==want)flCells[i].className=want;}
+  const r0=Math.floor(lo/10),r1=Math.floor(hi/10);flFrame.style.top=(r0*ROWH-4)+'px';flFrame.style.height=((r1-r0+1)*ROWH+5)+'px';
+  flVis.style.top=(Math.floor(first/10)*ROWH-3)+'px';flVis.style.height=((Math.floor(last/10)-Math.floor(first/10)+1)*ROWH+3)+'px';
+  flCount.textContent=cnt;flMem.style.width=(cnt/300*100)+'%';}};
+
+// versus
+const vA=buildPhone(document.getElementById('vsA'),{rows:80}),vB=buildPhone(document.getElementById('vsB'),{rows:80});
+const nR=document.getElementById('nRange'),nO=document.getElementById('nOut');
+function upd(){const N=Math.round(50*Math.pow(100,nR.value/100));nO.textContent=N.toLocaleString('en-IN');
+  const a=N,b=Math.min(N,210),max=5000;
+  document.getElementById('vsAc').textContent=a.toLocaleString('en-IN');document.getElementById('vsBc').textContent=b.toLocaleString('en-IN');
+  document.getElementById('vsAm').style.width=(a/max*100)+'%';document.getElementById('vsBm').style.width=Math.max(1.5,b/max*100)+'%';
+  document.getElementById('vsAt').textContent=Math.round(a*.35);document.getElementById('vsBt').textContent=Math.round(Math.min(N,10)*.35);}
+nR.addEventListener('input',upd);upd();
+H.vs={tick(t){const y=reduce?0:ease(tri(t,16000))*(80*RH-440);setY(vA,y);setY(vB,y);}};
+
+// notch
+const nP=buildPhone(document.getElementById('notchPhone'),{rows:20,pt:0});
+const dz1=document.createElement('div');dz1.className='danger';const dz2=document.createElement('div');dz2.className='danger b';
+nP.el.querySelector('.screen').append(dz1,dz2);
+H.notch={step(n){[dz1,dz2,document.getElementById('pinTop'),document.getElementById('pinBot')].forEach(e=>e.classList.toggle('on2',n>=2));}};
+
+// safe
+const saP=buildPhone(document.getElementById('safePhone'),{rows:20,pt:0});
+const iT=document.createElement('div');iT.className='inset t';iT.innerHTML='<span>top 59pt</span>';
+const iB=document.createElement('div');iB.className='inset bt';iB.innerHTML='<span>bottom 34pt</span>';
+saP.el.querySelector('.screen').append(iT,iB);
+document.getElementById('landApp').innerHTML=`<div class="app-h" style="background:var(--ios-bg)">Chats<small>Edit</small></div><div class="vp">${[0,1,2,3,4].map(i=>rowHTML(chat(i))).join('')}</div>`;
+const port=document.getElementById('safePort'),land=document.getElementById('land'),landCap=document.getElementById('landCap');
+H.safe={step(n){clearT();
+  if(n===1){saP.app.style.setProperty('--pt','0px');saP.app.style.setProperty('--pb','0px');iT.classList.remove('on2');iB.classList.remove('on2');
+    later(()=>{iT.classList.add('on2');iB.classList.add('on2');},reduce?0:400);
+    later(()=>{saP.app.style.setProperty('--pt','39px');saP.app.style.setProperty('--pb','22px');},reduce?0:1100);}
+  else{iT.classList.add('on2');iB.classList.add('on2');saP.app.style.setProperty('--pt','39px');saP.app.style.setProperty('--pb','22px');}
+  port.classList.toggle('away',n>=3);land.classList.toggle('on2',n>=3);landCap.classList.toggle('on2',n>=3);}};
+
+/* ---------- engine ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+const prog=document.getElementById('prog');slides.forEach(()=>prog.appendChild(document.createElement('i')));
+let cur=0,step=1,t0=performance.now();
+const stepsOf=i=>+slides[i].dataset.steps||1;
+const hookOf=i=>H[slides[i].dataset.id]||{};
+function builds(){slides[cur].querySelectorAll('[data-at]').forEach(e=>e.classList.toggle('on',+e.dataset.at<=step));}
+function chrome(){document.getElementById('count').textContent=`${cur+1}/${slides.length}`;document.getElementById('barTitle').textContent=slides[cur].dataset.name;
+  [...prog.children].forEach((d,i)=>d.className=i<cur?'done':i===cur?'now':'');
+  document.getElementById('notesText').textContent=slides[cur].dataset.notes||'';
+  try{history.replaceState(null,'','#s'+(cur+1));}catch(e){}}
+function go(i,st){clearT();hookOf(cur).leave?.();slides[cur].classList.remove('active');
+  cur=Math.max(0,Math.min(slides.length-1,i));step=st||1;slides[cur].classList.add('active');t0=performance.now();
+  builds();chrome();const h=hookOf(cur);h.enter?.();h.step?.(step);}
+function next(){if(step<stepsOf(cur)){step++;builds();hookOf(cur).step?.(step);}else if(cur<slides.length-1)go(cur+1,1);}
+function prev(){if(step>1){step--;builds();hookOf(cur).step?.(step);}else if(cur>0)go(cur-1,stepsOf(cur-1));}
+document.getElementById('nextBtn').onclick=next;document.getElementById('prevBtn').onclick=prev;
+const notes=document.getElementById('notes');
+document.getElementById('notesBtn').onclick=()=>{notes.hidden=!notes.hidden;};
+document.getElementById('fsBtn').onclick=()=>{try{const r=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();r&&r.catch&&r.catch(()=>{});}catch(e){}};
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next();}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev();}
+  else if(e.key==='n'||e.key==='N')notes.hidden=!notes.hidden;
+  else if(e.key==='Home')go(0,1);else if(e.key==='End')go(slides.length-1,1);});
+let tx=null;addEventListener('touchstart',e=>{if(e.target.tagName!=='INPUT')tx=e.touches[0].clientX;},{passive:true});
+addEventListener('touchend',e=>{if(tx==null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)(d<0?next:prev)();tx=null;});
+
+function loop(now){const h=hookOf(cur);h.tick?.(now-t0,now);requestAnimationFrame(loop);}
+const m=/^#s(\d+)$/.exec(location.hash);
+slides[0].classList.add('active');go(m?(+m[1]-1):0,1);
+requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>

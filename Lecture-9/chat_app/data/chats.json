@@ -1,0 +1,3014 @@
+[
+  {
+    "id": 1,
+    "name": "Aman Sharma",
+    "avatar": "AS",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aman",
+        "text": "Hey, how are you?",
+        "time": "09:00 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "09:02 AM"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Priya Singh",
+    "avatar": "PS",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Priya",
+        "text": "Can you share the project notes?",
+        "time": "10:07 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "10:09 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Priya",
+        "text": "Sounds good to me.",
+        "time": "10:11 AM"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Rahul Verma",
+    "avatar": "RV",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rahul",
+        "text": "Are we working on the UI today?",
+        "time": "11:14 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "11:16 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rahul",
+        "text": "We can discuss it after class.",
+        "time": "11:18 AM"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Sneha Patel",
+    "avatar": "SP",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sneha",
+        "text": "How is your preparation going?",
+        "time": "12:21 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "12:23 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sneha",
+        "text": "Okay, talk soon!",
+        "time": "12:25 AM"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Vikram Mehta",
+    "avatar": "VM",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Vikram",
+        "text": "Did you finish the React assignment?",
+        "time": "09:28 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "09:30 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Vikram",
+        "text": "Let me know if you need help.",
+        "time": "09:32 AM"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Neha Gupta",
+    "avatar": "NG",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Neha",
+        "text": "Have you tested the app?",
+        "time": "10:35 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "10:37 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Neha",
+        "text": "Nice, keep me posted.",
+        "time": "10:39 AM"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Arjun Kapoor",
+    "avatar": "AK",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Arjun",
+        "text": "Did you check the latest update?",
+        "time": "11:42 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "11:44 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Arjun",
+        "text": "Awesome, thanks!",
+        "time": "11:46 AM"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Ananya Yadav",
+    "avatar": "AY",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Ananya",
+        "text": "Are you joining the class today?",
+        "time": "12:49 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "12:51 AM"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Rohit Joshi",
+    "avatar": "RJ",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rohit",
+        "text": "What time is our meeting?",
+        "time": "09:56 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "09:58 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rohit",
+        "text": "Please send it when ready.",
+        "time": "09:00 AM"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Isha Malhotra",
+    "avatar": "IM",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Isha",
+        "text": "Can we discuss the project?",
+        "time": "10:03 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "10:05 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Isha",
+        "text": "That works for me.",
+        "time": "10:07 AM"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Karan Mishra",
+    "avatar": "KM",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Karan",
+        "text": "Hey, how are you?",
+        "time": "11:10 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "11:12 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Karan",
+        "text": "Great, see you soon!",
+        "time": "11:14 AM"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Pooja Jain",
+    "avatar": "PJ",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Pooja",
+        "text": "Can you share the project notes?",
+        "time": "12:17 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "12:19 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Pooja",
+        "text": "Sounds good to me.",
+        "time": "12:21 AM"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Sahil Agarwal",
+    "avatar": "SA",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sahil",
+        "text": "Are we working on the UI today?",
+        "time": "09:24 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "09:26 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sahil",
+        "text": "We can discuss it after class.",
+        "time": "09:28 AM"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Riya Rao",
+    "avatar": "RR",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Riya",
+        "text": "How is your preparation going?",
+        "time": "10:31 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "10:33 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Riya",
+        "text": "Okay, talk soon!",
+        "time": "10:35 AM"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Aditya Saxena",
+    "avatar": "AS",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aditya",
+        "text": "Did you finish the React assignment?",
+        "time": "11:38 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "11:40 AM"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "Nisha Bhat",
+    "avatar": "NB",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Nisha",
+        "text": "Have you tested the app?",
+        "time": "12:45 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "12:47 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Nisha",
+        "text": "Nice, keep me posted.",
+        "time": "12:49 AM"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Kabir Nair",
+    "avatar": "KN",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Kabir",
+        "text": "Did you check the latest update?",
+        "time": "09:52 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "09:54 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Kabir",
+        "text": "Awesome, thanks!",
+        "time": "09:56 AM"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Meera Sethi",
+    "avatar": "MS",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Meera",
+        "text": "Are you joining the class today?",
+        "time": "10:59 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "10:01 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Meera",
+        "text": "Thanks for the update!",
+        "time": "10:03 AM"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Dev Kumar",
+    "avatar": "DK",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Dev",
+        "text": "What time is our meeting?",
+        "time": "11:06 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "11:08 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Dev",
+        "text": "Please send it when ready.",
+        "time": "11:10 AM"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Simran Chopra",
+    "avatar": "SC",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Simran",
+        "text": "Can we discuss the project?",
+        "time": "12:13 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "12:15 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Simran",
+        "text": "That works for me.",
+        "time": "12:17 AM"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "Varun Sharma",
+    "avatar": "VS",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Varun",
+        "text": "Hey, how are you?",
+        "time": "09:20 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "09:22 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Varun",
+        "text": "Great, see you soon!",
+        "time": "09:24 AM"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "name": "Tanya Singh",
+    "avatar": "TS",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Tanya",
+        "text": "Can you share the project notes?",
+        "time": "10:27 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "10:29 AM"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "name": "Harsh Verma",
+    "avatar": "HV",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Harsh",
+        "text": "Are we working on the UI today?",
+        "time": "11:34 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "11:36 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Harsh",
+        "text": "We can discuss it after class.",
+        "time": "11:38 AM"
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "name": "Aditi Patel",
+    "avatar": "AP",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aditi",
+        "text": "How is your preparation going?",
+        "time": "12:41 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "12:43 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aditi",
+        "text": "Okay, talk soon!",
+        "time": "12:45 AM"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "name": "Yash Mehta",
+    "avatar": "YM",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Yash",
+        "text": "Did you finish the React assignment?",
+        "time": "09:48 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "09:50 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Yash",
+        "text": "Let me know if you need help.",
+        "time": "09:52 AM"
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "name": "Kavya Gupta",
+    "avatar": "KG",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Kavya",
+        "text": "Have you tested the app?",
+        "time": "10:55 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "10:57 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Kavya",
+        "text": "Nice, keep me posted.",
+        "time": "10:59 AM"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "name": "Mohit Kapoor",
+    "avatar": "MK",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Mohit",
+        "text": "Did you check the latest update?",
+        "time": "11:02 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "11:04 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Mohit",
+        "text": "Awesome, thanks!",
+        "time": "11:06 AM"
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "name": "Diya Yadav",
+    "avatar": "DY",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Diya",
+        "text": "Are you joining the class today?",
+        "time": "12:09 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "12:11 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Diya",
+        "text": "Thanks for the update!",
+        "time": "12:13 AM"
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "name": "Rohan Joshi",
+    "avatar": "RJ",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rohan",
+        "text": "What time is our meeting?",
+        "time": "09:16 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "09:18 AM"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "name": "Sakshi Malhotra",
+    "avatar": "SM",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sakshi",
+        "text": "Can we discuss the project?",
+        "time": "10:23 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "10:25 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sakshi",
+        "text": "That works for me.",
+        "time": "10:27 AM"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "name": "Aman Yadav",
+    "avatar": "AY",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aman",
+        "text": "Hey, how are you?",
+        "time": "11:30 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "11:32 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aman",
+        "text": "Great, see you soon!",
+        "time": "11:34 AM"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "name": "Priya Joshi",
+    "avatar": "PJ",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Priya",
+        "text": "Can you share the project notes?",
+        "time": "12:37 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "12:39 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Priya",
+        "text": "Sounds good to me.",
+        "time": "12:41 AM"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "name": "Rahul Malhotra",
+    "avatar": "RM",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rahul",
+        "text": "Are we working on the UI today?",
+        "time": "09:44 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "09:46 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rahul",
+        "text": "We can discuss it after class.",
+        "time": "09:48 AM"
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "name": "Sneha Mishra",
+    "avatar": "SM",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sneha",
+        "text": "How is your preparation going?",
+        "time": "10:51 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "10:53 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sneha",
+        "text": "Okay, talk soon!",
+        "time": "10:55 AM"
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "name": "Vikram Jain",
+    "avatar": "VJ",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Vikram",
+        "text": "Did you finish the React assignment?",
+        "time": "11:58 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "11:00 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Vikram",
+        "text": "Let me know if you need help.",
+        "time": "11:02 AM"
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "name": "Neha Agarwal",
+    "avatar": "NA",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Neha",
+        "text": "Have you tested the app?",
+        "time": "12:05 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "12:07 AM"
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "name": "Arjun Rao",
+    "avatar": "AR",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Arjun",
+        "text": "Did you check the latest update?",
+        "time": "09:12 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "09:14 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Arjun",
+        "text": "Awesome, thanks!",
+        "time": "09:16 AM"
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "name": "Ananya Saxena",
+    "avatar": "AS",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Ananya",
+        "text": "Are you joining the class today?",
+        "time": "10:19 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "10:21 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Ananya",
+        "text": "Thanks for the update!",
+        "time": "10:23 AM"
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "name": "Rohit Bhat",
+    "avatar": "RB",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rohit",
+        "text": "What time is our meeting?",
+        "time": "11:26 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "11:28 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rohit",
+        "text": "Please send it when ready.",
+        "time": "11:30 AM"
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "name": "Isha Nair",
+    "avatar": "IN",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Isha",
+        "text": "Can we discuss the project?",
+        "time": "12:33 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "12:35 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Isha",
+        "text": "That works for me.",
+        "time": "12:37 AM"
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "name": "Karan Sethi",
+    "avatar": "KS",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Karan",
+        "text": "Hey, how are you?",
+        "time": "09:40 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "09:42 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Karan",
+        "text": "Great, see you soon!",
+        "time": "09:44 AM"
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "name": "Pooja Kumar",
+    "avatar": "PK",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Pooja",
+        "text": "Can you share the project notes?",
+        "time": "10:47 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "10:49 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Pooja",
+        "text": "Sounds good to me.",
+        "time": "10:51 AM"
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "name": "Sahil Chopra",
+    "avatar": "SC",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sahil",
+        "text": "Are we working on the UI today?",
+        "time": "11:54 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "11:56 AM"
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "name": "Riya Sharma",
+    "avatar": "RS",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Riya",
+        "text": "How is your preparation going?",
+        "time": "12:01 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "12:03 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Riya",
+        "text": "Okay, talk soon!",
+        "time": "12:05 AM"
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "name": "Aditya Singh",
+    "avatar": "AS",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aditya",
+        "text": "Did you finish the React assignment?",
+        "time": "09:08 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "09:10 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aditya",
+        "text": "Let me know if you need help.",
+        "time": "09:12 AM"
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "name": "Nisha Verma",
+    "avatar": "NV",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Nisha",
+        "text": "Have you tested the app?",
+        "time": "10:15 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "10:17 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Nisha",
+        "text": "Nice, keep me posted.",
+        "time": "10:19 AM"
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "name": "Kabir Patel",
+    "avatar": "KP",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Kabir",
+        "text": "Did you check the latest update?",
+        "time": "11:22 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "11:24 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Kabir",
+        "text": "Awesome, thanks!",
+        "time": "11:26 AM"
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "name": "Meera Mehta",
+    "avatar": "MM",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Meera",
+        "text": "Are you joining the class today?",
+        "time": "12:29 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "12:31 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Meera",
+        "text": "Thanks for the update!",
+        "time": "12:33 AM"
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "name": "Dev Gupta",
+    "avatar": "DG",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Dev",
+        "text": "What time is our meeting?",
+        "time": "09:36 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "09:38 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Dev",
+        "text": "Please send it when ready.",
+        "time": "09:40 AM"
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "name": "Simran Kapoor",
+    "avatar": "SK",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Simran",
+        "text": "Can we discuss the project?",
+        "time": "10:43 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "10:45 AM"
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "name": "Varun Yadav",
+    "avatar": "VY",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Varun",
+        "text": "Hey, how are you?",
+        "time": "11:50 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "11:52 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Varun",
+        "text": "Great, see you soon!",
+        "time": "11:54 AM"
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "name": "Tanya Joshi",
+    "avatar": "TJ",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Tanya",
+        "text": "Can you share the project notes?",
+        "time": "12:57 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "12:59 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Tanya",
+        "text": "Sounds good to me.",
+        "time": "12:01 AM"
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "name": "Harsh Malhotra",
+    "avatar": "HM",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Harsh",
+        "text": "Are we working on the UI today?",
+        "time": "09:04 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "09:06 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Harsh",
+        "text": "We can discuss it after class.",
+        "time": "09:08 AM"
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "name": "Aditi Mishra",
+    "avatar": "AM",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aditi",
+        "text": "How is your preparation going?",
+        "time": "10:11 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "10:13 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aditi",
+        "text": "Okay, talk soon!",
+        "time": "10:15 AM"
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "name": "Yash Jain",
+    "avatar": "YJ",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Yash",
+        "text": "Did you finish the React assignment?",
+        "time": "11:18 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "11:20 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Yash",
+        "text": "Let me know if you need help.",
+        "time": "11:22 AM"
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "name": "Kavya Agarwal",
+    "avatar": "KA",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Kavya",
+        "text": "Have you tested the app?",
+        "time": "12:25 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "12:27 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Kavya",
+        "text": "Nice, keep me posted.",
+        "time": "12:29 AM"
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "name": "Mohit Rao",
+    "avatar": "MR",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Mohit",
+        "text": "Did you check the latest update?",
+        "time": "09:32 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "09:34 AM"
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "name": "Diya Saxena",
+    "avatar": "DS",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Diya",
+        "text": "Are you joining the class today?",
+        "time": "10:39 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "10:41 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Diya",
+        "text": "Thanks for the update!",
+        "time": "10:43 AM"
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "name": "Rohan Bhat",
+    "avatar": "RB",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rohan",
+        "text": "What time is our meeting?",
+        "time": "11:46 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "11:48 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rohan",
+        "text": "Please send it when ready.",
+        "time": "11:50 AM"
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "name": "Sakshi Nair",
+    "avatar": "SN",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sakshi",
+        "text": "Can we discuss the project?",
+        "time": "12:53 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "12:55 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sakshi",
+        "text": "That works for me.",
+        "time": "12:57 AM"
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "name": "Aman Saxena",
+    "avatar": "AS",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aman",
+        "text": "Hey, how are you?",
+        "time": "09:00 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "09:02 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aman",
+        "text": "Great, see you soon!",
+        "time": "09:04 AM"
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "name": "Priya Bhat",
+    "avatar": "PB",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Priya",
+        "text": "Can you share the project notes?",
+        "time": "10:07 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "10:09 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Priya",
+        "text": "Sounds good to me.",
+        "time": "10:11 AM"
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "name": "Rahul Nair",
+    "avatar": "RN",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rahul",
+        "text": "Are we working on the UI today?",
+        "time": "11:14 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "11:16 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rahul",
+        "text": "We can discuss it after class.",
+        "time": "11:18 AM"
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "name": "Sneha Sethi",
+    "avatar": "SS",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sneha",
+        "text": "How is your preparation going?",
+        "time": "12:21 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "12:23 AM"
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "name": "Vikram Kumar",
+    "avatar": "VK",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Vikram",
+        "text": "Did you finish the React assignment?",
+        "time": "09:28 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "09:30 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Vikram",
+        "text": "Let me know if you need help.",
+        "time": "09:32 AM"
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "name": "Neha Chopra",
+    "avatar": "NC",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Neha",
+        "text": "Have you tested the app?",
+        "time": "10:35 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "10:37 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Neha",
+        "text": "Nice, keep me posted.",
+        "time": "10:39 AM"
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "name": "Arjun Sharma",
+    "avatar": "AS",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Arjun",
+        "text": "Did you check the latest update?",
+        "time": "11:42 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "11:44 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Arjun",
+        "text": "Awesome, thanks!",
+        "time": "11:46 AM"
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "name": "Ananya Singh",
+    "avatar": "AS",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Ananya",
+        "text": "Are you joining the class today?",
+        "time": "12:49 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "12:51 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Ananya",
+        "text": "Thanks for the update!",
+        "time": "12:53 AM"
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "name": "Rohit Verma",
+    "avatar": "RV",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rohit",
+        "text": "What time is our meeting?",
+        "time": "09:56 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "09:58 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rohit",
+        "text": "Please send it when ready.",
+        "time": "09:00 AM"
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "name": "Isha Patel",
+    "avatar": "IP",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Isha",
+        "text": "Can we discuss the project?",
+        "time": "10:03 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "10:05 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Isha",
+        "text": "That works for me.",
+        "time": "10:07 AM"
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "name": "Karan Mehta",
+    "avatar": "KM",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Karan",
+        "text": "Hey, how are you?",
+        "time": "11:10 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "11:12 AM"
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "name": "Pooja Gupta",
+    "avatar": "PG",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Pooja",
+        "text": "Can you share the project notes?",
+        "time": "12:17 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "12:19 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Pooja",
+        "text": "Sounds good to me.",
+        "time": "12:21 AM"
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "name": "Sahil Kapoor",
+    "avatar": "SK",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sahil",
+        "text": "Are we working on the UI today?",
+        "time": "09:24 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "09:26 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sahil",
+        "text": "We can discuss it after class.",
+        "time": "09:28 AM"
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "name": "Riya Yadav",
+    "avatar": "RY",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Riya",
+        "text": "How is your preparation going?",
+        "time": "10:31 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "10:33 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Riya",
+        "text": "Okay, talk soon!",
+        "time": "10:35 AM"
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "name": "Aditya Joshi",
+    "avatar": "AJ",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aditya",
+        "text": "Did you finish the React assignment?",
+        "time": "11:38 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "11:40 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aditya",
+        "text": "Let me know if you need help.",
+        "time": "11:42 AM"
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "name": "Nisha Malhotra",
+    "avatar": "NM",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Nisha",
+        "text": "Have you tested the app?",
+        "time": "12:45 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "12:47 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Nisha",
+        "text": "Nice, keep me posted.",
+        "time": "12:49 AM"
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "name": "Kabir Mishra",
+    "avatar": "KM",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Kabir",
+        "text": "Did you check the latest update?",
+        "time": "09:52 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "09:54 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Kabir",
+        "text": "Awesome, thanks!",
+        "time": "09:56 AM"
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "name": "Meera Jain",
+    "avatar": "MJ",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Meera",
+        "text": "Are you joining the class today?",
+        "time": "10:59 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "10:01 AM"
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "name": "Dev Agarwal",
+    "avatar": "DA",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Dev",
+        "text": "What time is our meeting?",
+        "time": "11:06 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "11:08 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Dev",
+        "text": "Please send it when ready.",
+        "time": "11:10 AM"
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "name": "Simran Rao",
+    "avatar": "SR",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Simran",
+        "text": "Can we discuss the project?",
+        "time": "12:13 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "12:15 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Simran",
+        "text": "That works for me.",
+        "time": "12:17 AM"
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "name": "Varun Saxena",
+    "avatar": "VS",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Varun",
+        "text": "Hey, how are you?",
+        "time": "09:20 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "09:22 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Varun",
+        "text": "Great, see you soon!",
+        "time": "09:24 AM"
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "name": "Tanya Bhat",
+    "avatar": "TB",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Tanya",
+        "text": "Can you share the project notes?",
+        "time": "10:27 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "10:29 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Tanya",
+        "text": "Sounds good to me.",
+        "time": "10:31 AM"
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "name": "Harsh Nair",
+    "avatar": "HN",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Harsh",
+        "text": "Are we working on the UI today?",
+        "time": "11:34 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "11:36 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Harsh",
+        "text": "We can discuss it after class.",
+        "time": "11:38 AM"
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "name": "Aditi Sethi",
+    "avatar": "AS",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aditi",
+        "text": "How is your preparation going?",
+        "time": "12:41 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "12:43 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aditi",
+        "text": "Okay, talk soon!",
+        "time": "12:45 AM"
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "name": "Yash Kumar",
+    "avatar": "YK",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Yash",
+        "text": "Did you finish the React assignment?",
+        "time": "09:48 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "09:50 AM"
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "name": "Kavya Chopra",
+    "avatar": "KC",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Kavya",
+        "text": "Have you tested the app?",
+        "time": "10:55 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "10:57 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Kavya",
+        "text": "Nice, keep me posted.",
+        "time": "10:59 AM"
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "name": "Mohit Sharma",
+    "avatar": "MS",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Mohit",
+        "text": "Did you check the latest update?",
+        "time": "11:02 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "11:04 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Mohit",
+        "text": "Awesome, thanks!",
+        "time": "11:06 AM"
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "name": "Diya Singh",
+    "avatar": "DS",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Diya",
+        "text": "Are you joining the class today?",
+        "time": "12:09 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "12:11 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Diya",
+        "text": "Thanks for the update!",
+        "time": "12:13 AM"
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "name": "Rohan Verma",
+    "avatar": "RV",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rohan",
+        "text": "What time is our meeting?",
+        "time": "09:16 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "09:18 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rohan",
+        "text": "Please send it when ready.",
+        "time": "09:20 AM"
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "name": "Sakshi Patel",
+    "avatar": "SP",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sakshi",
+        "text": "Can we discuss the project?",
+        "time": "10:23 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "10:25 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sakshi",
+        "text": "That works for me.",
+        "time": "10:27 AM"
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "name": "Aman Singh",
+    "avatar": "AS",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aman",
+        "text": "Hey, how are you?",
+        "time": "11:30 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "11:32 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aman",
+        "text": "Great, see you soon!",
+        "time": "11:34 AM"
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "name": "Priya Verma",
+    "avatar": "PV",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Priya",
+        "text": "Can you share the project notes?",
+        "time": "12:37 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "12:39 AM"
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "name": "Rahul Patel",
+    "avatar": "RP",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rahul",
+        "text": "Are we working on the UI today?",
+        "time": "09:44 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "09:46 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rahul",
+        "text": "We can discuss it after class.",
+        "time": "09:48 AM"
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "name": "Sneha Mehta",
+    "avatar": "SM",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sneha",
+        "text": "How is your preparation going?",
+        "time": "10:51 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "10:53 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sneha",
+        "text": "Okay, talk soon!",
+        "time": "10:55 AM"
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "name": "Vikram Gupta",
+    "avatar": "VG",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Vikram",
+        "text": "Did you finish the React assignment?",
+        "time": "11:58 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "11:00 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Vikram",
+        "text": "Let me know if you need help.",
+        "time": "11:02 AM"
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "name": "Neha Kapoor",
+    "avatar": "NK",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Neha",
+        "text": "Have you tested the app?",
+        "time": "12:05 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "12:07 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Neha",
+        "text": "Nice, keep me posted.",
+        "time": "12:09 AM"
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "name": "Arjun Yadav",
+    "avatar": "AY",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Arjun",
+        "text": "Did you check the latest update?",
+        "time": "09:12 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "09:14 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Arjun",
+        "text": "Awesome, thanks!",
+        "time": "09:16 AM"
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "name": "Ananya Joshi",
+    "avatar": "AJ",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Ananya",
+        "text": "Are you joining the class today?",
+        "time": "10:19 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "10:21 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Ananya",
+        "text": "Thanks for the update!",
+        "time": "10:23 AM"
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "name": "Rohit Malhotra",
+    "avatar": "RM",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rohit",
+        "text": "What time is our meeting?",
+        "time": "11:26 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "11:28 AM"
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "name": "Isha Mishra",
+    "avatar": "IM",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Isha",
+        "text": "Can we discuss the project?",
+        "time": "12:33 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "12:35 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Isha",
+        "text": "That works for me.",
+        "time": "12:37 AM"
+      }
+    ]
+  },
+  {
+    "id": 101,
+    "name": "Karan Jain",
+    "avatar": "KJ",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Karan",
+        "text": "Hey, how are you?",
+        "time": "09:40 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "09:42 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Karan",
+        "text": "Great, see you soon!",
+        "time": "09:44 AM"
+      }
+    ]
+  },
+  {
+    "id": 102,
+    "name": "Pooja Agarwal",
+    "avatar": "PA",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Pooja",
+        "text": "Can you share the project notes?",
+        "time": "10:47 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "10:49 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Pooja",
+        "text": "Sounds good to me.",
+        "time": "10:51 AM"
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "name": "Sahil Rao",
+    "avatar": "SR",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sahil",
+        "text": "Are we working on the UI today?",
+        "time": "11:54 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "11:56 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Sahil",
+        "text": "We can discuss it after class.",
+        "time": "11:58 AM"
+      }
+    ]
+  },
+  {
+    "id": 104,
+    "name": "Riya Saxena",
+    "avatar": "RS",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Riya",
+        "text": "How is your preparation going?",
+        "time": "12:01 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "12:03 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Riya",
+        "text": "Okay, talk soon!",
+        "time": "12:05 AM"
+      }
+    ]
+  },
+  {
+    "id": 105,
+    "name": "Aditya Bhat",
+    "avatar": "AB",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aditya",
+        "text": "Did you finish the React assignment?",
+        "time": "09:08 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "09:10 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aditya",
+        "text": "Let me know if you need help.",
+        "time": "09:12 AM"
+      }
+    ]
+  },
+  {
+    "id": 106,
+    "name": "Nisha Nair",
+    "avatar": "NN",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Nisha",
+        "text": "Have you tested the app?",
+        "time": "10:15 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "10:17 AM"
+      }
+    ]
+  },
+  {
+    "id": 107,
+    "name": "Kabir Sethi",
+    "avatar": "KS",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Kabir",
+        "text": "Did you check the latest update?",
+        "time": "11:22 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "11:24 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Kabir",
+        "text": "Awesome, thanks!",
+        "time": "11:26 AM"
+      }
+    ]
+  },
+  {
+    "id": 108,
+    "name": "Meera Kumar",
+    "avatar": "MK",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Meera",
+        "text": "Are you joining the class today?",
+        "time": "12:29 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "12:31 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Meera",
+        "text": "Thanks for the update!",
+        "time": "12:33 AM"
+      }
+    ]
+  },
+  {
+    "id": 109,
+    "name": "Dev Chopra",
+    "avatar": "DC",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Dev",
+        "text": "What time is our meeting?",
+        "time": "09:36 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "09:38 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Dev",
+        "text": "Please send it when ready.",
+        "time": "09:40 AM"
+      }
+    ]
+  },
+  {
+    "id": 110,
+    "name": "Simran Sharma",
+    "avatar": "SS",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Simran",
+        "text": "Can we discuss the project?",
+        "time": "10:43 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "10:45 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Simran",
+        "text": "That works for me.",
+        "time": "10:47 AM"
+      }
+    ]
+  },
+  {
+    "id": 111,
+    "name": "Varun Singh",
+    "avatar": "VS",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Varun",
+        "text": "Hey, how are you?",
+        "time": "11:50 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am doing well!",
+        "time": "11:52 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Varun",
+        "text": "Great, see you soon!",
+        "time": "11:54 AM"
+      }
+    ]
+  },
+  {
+    "id": 112,
+    "name": "Tanya Verma",
+    "avatar": "TV",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Tanya",
+        "text": "Can you share the project notes?",
+        "time": "12:57 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Sure, I will share them.",
+        "time": "12:59 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Tanya",
+        "text": "Sounds good to me.",
+        "time": "12:01 AM"
+      }
+    ]
+  },
+  {
+    "id": 113,
+    "name": "Harsh Patel",
+    "avatar": "HP",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Harsh",
+        "text": "Are we working on the UI today?",
+        "time": "09:04 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I am starting in a few minutes.",
+        "time": "09:06 AM"
+      }
+    ]
+  },
+  {
+    "id": 114,
+    "name": "Aditi Mehta",
+    "avatar": "AM",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Aditi",
+        "text": "How is your preparation going?",
+        "time": "10:11 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "It is going well so far.",
+        "time": "10:13 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Aditi",
+        "text": "Okay, talk soon!",
+        "time": "10:15 AM"
+      }
+    ]
+  },
+  {
+    "id": 115,
+    "name": "Yash Gupta",
+    "avatar": "YG",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Yash",
+        "text": "Did you finish the React assignment?",
+        "time": "11:18 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Almost done, just testing it.",
+        "time": "11:20 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Yash",
+        "text": "Let me know if you need help.",
+        "time": "11:22 AM"
+      }
+    ]
+  },
+  {
+    "id": 116,
+    "name": "Kavya Kapoor",
+    "avatar": "KK",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Kavya",
+        "text": "Have you tested the app?",
+        "time": "12:25 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, it is working now.",
+        "time": "12:27 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Kavya",
+        "text": "Nice, keep me posted.",
+        "time": "12:29 AM"
+      }
+    ]
+  },
+  {
+    "id": 117,
+    "name": "Mohit Yadav",
+    "avatar": "MY",
+    "unreadCount": 0,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Mohit",
+        "text": "Did you check the latest update?",
+        "time": "09:32 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "I will check it today.",
+        "time": "09:34 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Mohit",
+        "text": "Awesome, thanks!",
+        "time": "09:36 AM"
+      }
+    ]
+  },
+  {
+    "id": 118,
+    "name": "Diya Joshi",
+    "avatar": "DJ",
+    "unreadCount": 1,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Diya",
+        "text": "Are you joining the class today?",
+        "time": "10:39 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Yes, I will be there.",
+        "time": "10:41 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Diya",
+        "text": "Thanks for the update!",
+        "time": "10:43 AM"
+      }
+    ]
+  },
+  {
+    "id": 119,
+    "name": "Rohan Malhotra",
+    "avatar": "RM",
+    "unreadCount": 2,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Rohan",
+        "text": "What time is our meeting?",
+        "time": "11:46 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Let us meet at 4 PM.",
+        "time": "11:48 AM"
+      },
+      {
+        "id": 3,
+        "sender": "Rohan",
+        "text": "Please send it when ready.",
+        "time": "11:50 AM"
+      }
+    ]
+  },
+  {
+    "id": 120,
+    "name": "Sakshi Mishra",
+    "avatar": "SM",
+    "unreadCount": 3,
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Sakshi",
+        "text": "Can we discuss the project?",
+        "time": "12:53 AM"
+      },
+      {
+        "id": 2,
+        "sender": "me",
+        "text": "Of course, let us connect.",
+        "time": "12:55 AM"
+      }
+    ]
+  }
+]
