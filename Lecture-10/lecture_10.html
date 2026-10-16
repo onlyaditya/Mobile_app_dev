@@ -287,6 +287,51 @@ pre.code{margin:0;background:var(--code-bg);border:1px solid var(--line);border-
 .bonus{margin-top:34px;font-size:25px;color:var(--muted);border:2px dashed var(--dim);border-radius:14px;padding:16px 22px}
 .bonus b{color:var(--amber)}
 
+
+/* nav types */
+.types{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:28px;justify-items:center;text-align:center}
+.ty h3{font-size:32px;margin-top:16px}
+.ty p{font-size:22px;color:var(--muted);margin-top:4px}
+.drawer{position:absolute;top:0;bottom:0;left:0;width:78%;background:#fff;z-index:28;transform:translateX(-102%);transition:transform .4s cubic-bezier(.2,.8,.2,1);padding-top:44px;box-shadow:8px 0 24px -12px rgba(0,0,0,.4)}
+.drawer.open{transform:none}
+.dim{position:absolute;inset:0;background:rgba(10,20,26,.38);opacity:0;transition:opacity .4s;z-index:27;pointer-events:none}
+.dim.open{opacity:1}
+.drawer .dh{padding:8px 16px 14px;font:800 19px var(--f-display);color:var(--ios-fg);border-bottom:1px solid var(--ios-line);margin-bottom:8px}
+.drawer .dh small{display:block;font:500 10.5px var(--f-body);color:var(--ios-muted);margin-top:3px}
+.ditem{padding:10px 16px;font:600 13px var(--f-body);color:var(--ios-fg);margin-right:14px;border-radius:0 20px 20px 0;transition:background .2s,color .2s}
+.ditem.act{background:#e6f0fd;color:var(--ios-blue)}
+.ham{color:var(--ios-fg)!important;padding-left:6px}
+.tt{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--ios-bg)}
+.tt-h{padding:42px 14px 8px;font:800 22px/1 var(--f-display);letter-spacing:-.02em;background:var(--ios-bar);color:var(--ios-fg)}
+.tt-tabs{display:flex;position:relative;background:var(--ios-bar);border-bottom:1px solid var(--ios-line)}
+.tt-tabs span{flex:1;text-align:center;padding:10px 0;font:700 12px var(--f-body);color:#8a98a1;transition:color .3s}
+.tt-tabs span.act{color:var(--ios-blue)}
+.tt-ind{position:absolute;bottom:-1px;left:0;width:33.3333%;height:3px;background:var(--ios-blue);border-radius:2px;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.tt-pager{flex:1;overflow:hidden;min-height:0}
+.tt-track{display:flex;width:300%;height:100%;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.tt-page{width:33.3333%;overflow:hidden}
+.which{display:flex;flex-direction:column;gap:14px;margin-top:26px}
+.wr{display:grid;grid-template-columns:52px 230px 1fr;align-items:center;gap:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 22px}
+.wr svg{display:block;fill:none;stroke:var(--cyan);stroke-width:2.5}
+.wr b{font:800 30px var(--f-display)}
+.wr span{font:500 26px var(--f-body);color:var(--muted)}
+
+
+/* method walkthrough */
+.wk-code{font:700 46px/1.1 var(--f-mono)!important;color:var(--cyan);letter-spacing:-.01em}
+.wk-say{font-size:27px;line-height:1.35}
+.wk-say small{display:block;font-size:22px;color:var(--muted);margin-top:4px}
+.wk-say small b{color:var(--amber)}
+.cards.short{height:300px}
+.mlist{display:flex;flex-direction:column;gap:4px}
+.mitem{appearance:none;text-align:left;background:none;border:2px solid transparent;border-radius:9px;padding:5px 12px;font:600 18px var(--f-mono);color:var(--dim);cursor:pointer}
+.mitem .fn{color:inherit}
+.mitem.done{color:var(--muted)}
+.mitem.now{background:var(--cyan-soft);border-color:var(--cyan);color:var(--fg)}
+.mitem.now .fn{color:var(--cyan)}
+.mitem:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.replay{margin-top:12px}
+
 @media (prefers-reduced-motion: reduce){
   .slide.active,.caret,.tapdot,.scr.flash,.nh.slidein,.cutflash.go,.scard.flashc,.nt.ping{animation:none!important}
   [data-at],.node,.scr,.scard,.xlist div,.mscr,.appmap path,.tree div{transition:none!important}
@@ -312,7 +357,7 @@ pre.code{margin:0;background:var(--code-bg);border:1px solid var(--line);border-
 
 <!-- ROADMAP -->
 <section class="slide" data-id="road" data-steps="1" data-name="Today's route"
-  data-notes="Stops 1–4 (amber) use only what students already know: we do it the hard way. Stop 5 is the idea that makes the rest click. Stops 5–11 (cyan) are React Navigation. Stop 11 is a stretch goal: if time runs out, everyone still leaves with a working stack. Click a node to jump to it.">
+  data-notes="Stops 1–4 (amber) use only what students already know: we do it the hard way. Stop 5 introduces the four types of navigation, then the stack-of-cards idea that makes the rest click. Stops 5–11 (cyan) are React Navigation. Stop 11 is a stretch goal: if time runs out, everyone still leaves with a working stack. Click a node to jump to it.">
   <div class="kicker"><b>Today</b> · 11 stops · code along</div>
   <h2>Today's route</h2>
   <div class="legend-row"><span class="tag a">1–4 · the hard way</span><span class="tag c">5–11 · the right way</span></div>
@@ -434,6 +479,79 @@ return &lt;ChatListScreen onOpen={setChat} /&gt;;</pre>
       </div>
     </div>
   </div>
+</section>
+
+<!-- STOP 5 · TYPES -->
+<section class="slide" data-id="types" data-steps="1" data-name="Stop 5 · Types of navigation"
+  data-notes="Before we write any navigation code, show the four patterns students already use every day. Ask them to name an app for each. Stack: going deeper and coming back (chat to profile). Bottom tabs: the main sections, always visible. Drawer: a menu that slides in from the side. Top tabs: swipe sideways between related lists. React Navigation has a navigator for each one, and they all work the same way: a Navigator with Screens inside.">
+  <div class="kicker"><b>Stop 5</b> · Types of navigation</div>
+  <h2>Four ways to move between screens</h2>
+  <div class="types">
+    <div class="ty"><div class="pw" style="--s:.66"><div class="phone" id="tyStack"></div></div><h3>Stack</h3><p>Go deeper, then back</p></div>
+    <div class="ty"><div class="pw" style="--s:.66"><div class="phone" id="tyTabs"></div></div><h3>Bottom tabs</h3><p>Jump between sections</p></div>
+    <div class="ty"><div class="pw" style="--s:.66"><div class="phone" id="tyDrawer"></div></div><h3>Drawer</h3><p>A menu from the side</p></div>
+    <div class="ty"><div class="pw" style="--s:.66"><div class="phone" id="tyTop"></div></div><h3>Top tabs</h3><p>Swipe between lists</p></div>
+  </div>
+</section>
+
+<!-- STOP 5 · DRAWER -->
+<section class="slide" data-id="drawer" data-steps="1" data-name="Stop 5 · Drawer navigator"
+  data-notes="A drawer hides a menu off the left edge. It opens with the hamburger button or a swipe from the edge. Good when an app has many sections that people don't need all the time, like Gmail's folders. Installing it also needs react-native-gesture-handler and react-native-reanimated (npx expo install @react-navigation/drawer react-native-gesture-handler react-native-reanimated). We won't build it today; the code shape is the same as the stack.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="drPhone"></div></div>
+    <div class="col">
+      <div class="head"><div class="kicker"><b>Stop 5</b> · Types of navigation</div><h2><span class="cyan">Drawer</span>: a menu that slides in</h2></div>
+      <div class="xlist good show">
+        <div><i>✓</i><span>Opens with ☰ or a swipe</span></div>
+        <div><i>✓</i><span>Good for many sections</span></div>
+        <div><i>✓</i><span>Hidden until you need it</span></div>
+      </div>
+      <div><div class="ctitle">@react-navigation/drawer</div>
+<pre class="code" data-hl>const Drawer = createDrawerNavigator();
+
+&lt;Drawer.Navigator&gt;
+  &lt;Drawer.Screen name="Chats" component={ChatsScreen} /&gt;
+  &lt;Drawer.Screen name="Starred" component={StarredScreen} /&gt;
+&lt;/Drawer.Navigator&gt;</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- STOP 5 · TOP TABS -->
+<section class="slide" data-id="top" data-steps="1" data-name="Stop 5 · Top tabs navigator"
+  data-notes="Top tabs sit under the header, and you switch by tapping a tab or swiping sideways. Good for two to four lists that belong together, like the Posts / Reels / Tagged tabs on a profile page. Install: npx expo install @react-navigation/material-top-tabs react-native-pager-view. Again, same shape: a Navigator with Screens inside.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="topPhone"></div></div>
+    <div class="col">
+      <div class="head"><div class="kicker"><b>Stop 5</b> · Types of navigation</div><h2><span class="cyan">Top tabs</span>: swipe between lists</h2></div>
+      <div class="xlist good show">
+        <div><i>✓</i><span>Tabs sit under the header</span></div>
+        <div><i>✓</i><span>Swipe left or right to switch</span></div>
+        <div><i>✓</i><span>Good for 2–4 related lists</span></div>
+      </div>
+      <div><div class="ctitle">@react-navigation/material-top-tabs</div>
+<pre class="code" data-hl>const TopTab = createMaterialTopTabNavigator();
+
+&lt;TopTab.Navigator&gt;
+  &lt;TopTab.Screen name="Chats" component={ChatsList} /&gt;
+  &lt;TopTab.Screen name="Groups" component={GroupsList} /&gt;
+&lt;/TopTab.Navigator&gt;</pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- STOP 5 · WHICH -->
+<section class="slide" data-id="which" data-steps="1" data-name="Stop 5 · Which one, when?"
+  data-notes="One rule per navigator. Real apps combine them: for example tabs at the top level, with a stack inside each tab, which is exactly what we build by the end of today. A modal (a screen sliding up from the bottom) is not a separate navigator: it's a stack screen with options={ { presentation: 'modal' } }. Today: stack first, then bottom tabs. Drawer and top tabs work the same way, so students can try them at home.">
+  <div class="kicker"><b>Stop 5</b> · Types of navigation</div>
+  <h2>Which one, when?</h2>
+  <div class="which">
+    <div class="wr"><svg width="52" height="52" viewBox="0 0 52 52"><rect x="16" y="5" width="26" height="34" rx="4"/><rect x="9" y="12" width="26" height="34" rx="4" fill="var(--panel)"/></svg><b>Stack</b><span>Go deeper: list → detail</span></div>
+    <div class="wr"><svg width="52" height="52" viewBox="0 0 52 52"><rect x="12" y="4" width="28" height="44" rx="5"/><path d="M12 37h28"/><circle cx="19" cy="42.5" r="1.6" fill="var(--cyan)"/><circle cx="26" cy="42.5" r="1.6" fill="var(--cyan)"/><circle cx="33" cy="42.5" r="1.6" fill="var(--cyan)"/></svg><b>Bottom tabs</b><span>3–5 main sections, always visible</span></div>
+    <div class="wr"><svg width="52" height="52" viewBox="0 0 52 52"><rect x="12" y="4" width="28" height="44" rx="5"/><rect x="12" y="4" width="17" height="44" rx="5" fill="var(--cyan-soft)"/></svg><b>Drawer</b><span>Many sections, used less often</span></div>
+    <div class="wr"><svg width="52" height="52" viewBox="0 0 52 52"><rect x="12" y="4" width="28" height="44" rx="5"/><path d="M12 17h28"/><path d="M15 17h9" stroke-width="5"/></svg><b>Top tabs</b><span>Related lists you swipe between</span></div>
+  </div>
+  <p class="callout" style="margin-top:26px">Real apps mix them. Today: <span class="cyan">Stack</span> first, then <span class="cyan">Tabs</span>.</p>
 </section>
 
 <!-- STOP 5 -->
@@ -581,6 +699,26 @@ return &lt;ChatListScreen onOpen={setChat} /&gt;;</pre>
   </div>
 </section>
 
+<!-- STOP 10 · WALKTHROUGH -->
+<section class="slide" data-id="walk" data-steps="7" data-name="Stop 10 · Each method, step by step"
+  data-notes="Press → to go through one method per step. Each step starts from a ready-made stack, waits a moment so students can see the 'before', then runs the method. Ask before each one: what will the stack look like after this? Step 2 is the surprise: navigate to the screen you are already on does not add a card. Step 7: after replace, goBack skips the replaced screen. Use ▶ Replay to run a step again, or click any method in the list to jump to it. The next slide is the free playground.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="wkPhone"></div></div>
+    <div class="col" style="gap:16px">
+      <div class="head"><div class="kicker"><b>Stop 10</b> · Method <span id="wkNum">1</span> of 7</div><h2 class="wk-code" id="wkCode">navigate('Chat')</h2></div>
+      <p class="wk-say" id="wkSay"></p>
+      <div class="svz" id="wkViz">
+        <div><div class="cards-cap"><b>top card</b> = on screen</div><div class="cards short" data-role="cards"></div></div>
+        <div>
+          <div class="mlist" id="wkList"></div>
+          <button class="op reset replay" id="wkReplay">▶ Replay</button>
+          <div class="slog" data-role="log"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- STOP 10 -->
 <section class="slide" data-id="mt" data-steps="1" data-name="Stop 10 · Moving around the stack"
   data-notes="First: register a Profile screen in App.js and add a 'View profile' Button on ChatScreen that calls navigation.navigate('Profile', { chatId }). Then play with the buttons. navigate: go to a screen; if already on it, only update params. push: always add a card. goBack: pop one. popTo: pop back to an earlier screen by name. popToTop: back to the first screen. replace: swap the top card, no way back to it. In React Navigation 7, navigate no longer jumps back to an older screen; use popTo.">
@@ -697,7 +835,7 @@ return &lt;ChatListScreen onOpen={setChat} /&gt;;</pre>
 <div class="bar">
   <button class="btn" id="prevBtn" aria-label="Previous">←</button>
   <button class="btn" id="nextBtn" aria-label="Next">→</button>
-  <span class="count" id="count">1/19</span>
+  <span class="count" id="count">1/24</span>
   <span class="title" id="barTitle"></span>
   <div class="prog" id="prog"></div>
   <button class="btn hide-sm" id="notesBtn">Notes</button>
@@ -797,7 +935,7 @@ H.title={step(){const loop=()=>{tNav.reset(sList());
   later(loop,9800);};loop();}};
 
 /* roadmap */
-const STOPS=[["The problem",2],["Pressable",3],["One file each",4],["useState",5],["Stack of cards",7],["Install",8],["First stack",10],["navigate()",11],["Params",13],["Move around",14],["Bottom tabs",15]];
+const STOPS=[["The problem",2],["Pressable",3],["One file each",4],["useState",5],["Nav types",7],["Install",12],["First stack",14],["navigate()",15],["Params",17],["Move around",18],["Bottom tabs",20]];
 const road=document.getElementById('road'),rp=document.getElementById('roadPath'),rd=document.getElementById('roadDraw');
 const PTS=[];for(let i=0;i<6;i++)PTS.push([92+i*197,60]);for(let j=0;j<5;j++)PTS.push([1077-j*246,290]);
 let dpath=`M${PTS[0][0]},${PTS[0][1]}`;for(let i=1;i<6;i++)dpath+=` L${PTS[i][0]},${PTS[i][1]}`;
@@ -956,6 +1094,88 @@ H.tabs={step(){tDemo();}};
 function tabPhone(id,double){const s=phone(document.getElementById(id),{tabs:true});new Nav(s.querySelectorAll('.host')[0]).reset(sList({double}));}
 tabPhone('dblA',true);tabPhone('dblB',false);
 H.tabc={};
+
+/* nav types */
+const HAM='<svg width="18" height="14" viewBox="0 0 18 14"><path d="M1 1h16M1 7h16M1 13h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+function stackRig(id){const n=newNav(id);const loop=()=>{n.reset(sList());later(()=>tapRow(n,0),500);later(()=>n.push(sChat(chat(0))),750);later(()=>n.push(sProfile(chat(0),'Priya')),2000);later(()=>n.pop(),3300);later(()=>n.pop(),4300);later(loop,5300);};return{start:loop};}
+function tabsRig(id){const sc=phone(document.getElementById(id),{tabs:true});const hs=sc.querySelectorAll('.host');const a=new Nav(hs[0]),b=new Nav(hs[1]);const btns=sc.querySelectorAll('.tabbar button');
+  let t=0;const sw=x=>{t=x;hs[0].hidden=x!==0;hs[1].hidden=x!==1;btns.forEach((q,j)=>q.classList.toggle('act',j===x));};
+  const loop=()=>{later(()=>tapEl(a,btns[1-t]),700);later(()=>sw(1-t),900);later(loop,2300);};
+  return{start(){a.reset(sList({rows:8}));b.reset(sSettings());sw(0);loop();}};}
+function drawerRig(id){const nav=newNav(id);const scr=nav.screen;
+  const dim=document.createElement('div');dim.className='dim';const dr=document.createElement('div');dr.className='drawer';
+  const ITEMS=['Chats','Starred','Archived','Settings'];
+  dr.innerHTML='<div class="dh">Aadi<small>aadi@college.edu</small></div>'+ITEMS.map(t=>`<div class="ditem">${t}</div>`).join('');
+  scr.append(dim,dr);
+  const ROWS={Chats:[0,1,2,3,4,5,6,7,8],Starred:[3,6],Archived:[7,9],Settings:[]};
+  const page=t=>`<div class="nh"><span class="nb ham">${HAM}</span><span class="nt">${t}</span><span class="nr"></span></div><div class="body">${ROWS[t].map(i=>rowHTML(chat(i))).join('')}${t==='Settings'?'<div class="prow">Account</div><div class="prow">Privacy</div><div class="prow">Notifications</div><div class="prow">Help</div>':''}</div>`;
+  const open=o=>{dr.classList.toggle('open',o);dim.classList.toggle('open',o);};
+  const select=t=>dr.querySelectorAll('.ditem').forEach(d=>d.classList.toggle('act',d.textContent===t));
+  const seq=['Starred','Settings','Chats'];let k=0;
+  const loop=()=>{const t=seq[k++%seq.length];
+    later(()=>{const h=nav.top().querySelector('.ham');h&&tapEl(nav,h);},600);
+    later(()=>open(true),800);
+    later(()=>{const it=[...dr.querySelectorAll('.ditem')].find(d=>d.textContent===t);it&&tapEl(nav,it);select(t);},1900);
+    later(()=>{open(false);nav.reset(page(t));},2200);
+    later(loop,3600);};
+  return{start(){open(false);select('Chats');nav.reset(page('Chats'));k=0;loop();}};}
+function topRig(id){const scr=phone(document.getElementById(id));const host=scr.querySelector('.host');
+  const T=['Chats','Groups','Calls'];
+  const calls=[['↙ Missed call · 10:05',1],['↗ Outgoing · 09:12',4],['↙ Incoming · Yesterday',0],['↙ Missed call · Mon',5]];
+  const pages=[[0,1,3,4,5,6,8,9].map(i=>rowHTML(chat(i))).join(''),
+    [2,7].map(i=>rowHTML(chat(i))).join('')+rowHTML({...chat(8),name:'Capstone Team 7',message:'Ishita: standup at 4'}),
+    calls.map(([m,i])=>rowHTML({...chat(i),message:m,time:'',unread:0})).join('')];
+  host.innerHTML=`<div class="tt"><div class="tt-h">Messages</div><div class="tt-tabs">${T.map(t=>`<span>${t}</span>`).join('')}<i class="tt-ind"></i></div><div class="tt-pager"><div class="tt-track">${pages.map(p=>`<div class="tt-page">${p}</div>`).join('')}</div></div></div>`;
+  const tabs=[...host.querySelectorAll('.tt-tabs span')],ind=host.querySelector('.tt-ind'),track=host.querySelector('.tt-track');
+  let i=0;const show=x=>{i=x;tabs.forEach((t,j)=>t.classList.toggle('act',j===x));ind.style.transform=`translateX(${x*100}%)`;track.style.transform=`translateX(${-x*33.3333}%)`;};
+  const swipe=()=>{if(!D)return;const d=dot(scr,170,300,'swipedot');d.animate([{transform:'translateX(0)'},{transform:'translateX(-120px)'}],{duration:500,easing:'ease-in-out'}).onfinish=()=>d.remove();};
+  const loop=()=>{const nx=(i+1)%3;
+    if(nx>0)later(swipe,500);else later(()=>tapEl({screen:scr},tabs[0]),700);
+    later(()=>show(nx),nx>0?750:900);later(loop,2400);};
+  return{start(){show(0);loop();}};}
+const tyS=stackRig('tyStack'),tyT=tabsRig('tyTabs'),tyD=drawerRig('tyDrawer'),tyP=topRig('tyTop');
+const drR=drawerRig('drPhone'),topR=topRig('topPhone');
+H.types={step(){tyS.start();tyT.start();tyD.start();tyP.start();}};
+H.drawer={step(){drR.start();}};
+H.top={step(){topR.start();}};
+
+/* method walkthrough */
+StackViz.prototype.build=function(names){
+  this.cards.innerHTML='';this.items=[];this.n=0;
+  this.nav.host.querySelectorAll('.scr').forEach(e=>e.remove());this.nav.st=[];
+  let prev=null;
+  names.forEach(name=>{
+    const it={name,chat:name==='Chat'?this.nextChat():name==='Profile'?((prev&&prev.chat)||chat(0)):null};
+    this.addCard(it,false);
+    this.nav._add(this.screenFor(it,prev),false);
+    const st=this.nav.st;if(st.length>1)st[st.length-2].classList.add('under');
+    prev=it;});
+};
+const METHODS=[
+ {label:"navigate('Chat')",code:"navigate('Chat')",start:['Chats'],op:['navigate','Chat'],say:'Opens a screen: adds a card on top.',when:'Tapping a chat in the list.'},
+ {label:"navigate('Chat') again",code:"navigate('Chat')",start:['Chats','Chat'],op:['navigate','Chat'],say:'Already on Chat? <b class="coral">No new card.</b> Only the params change.',when:'Updating the screen you are on.'},
+ {label:"push('Chat')",code:"push('Chat')",start:['Chats','Chat'],op:['push','Chat'],say:'Always adds a new card, even for the same screen.',when:'Opening another chat from inside a chat.'},
+ {label:"goBack()",code:"goBack()",start:['Chats','Chat','Profile'],op:['goBack'],say:'Removes the top card.',when:'A custom Back or Cancel button.'},
+ {label:"popTo('Chats')",code:"popTo('Chats')",start:['Chats','Chat','Chat','Profile'],op:['popTo','Chats'],say:'Removes cards until it reaches that screen.',when:'A "Done" button after a few steps.'},
+ {label:"popToTop()",code:"popToTop()",start:['Chats','Chat','Profile'],op:['popToTop'],say:'Goes straight back to the first card.',when:'Tapping the current tab again.'},
+ {label:"replace('Profile')",code:"replace('Profile')",start:['Chats','Chat'],op:['replace','Profile'],then:true,say:'Swaps the top card. Back skips the old one.',when:'Login → Home: no going back to login.'}
+];
+const wkViz=new StackViz(document.getElementById('wkViz'),'wkPhone');
+const wkList=document.getElementById('wkList');
+wkList.innerHTML=METHODS.map((m,i)=>{const k=m.label.indexOf('(');return `<button class="mitem" data-i="${i}"><span class="fn">${m.label.slice(0,k)}</span>${esc(m.label.slice(k))}</button>`;}).join('');
+wkList.querySelectorAll('.mitem').forEach(b=>b.addEventListener('click',()=>go(cur,+b.dataset.i+1)));
+document.getElementById('wkReplay').addEventListener('click',()=>runStep());
+H.walk={step(n){const m=METHODS[n-1];
+  document.getElementById('wkNum').textContent=n;
+  const k=m.code.indexOf('(');
+  document.getElementById('wkCode').innerHTML=`${m.code.slice(0,k)}<span style="color:var(--fg)">${esc(m.code.slice(k))}</span>`;
+  document.getElementById('wkSay').innerHTML=`${m.say}<small><b>Use it for:</b> ${esc(m.when)}</small>`;
+  wkList.querySelectorAll('.mitem').forEach((b,i)=>{b.classList.toggle('now',i===n-1);b.classList.toggle('done',i<n-1);});
+  wkViz.build(m.start);
+  wkViz.log(`Before: <b>${m.start.join(' → ')}</b>`);
+  later(()=>wkViz.run(...m.op),1300);
+  if(m.then)later(()=>{wkViz.run('goBack');wkViz.log('Then <b class="cyan">goBack</b>: straight to <b>Chats</b>. Chat is gone.');},3400);
+}};
 
 /* ---------- engine ---------- */
 const slides=[...document.querySelectorAll('.slide')];
