@@ -3,8 +3,8 @@ import ChatItem from "../components/ChatItem";
 import initalChat from "../data/chats.json";
 import { useState } from "react";
 
-const ChatList = () => {
-  const [chats, setChats] = useState(initalChat)
+const ChatList = ({ navigation }) => {
+  const [chats, setChats] = useState(initalChat);
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Chats</Text>
@@ -13,7 +13,7 @@ const ChatList = () => {
         data={chats}
         renderItem={({ item }) => {
           return (
-            <Pressable onPress={() => selectChat(item)}>
+            <Pressable onPress={() => navigation.navigate("Single Chat", {chat: item})}>
               <ChatItem chat={item} />
             </Pressable>
           );

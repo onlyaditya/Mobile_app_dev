@@ -1,6 +1,7 @@
 import { View, Text, FlatList, StyleSheet } from "react-native";
 
-export default function IndividualChat({ chat }) {
+export default function IndividualChat({route}) {
+  const chat = route.params.chat;
   return (
     <View style={styles.container}>
       <View style={styles.header}>

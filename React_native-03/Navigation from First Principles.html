@@ -332,6 +332,54 @@ pre.code{margin:0;background:var(--code-bg);border:1px solid var(--line);border-
 .mitem:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
 .replay{margin-top:12px}
 
+
+/* combining navigators */
+.need{display:flex;flex-direction:column;gap:12px}
+.need div{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 18px;font:600 23px var(--f-body)}
+.need code{font:700 21px var(--f-mono);color:var(--cyan)}
+.srcrow{display:flex;gap:12px;flex-wrap:wrap;min-height:46px;margin-top:18px}
+.flyc{position:absolute;z-index:70;pointer-events:none}
+
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+.bin{border:2px dashed var(--line);border-radius:16px;padding:16px 18px;min-height:250px;background:var(--panel)}
+.bin h3{font-size:28px} .bin p{font-size:19px;color:var(--muted);margin:2px 0 14px}
+.bin .got{display:flex;flex-wrap:wrap;gap:10px}
+.bin.sw{border-color:rgba(176,102,0,.5)} .bin.st{border-color:rgba(10,132,121,.5)}
+.schip{display:inline-block;font:700 20px var(--f-mono);padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:var(--panel);white-space:nowrap}
+.schip.sw{border-color:var(--amber);background:var(--amber-soft)} .schip.st{border-color:var(--cyan);background:var(--top-card)}
+.qline{font:700 26px var(--f-body);margin-top:6px}
+.tree4{position:relative;width:1168px;height:400px;margin-top:8px}
+.tree4 svg{position:absolute;inset:0}
+.tree4 line{stroke:var(--line);stroke-width:3}
+.tree4 line.on{stroke:var(--cyan);stroke-width:5}
+.tree4 .tn3{min-width:150px;font-size:19px}
+.tn3.sw{border-color:rgba(176,102,0,.6);background:var(--amber-soft)}
+.tn3.st{border-color:rgba(10,132,121,.6)}
+.tn3.hot{border-color:var(--cyan)!important;background:var(--top-card)!important;box-shadow:0 0 0 4px var(--cyan-soft)}
+.anno{position:absolute;font:700 16px var(--f-mono);color:var(--muted);white-space:nowrap}
+.anno b{color:var(--amber)} .anno i{font-style:normal;color:var(--cyan)}
+.evt{display:inline-flex;align-items:center;gap:12px;font:700 22px var(--f-mono);background:var(--code-bg);border:2px solid var(--line);border-radius:12px;padding:10px 16px}
+.rpulse{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:var(--amber);box-shadow:0 0 14px var(--amber);z-index:5}
+.mtree{font:600 19px var(--f-mono);color:var(--muted);margin-top:12px;text-align:center}
+.mtree b{color:var(--fg)}
+
+
+/* whatsapp-like phone + builds */
+.tn3[data-at]{transform:translate(-50%,-50%) translateY(14px)}
+.tn3[data-at].on{transform:translate(-50%,-50%)}
+.wbar{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;border-top:1px solid var(--ios-line);background:var(--ios-bar);z-index:25;padding-bottom:12px;box-sizing:border-box}
+.wbar button{flex:1;appearance:none;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:600 8.5px var(--f-body);color:#7b8a93;padding:0;transition:color .2s}
+.wbar button.act{color:#128c4a}
+.wbar button.act svg{background:#d8f3e1;border-radius:10px}
+.wbar svg{width:30px;height:18px;padding:2px 0;display:block}
+.wsec{display:flex;flex-direction:column;gap:12px}
+.wsec div{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:14px;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:12px 18px;font:600 23px var(--f-body);transition:all .3s}
+.wsec div b{font:700 15px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:6px}
+.wsec div.a b{background:var(--amber-soft);color:var(--amber)} .wsec div.c b{background:var(--cyan-soft);color:var(--cyan)}
+.wsec div.a.lit{border-color:var(--amber);background:var(--amber-soft)} .wsec div.c.lit{border-color:var(--cyan);background:var(--top-card)}
+.secl{font:700 10px var(--f-body);color:var(--ios-muted);padding:10px 12px 4px;text-transform:uppercase;letter-spacing:.05em}
+.tcap{font:700 24px var(--f-body);min-height:34px;margin-top:6px}
+
 @media (prefers-reduced-motion: reduce){
   .slide.active,.caret,.tapdot,.scr.flash,.nh.slidein,.cutflash.go,.scard.flashc,.nt.ping{animation:none!important}
   [data-at],.node,.scr,.scard,.xlist div,.mscr,.appmap path,.tree div{transition:none!important}
@@ -402,7 +450,7 @@ pre.code{margin:0;background:var(--code-bg);border:1px solid var(--line);border-
 .swb.act{border-color:var(--cyan);background:var(--top-card)}
 .minis3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center;text-align:center}
 .minis3 p{font:600 18px var(--f-body);margin-top:6px}
-.tree3{position:relative;width:1168px;height:330px;margin-top:6px}
+.tree3{position:relative;width:1168px;height:330px;margin-top:28px}
 .tree3 svg{position:absolute;inset:0}
 .tree3 line{stroke:var(--line);stroke-width:3;transition:stroke .3s,stroke-width .3s}
 .tree3 line.on{stroke:var(--cyan);stroke-width:5}
@@ -445,6 +493,65 @@ pre.code{margin:0;background:var(--code-bg);border:1px solid var(--line);border-
 .recap3 .rc{min-height:300px}
 .fp-title{font-size:96px!important}
 
+/* ---------- back-bench sizes (override) ---------- */
+.kicker{font-size:20px}
+h2{font-size:56px}
+.lead{font-size:31px}
+pre.code{font-size:20px}
+.codestack .lbl,.ctitle,.cap{font-size:17px}
+.principle{font-size:33px}
+.principle small{font-size:23px}
+.xlist div{font-size:31px}
+.cp{font-size:23px} .cp b{font-size:16px}
+.tag{font-size:16px}
+.op{font-size:19px}
+.slog{font-size:24px}
+.need div{font-size:25px} .need code{font-size:23px}
+.tn3{font-size:22px} .tn3 small{font-size:15px}
+.tree4 .tn3{font-size:21px}
+.anno{font-size:18px}
+.q h3{font-size:27px} .q p{font-size:21px}
+.pt td{font-size:18px} .pt td:first-child{font-size:24px} .pt th{font-size:17px}
+.mr .req{font-size:25px} .mr code{font-size:22px}
+.readout{font-size:21px}
+.sbox.sm{font-size:23px}
+.rules span{font-size:23px}
+.cards-cap{font-size:17px}
+.scard b{font-size:25px} .scard span{font-size:17px}
+.wsec div{font-size:25px} .wsec div b{font-size:16px}
+.pbox{font-size:37px} .pbox small{font-size:23px}
+.comp{font-size:26px} .comp small{font-size:21px}
+.sp h3{font-size:30px} .sp p{font-size:21px}
+.msop{font-size:23px}
+.mcard{font-size:21px}
+.ibox{font-size:25px} .ibox small{font-size:19px}
+.sc h3{font-size:26px}
+.shp p{font-size:22px}
+.bin h3{font-size:30px} .bin p{font-size:21px}
+.schip{font-size:22px}
+.qline{font-size:28px}
+.evt{font-size:24px}
+.mtree{font-size:21px}
+.steps div{font-size:32px}
+.ty h3{font-size:34px} .ty p{font-size:24px}
+.minis3 p{font-size:20px}
+.term .tbody{font-size:21px}
+/* persistence */
+.mrow{font-size:23px}
+.membox h4{font-size:17px}
+.snode{font-size:22px}
+.sarr b{font-size:19px}
+.locker b{font-size:22px} .locker span{font-size:19px}
+.req{font-size:24px} .req code{font-size:23px}
+.lane2 > b{font-size:25px} .lane2 > b small{font-size:18px}
+.status{font-size:27px}
+.shelf h3{font-size:28px} .shelf p{font-size:20px}
+.chip2{font-size:20px}
+.bug h3{font-size:27px} .bug pre{font-size:18px} .bug .res,.bug .fix{font-size:19px}
+.dbc h3{font-size:28px} .dbc pre{font-size:17px} .dbc .lbl2{font-size:19px}
+.dbrows div{font-size:17px}
+.lane .ll{font-size:20px}
+.pt td{word-break:normal} .pt td:first-child{width:130px}
 </style>
 
 <div class="viewport" id="vp"><div class="holder" id="holder"><div id="stage">
@@ -578,6 +685,32 @@ export default function App() {
   <div class="cp" data-at="2" style="bottom:14px">The list shows under a "Chats" header</div>
 </section>
 
+<!-- 8b OPEN -->
+<section class="slide" data-id="open" data-steps="3" data-name="Code-along · Tap a chat to open it"
+  data-notes="Step 1: because ChatList is registered as a screen, the stack hands it a navigation object. Think of it as the remote control for the history list. Step 2: navigate('Chat') means 'add Chat to the history'. The string must match a Stack.Screen name exactly; a typo gives a 'not handled by any navigator' error, worth showing on purpose. If the Pressable lives in a separate row component, that component is not a screen, so use const navigation = useNavigation() there. Step 3: going back means removing from the history. The header's back button, the iOS swipe and Android back already call it for us; goBack() is for our own buttons. Notice the chat screen doesn't know WHICH chat was tapped yet. Students can temporarily show placeholder text in IndividualChat. That gap is requirement 7, later.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="openPhone"></div></div>
+    <div class="col" style="gap:16px">
+      <div class="head"><div class="kicker"><b>Code-along</b> · ChatList.js</div><h2>Tap a chat <span class="cyan">to open it</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · every screen receives navigation</div>
+<pre class="code" data-hl data-at="1">export default function ChatList({ navigation }) {</pre>
+        <div class="lbl">2 · tap = add to the history</div>
+<pre class="code" data-hl data-at="2">renderItem={({ item }) =&gt; (
+  &lt;Pressable onPress={() =&gt; navigation.navigate("Chat")}&gt;
+    {/* row UI */}
+  &lt;/Pressable&gt;
+)}</pre>
+        <div class="lbl">3 · back = remove from the history</div>
+<pre class="code" data-hl data-at="3">navigation.goBack();  // the header ‹ already does this</pre>
+      </div>
+      <div><div class="cap">history</div><div class="arr" id="openArr"></div></div>
+      <div class="opline" id="openOp"></div>
+    </div>
+  </div>
+  <div class="cp" data-at="2" style="bottom:14px">Tap a chat: a new screen slides in</div>
+</section>
+
 <!-- 9 MISSING -->
 <section class="slide" data-id="missing" data-steps="1" data-name="Last class's version: what was missing?"
   data-notes="Recall the useState version from last class. Scroll down the list, open a chat, come back: the list jumps to the top. No animation. Android's back button closes the app. iOS edge-swipe does nothing. Each of these is a new requirement, and each one is something the library we just installed has to solve. The next slides take them one by one; students can check each on their own phone with the library version.">
@@ -695,7 +828,7 @@ export default function App() {
       <line id="eList" x1="300" y1="176" x2="120" y2="254"/><line id="eChat" x1="300" y1="176" x2="300" y2="254"/><line id="eProf" x1="300" y1="176" x2="480" y2="254"/>
       <line id="eSet" x1="870" y1="176" x2="780" y2="254"/><line id="ePriv" x1="870" y1="176" x2="960" y2="254"/>
     </svg>
-    <div class="tn3 on" id="tRoot" style="left:584px;top:30px"><small>switch</small>Tabs</div>
+    <div class="tn3 on" id="tRoot" style="left:584px;top:30px"><small>switch</small>Bottom tabs</div>
     <div class="tn3" id="tC" style="left:300px;top:150px"><small>stack</small>Chats</div>
     <div class="tn3" id="tS" style="left:870px;top:150px"><small>stack</small>Settings</div>
     <div class="tn3" id="tList" style="left:120px;top:280px">ChatList</div>
@@ -822,10 +955,10 @@ const chat = chats.find((c) =&gt; c.id === chatId);</pre>
   <table class="pt">
     <thead><tr><th>Idea</th><th>Web</th><th>iOS</th><th>Android</th><th>Flutter</th><th class="rn">React Native</th></tr></thead>
     <tbody>
-      <tr data-at="1"><td>Open</td><td>history.pushState</td><td>pushViewController</td><td>navigate()</td><td>Navigator.push</td><td class="rn">navigate()</td></tr>
-      <tr data-at="2"><td>Back</td><td>history.back</td><td>popViewController</td><td>popBackStack()</td><td>Navigator.pop</td><td class="rn">goBack()</td></tr>
+      <tr data-at="1"><td>Open</td><td>history.<wbr>pushState</td><td>push<wbr>ViewController</td><td>navigate()</td><td>Navigator.<wbr>push</td><td class="rn">navigate()</td></tr>
+      <tr data-at="2"><td>Back</td><td>history.back</td><td>pop<wbr>ViewController</td><td>popBackStack()</td><td>Navigator.<wbr>pop</td><td class="rn">goBack()</td></tr>
       <tr data-at="3"><td>Inputs</td><td>the URL /chat/1</td><td>properties</td><td>arguments</td><td>constructor args</td><td class="rn">route.params</td></tr>
-      <tr data-at="4"><td>Sections</td><td>top-level URLs</td><td>UITabBarController</td><td>BottomNavigationView</td><td>BottomNavigationBar</td><td class="rn">Tab.Navigator</td></tr>
+      <tr data-at="4"><td>Sections</td><td>top-level URLs</td><td>UITabBar<wbr>Controller</td><td>BottomNavigation<wbr>View</td><td>BottomNavigation<wbr>Bar</td><td class="rn">BottomTab.<wbr>Navigator</td></tr>
     </tbody>
   </table>
   <p class="principle" style="margin-top:26px">Learn the ideas once. Look up the names when you switch.</p>
@@ -841,28 +974,167 @@ const chat = chats.find((c) =&gt; c.id === chatId);</pre>
     <div class="mr" data-at="2"><div class="req">A possible destination</div><i class="ar"></i><code>&lt;Stack.Screen name="Chat" … /&gt;</code></div>
     <div class="mr" data-at="3"><div class="req">Open, with inputs</div><i class="ar"></i><code>navigation.navigate("Chat", { chatId })</code></div>
     <div class="mr" data-at="4"><div class="req">Read the inputs</div><i class="ar"></i><code>route.params.chatId</code></div>
-    <div class="mr" data-at="5"><div class="req">Sections</div><i class="ar"></i><code>&lt;Tab.Navigator&gt;</code></div>
+    <div class="mr" data-at="5"><div class="req">Sections</div><i class="ar"></i><code>&lt;BottomTab.Navigator&gt;</code></div>
   </div>
 </section>
 
-<!-- 24 CODE 3 -->
-<section class="slide" data-id="code3" data-steps="1" data-name="Stretch · Sections in code"
-  data-notes="Stretch goal. A switch of stacks: the Chats tab holds our stack, wrapped in its own function; Settings is a second tab. headerShown: false on the tab that contains a stack, otherwise both draw a header. Install with npx expo install @react-navigation/bottom-tabs.">
+<!-- T1 WHATSAPP -->
+<section class="slide" data-id="grow" data-steps="2" data-name="Combining · Look at WhatsApp"
+  data-notes="Use an app every student has open. On Android, WhatsApp has a fixed bar at the bottom: Chats, Updates (Status and Channels live here), Communities, Calls. Watch the phone and name the two kinds of movement as they happen. Tapping a tab jumps sideways to another section, and nothing is 'deeper'. Tapping a chat goes deeper: it slides in over everything, the bar disappears, and Back brings you out again. Step 2: two kinds of movement means two navigators working together: a switch for the sections, a stack for going deeper.">
   <div class="split">
-    <div class="pw" style="--s:1.22"><div class="phone" id="c3Phone"></div></div>
+    <div class="pw" style="--s:1.22"><div class="phone" id="grPhone"></div></div>
     <div class="col">
-      <div class="head"><div class="kicker"><b>Stretch</b> · Requirement 6 in code</div><h2>A switch of stacks</h2></div>
-<pre class="code" data-hl>&lt;Tab.Navigator&gt;
-  &lt;Tab.Screen
-    name="ChatsTab"
-    component={ChatsStack}
-    options={{ headerShown: false }}
-  /&gt;
-  &lt;Tab.Screen name="Settings" component={Settings} /&gt;
-&lt;/Tab.Navigator&gt;</pre>
-      <p class="principle">Tab.Navigator = the switch. ChatsStack = a stack inside it.</p>
+      <div class="head"><div class="kicker"><b>Combining navigators</b> · Look at WhatsApp</div><h2>Watch how you move<br><span class="cyan">around WhatsApp</span></h2></div>
+      <div class="wsec" id="grSec">
+        <div class="a"><b>sideways</b><span>Tap a tab: jump to another section</span></div>
+        <div class="c"><b>deeper</b><span>Tap a chat: it slides in, the bar hides</span></div>
+      </div>
+      <p class="principle" data-at="2">Two kinds of movement → two navigators.<small>A <b class="amber">switch</b> for the sections, a <b class="cyan">stack</b> for going deeper.</small></p>
     </div>
   </div>
+</section>
+
+<!-- T2 SORT -->
+<section class="slide" data-id="sort" data-steps="1" data-name="Combining · One question per screen"
+  data-notes="Design rule: for every screen, ask one question. Can I jump here any time, from the bottom bar? Then it's a section: it goes in the switch. Is it opened from something else, with a way back? Then it's deeper: it goes in the stack. Ask the class to call out each answer before the chip lands. Every WhatsApp screen fits one of the two.">
+  <div class="kicker"><b>Combining navigators</b> · One question per screen</div>
+  <h2>Ask one question <span class="cyan">per screen</span></h2>
+  <p class="qline">"Can I jump here any time, or is it opened from somewhere?"</p>
+  <div class="srcrow" id="sortSrc" style="min-height:52px"></div>
+  <div class="bins">
+    <div class="bin sw" id="binSw"><h3 class="amber">Jump any time → switch</h3><p>sections in the bottom bar</p><div class="got"></div></div>
+    <div class="bin st" id="binSt"><h3 class="cyan">Opened from somewhere → stack</h3><p>deeper screens, with a way back</p><div class="got"></div></div>
+  </div>
+</section>
+
+<!-- T3 ARCH -->
+<section class="slide" data-id="arch" data-steps="3" data-name="Combining · Build the tree, one step at a time"
+  data-notes="Build it on the board in the same three steps. Step 1: the four sections become one switch, the bottom tabs. Call it HomeTabs; it owns the tab bar. Step 2: the deeper screens, Chat and Contact info, go in a stack. Where does the switch go? It becomes the first screen of that stack. The stack is now the root, and it owns the header and the history. Step 3: opening a chat pushes Chat onto the root stack, on top of HomeTabs, which is exactly why WhatsApp's bar disappears inside a chat. Every screen belongs to exactly one navigator.">
+  <div class="kicker"><b>Combining navigators</b> · Architecture</div>
+  <h2>Build the tree <span class="cyan">one step at a time</span></h2>
+  <div class="tcap" id="archCap"></div>
+  <div class="tree4" id="arTree" style="height:380px">
+    <svg width="1168" height="380" viewBox="0 0 1168 380"></svg>
+    <div class="tn3 st" id="aStack" data-at="2" style="left:584px;top:36px"><small>stack · root</small>Stack</div>
+    <div class="anno" data-at="2" style="left:680px;top:20px">owns <i>the header</i> and <i>the history</i></div>
+    <div class="tn3 sw" id="aHome" style="left:330px;top:170px"><small>switch</small>HomeTabs</div>
+    <div class="anno" style="left:430px;top:200px">owns <b>the tab bar</b></div>
+    <div class="tn3" id="aChat" data-at="2" style="left:760px;top:170px">Chat</div>
+    <div class="tn3" id="aInfo" data-at="2" style="left:960px;top:170px">Contact info</div>
+    <div class="tn3" id="aChats" style="left:100px;top:320px">Chats</div>
+    <div class="tn3" id="aUpd" style="left:260px;top:320px">Updates</div>
+    <div class="tn3" id="aCom" style="left:420px;top:320px">Communities</div>
+    <div class="tn3" id="aCalls" style="left:580px;top:320px">Calls</div>
+  </div>
+</section>
+
+<!-- T4 NEST -->
+<section class="slide" data-id="nest" data-steps="1" data-name="Combining · Which one goes outside?"
+  data-notes="The tree we just built has the stack outside: that's B, and it's how WhatsApp behaves, because a chat covers the bar. The other valid tree, A, puts the bottom tabs outside and a stack inside each tab: then a chat opens inside the tab and the bar stays visible. Neither is wrong. One design question decides the code: should the bar stay visible when you go deeper?">
+  <div class="cmp">
+    <div class="pair">
+      <div><div class="phlabel"><span class="tag a">A · bar stays</span></div><div class="pw"><div class="phone" id="nestA"></div></div><p class="mtree"><b>BottomTabs</b> › Stack › Chat</p></div>
+      <div><div class="phlabel"><span class="tag c">B · bar hides (WhatsApp)</span></div><div class="pw"><div class="phone" id="nestB"></div></div><p class="mtree"><b>Stack</b> › HomeTabs, Chat</p></div>
+    </div>
+    <div class="col">
+      <div class="head"><div class="kicker"><b>Combining navigators</b> · Nesting order</div><h2>Which navigator<br>goes <span class="cyan">outside?</span></h2></div>
+      <div class="need">
+        <div><span>A · bar stays when you go deeper</span><code>Tabs outside</code></div>
+        <div><span>B · deeper screens cover the bar</span><code>Stack outside</code></div>
+      </div>
+      <p class="principle">Should the bar stay when you go deeper?<small>Answer that, and the nesting follows.</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- T5 ROUTE -->
+<section class="slide" data-id="route" data-steps="4" data-name="Combining · Who handles an action?"
+  data-notes="One event per step, on the WhatsApp tree. Step 1: tapping the Updates tab is handled by HomeTabs, the switch. Step 2: ChatList calls navigate('Chat'). It lives inside HomeTabs, and HomeTabs has no screen called Chat, so the action goes up to the parent, the root Stack, which knows Chat and pushes it over the tabs. This is why the code in ChatList doesn't change at all. Step 3: from Chat, navigate('ContactInfo') is handled by the nearest navigator, the Stack. Step 4: Back goes to the innermost navigator that can go back: the Stack pops, and the tabs with their bar are visible again. Rule: an action goes to the nearest navigator that can handle it; otherwise it bubbles up.">
+  <div class="kicker"><b>Combining navigators</b> · Who handles what</div>
+  <h2>An action goes to the <span class="cyan">nearest navigator</span> that can handle it</h2>
+  <div style="display:flex;gap:16px;align-items:center;margin-top:16px"><div class="evt" id="rtEvt"></div><div class="status" id="rtMsg" style="font-size:22px"></div></div>
+  <div class="tree4" id="rtTree" style="height:340px">
+    <svg width="1168" height="340" viewBox="0 0 1168 340"></svg>
+    <div class="tn3 st" id="rStack" style="left:584px;top:36px"><small>stack · root</small>Stack</div>
+    <div class="tn3 sw" id="rHome" style="left:330px;top:170px"><small>switch</small>HomeTabs</div>
+    <div class="tn3" id="rChat" style="left:760px;top:170px">Chat</div>
+    <div class="tn3" id="rInfo" style="left:960px;top:170px">Contact info</div>
+    <div class="tn3" id="rChats" style="left:220px;top:300px">Chats</div>
+    <div class="tn3" id="rUpd" style="left:440px;top:300px">Updates</div>
+  </div>
+</section>
+
+<!-- T6 HEADERS -->
+<section class="slide" data-id="headers" data-steps="2" data-name="Combining · Each navigator brings its own UI"
+  data-notes="Each navigator draws something. The stack draws a header for each of its screens, including HomeTabs. The bottom tabs draw a tab bar and, by default, their own header. Nested, you get two headers stacked on top of each other: the bug everyone hits. Step 2: hide one. In our tree, hide the stack's header on the Home screen, so the tab's header (Chats, Updates…) is the one you see. Inside a chat, the stack's header is the useful one because it has the back button.">
+  <div class="cmp">
+    <div class="pair">
+      <div><div class="phlabel"><span class="tag r">Two headers</span></div><div style="position:relative"><div class="bracket" style="top:40px;height:84px"></div><div class="pw"><div class="phone" id="hdA"></div></div></div></div>
+      <div data-at="2"><div class="phlabel"><span class="tag c">headerShown: false</span></div><div class="pw"><div class="phone" id="hdB"></div></div></div>
+    </div>
+    <div class="col">
+      <div class="head"><div class="kicker"><b>Combining navigators</b> · Headers</div><h2>Each navigator brings <span class="cyan">its own UI</span></h2></div>
+      <div class="need">
+        <div><span>Stack draws</span><code>a header</code></div>
+        <div><span>Bottom tabs draw</span><code>a tab bar + a header</code></div>
+      </div>
+      <p class="principle c">Nested → two headers.</p>
+      <p class="principle" data-at="2">Hide one.<small><span class="ic">options={{ headerShown: false }}</span> on the Home screen of the stack.</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- T7 CODE 1 -->
+<section class="slide" data-id="tabcode1" data-steps="2" data-name="Code-along · The switch: HomeTabs"
+  data-notes="Now the syntax, following the tree from the bottom up. Step 1: install bottom tabs. Step 2: the switch, in its own function called HomeTabs. ChatList is unchanged. Updates, Communities and Calls can be simple placeholder screens for now (a View with a Text). A navigator is just a component, so HomeTabs can be a screen of the stack in the next step.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="t1Phone"></div></div>
+    <div class="col" style="gap:14px">
+      <div class="head"><div class="kicker"><b>Combining navigators</b> · Code-along</div><h2>Step 1 · The switch: <span class="amber">HomeTabs</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · install</div>
+<pre class="code" data-at="1" style="font-size:18px">npx expo install @react-navigation/bottom-tabs</pre>
+        <div class="lbl">2 · the four sections · App.js</div>
+<pre class="code" data-hl data-at="2" style="font-size:18px">const BottomTab = createBottomTabNavigator();
+
+function HomeTabs() {
+  return (
+    &lt;BottomTab.Navigator&gt;
+      &lt;BottomTab.Screen name="Chats" component={ChatList} /&gt;
+      &lt;BottomTab.Screen name="Updates" component={Updates} /&gt;
+      &lt;BottomTab.Screen name="Communities" component={Communities} /&gt;
+      &lt;BottomTab.Screen name="Calls" component={Calls} /&gt;
+    &lt;/BottomTab.Navigator&gt;
+  );
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T8 CODE 2 -->
+<section class="slide" data-id="tabcode2" data-steps="2" data-name="Code-along · The stack at the root"
+  data-notes="Step 1: the root is the stack we already had. Its first screen is now the whole HomeTabs switch, with headerShown false so only the tab's header shows. Step 2: point out what did NOT change. ChatList still calls navigation.navigate('Chat', { chatId, name }). HomeTabs doesn't know Chat, so the action bubbles up to the Stack, which pushes it over the tabs. Run it: switch tabs, open a chat (the bar hides), go back (the bar returns).">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="t2Phone"></div></div>
+    <div class="col" style="gap:16px">
+      <div class="head"><div class="kicker"><b>Combining navigators</b> · Code-along</div><h2>Step 2 · The stack <span class="cyan">at the root</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · App: the tree, in code</div>
+<pre class="code" data-hl data-at="1">&lt;NavigationContainer&gt;
+  &lt;Stack.Navigator&gt;
+    &lt;Stack.Screen name="Home" component={HomeTabs}
+      options={{ headerShown: false }} /&gt;
+    &lt;Stack.Screen name="Chat" component={IndividualChat} /&gt;
+  &lt;/Stack.Navigator&gt;
+&lt;/NavigationContainer&gt;</pre>
+        <div class="lbl">2 · ChatList: unchanged</div>
+<pre class="code" data-hl data-at="2">navigation.navigate("Chat", { chatId: item.id, name: item.name })</pre>
+      </div>
+      <p class="principle" data-at="2">HomeTabs doesn't know Chat, so the action bubbles up to the Stack.</p>
+    </div>
+  </div>
+  <div class="cp" data-at="2" style="bottom:14px">Switch tabs, open a chat, go back</div>
 </section>
 
 <!-- 25 RECAP -->
@@ -895,7 +1167,7 @@ const chat = chats.find((c) =&gt; c.id === chatId);</pre>
 <div class="bar">
   <button class="btn" id="prevBtn" aria-label="Previous">←</button>
   <button class="btn" id="nextBtn" aria-label="Next">→</button>
-  <span class="count" id="count">1/26</span>
+  <span class="count" id="count">1/34</span>
   <span class="title" id="barTitle"></span>
   <div class="prog" id="prog"></div>
   <button class="btn hide-sm" id="notesBtn">Notes</button>
@@ -1162,6 +1434,19 @@ H.seen={step(){const loop=()=>{MS.forEach(m=>m.reset());[0,1,2].forEach(j=>later
 const bdNav=newNav('buildPhone');
 H.build={step(n){bdNav.reset(n<2?LIST():sList({hcls:'slidein'}));}};
 
+/* 8b open */
+const opNav=newNav('openPhone');
+function sChatNoData(){return hdr('Chat','Chats')+'<div class="body" style="display:grid;place-items:center;text-align:center;color:var(--ios-muted);font:700 15px var(--f-body);padding:0 20px"><div>Which chat?<br><span style="font-weight:500;font-size:12px">no data sent yet</span></div></div>';}
+H.open={step(n){const a=$('openArr'),op=$('openOp');a.innerHTML=arrHTML(['Chats'],-1);op.textContent='';opNav.reset(sList());if(n<2)return;
+  const loop=()=>{a.innerHTML=arrHTML(['Chats'],-1);op.textContent='';opNav.reset(sList());
+    later(()=>tapRow(opNav,0),800);
+    later(()=>{opNav.push(sChatNoData());a.innerHTML=arrHTML(['Chats','Chat'],1);op.textContent='navigate("Chat")  →  add to the end';},1050);
+    if(n>=3){later(()=>swipeBack(opNav),2900);later(()=>{a.innerHTML=arrHTML(['Chats'],-1);op.textContent='goBack()  →  remove the last one';},3550);
+      later(()=>tapRow(opNav,4),4600);later(()=>{opNav.push(sChatNoData());a.innerHTML=arrHTML(['Chats','Chat'],1);op.textContent='navigate("Chat")  →  add to the end';},4850);
+      later(()=>{const b=opNav.top().querySelector('.nb');b&&tapEl(opNav,b);},6400);later(()=>{opNav.pop();a.innerHTML=arrHTML(['Chats'],-1);op.textContent='‹ button  →  goBack()';},6600);
+      later(loop,8200);}
+    else later(loop,3400);};loop();}};
+
 /* 9 missing */
 const msNav=newNav('missPhone');const msTag=mkTag(msNav.screen,'c','↺ Back at the top: scroll lost',18,120);
 H.missing={step(){stagger($('missList'),true);
@@ -1238,7 +1523,7 @@ function treeApply(t){const leaf=t.tab==='C'?t.c[t.c.length-1]:t.s[t.s.length-1]
   document.querySelectorAll('#tree3 line').forEach(l=>l.classList.remove('on'));
   $('t'+t.tab).classList.add('on');$('e'+t.tab).classList.add('on');$('t'+leaf).classList.add('on');$('e'+leaf).classList.add('on');
   setBox($('treeBox'),`{ <span class="k">tab:</span> ${S(t.tab==='C'?'Chats':'Settings')},\n  <span class="k">Chats:</span> [${t.c.map(k=>S(TN[k])).join(', ')}],\n  <span class="k">Settings:</span> [${t.s.map(k=>S(TN[k])).join(', ')}] }`);}
-H.tree={step(){let k=0;const cyc=()=>{treeApply(TREE[k++%TREE.length]);later(cyc,1900);};cyc();}};
+H.tree={step(){drawEdges('tree3',[['tRoot','tC',0,'eC'],['tRoot','tS',0,'eS'],['tC','tList',0,'eList'],['tC','tChat',0,'eChat'],['tC','tProf',0,'eProf'],['tS','tSet',0,'eSet'],['tS','tPriv',0,'ePriv']],1);let k=0;const cyc=()=>{treeApply(TREE[k++%TREE.length]);later(cyc,1900);};cyc();}};
 
 /* 16 outside */
 const otScr=phone($('outPhone'));const otNav=new Nav(otScr.querySelector('.host'));
@@ -1288,8 +1573,90 @@ H.code2={step(n){const rd=$('c2Read');const seq=[0,4,6];let k=0;
     later(()=>{c2.push(sChat(c,{title:n>=3?c.name:'Chat'}));
       rd.innerHTML=n>=2?`route.params → { chatId: <b>${c.id}</b> }<br><span class="cyan">found: ${esc(c.name)}</span>`:`route.params → { chatId: <b>${c.id}</b>, … }`;},1450);
     later(()=>c2.pop(),3500);later(loop,4400);};loop();}};
-const c3=tabsRig('c3Phone');H.code3={step(){c3.start();}};
-
+/* ---------- combining navigators (WhatsApp) ---------- */
+const WICON={
+ Chats:'<svg viewBox="0 0 30 18"><path d="M9 3h12a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-7l-4 3v-3H9a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
+ Updates:'<svg viewBox="0 0 30 18"><circle cx="15" cy="9" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3 2"/><circle cx="15" cy="9" r="3" fill="currentColor"/></svg>',
+ Communities:'<svg viewBox="0 0 30 18"><circle cx="11" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="19" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 15c0-3 2.5-5 5-5s5 2 5 5M14 15c0-3 2.5-5 5-5s5 2 5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+ Calls:'<svg viewBox="0 0 30 18"><path d="M11 3l2.5 3.5-1.6 1.6a8 8 0 0 0 4 4l1.6-1.6L21 13l-1.5 2.2C14 15 9.8 10.8 9.8 5.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'};
+const WTABS=['Chats','Updates','Communities','Calls'];
+function sWUpdates(){return hdr('Updates','')+'<div class="body"><div class="secl">Status</div><div class="row"><div class="av" style="background:#3aa76d">+</div><div class="rb"><div class="rn">My status</div><div class="rm">Tap to add status update</div></div></div>'+[1,3,6].map((i,k)=>rowHTML({...chat(i),message:['Today, 08:15','Today, 07:40','Yesterday, 22:10'][k],time:'',unread:0})).join('')+'<div class="secl">Channels</div>'+rowHTML({...chat(8),name:'Campus News',message:'Fest dates announced',time:'09:00',unread:3})+'</div>';}
+function sWCom(){return hdr('Communities','')+'<div class="body"><div class="row"><div class="av" style="background:#128c4a">+</div><div class="rb"><div class="rn">New community</div></div></div>'+rowHTML({...chat(2),name:'CS 2026 Batch',message:'Announcements · 4 groups',time:'',unread:0})+rowHTML({...chat(7),name:'Hostel Block C',message:'Water off till 6pm',time:'',unread:0})+'</div>';}
+function sWCalls(){return hdr('Calls','')+'<div class="body">'+[[1,'↙ Missed · 10:05'],[4,'↗ Outgoing · 09:12'],[0,'↙ Incoming · Yesterday'],[5,'↙ Missed · Mon']].map(([i,m])=>rowHTML({...chat(i),message:m,time:'',unread:0})).join('')+'</div>';}
+function sWChats(double){return (double?hdr('Home','')+hdr('Chats','','','inner'):hdr('Chats',''))+'<div class="body">'+[0,1,2,3,4,5,6,7].map(i=>rowHTML(chat(i))).join('')+'</div>';}
+function waPhone(id,{double=false,inTab=false}={}){const el=$(id);el.innerHTML=`<div class="screen"><div class="island"></div><div class="sbar"><span>9:41</span>${SICONS}</div>${WTABS.map(()=>'<div class="host" style="bottom:56px" hidden></div>').join('')}<div class="wbar">${WTABS.map(t=>`<button>${WICON[t]}${t}</button>`).join('')}</div><div class="host" style="z-index:27;pointer-events:none"></div><div class="home-ind"></div></div>`;
+  const scr=el.querySelector('.screen');const hosts=[...scr.querySelectorAll('.host')];const top=hosts.pop();const navs=hosts.map(h=>new Nav(h));const btns=[...scr.querySelectorAll('.wbar button')];
+  const W={scr,navs,btns,top,cur:0,
+    reset(){navs[0].reset(sWChats(double));navs[1].reset(sWUpdates());navs[2].reset(sWCom());navs[3].reset(sWCalls());top.innerHTML='';W.sw(0);},
+    sw(i){W.cur=i;hosts.forEach((h,j)=>h.hidden=j!==i);btns.forEach((b,j)=>b.classList.toggle('act',j===i));},
+    tapTab(i){tapEl(navs[0],btns[i]);},
+    openChat(c){if(inTab){navs[W.cur].push(sChat(c));return;}const e=document.createElement('div');e.className='scr'+(D?' off':'');e.innerHTML=sChat(c);top.appendChild(e);void e.offsetWidth;e.classList.remove('off');},
+    back(){if(inTab){navs[W.cur].pop();return;}const e=top.lastChild;if(!e)return;if(D){e.classList.add('off');setTimeout(()=>e.remove(),450);}else e.remove();}};
+  return W;}
+function drawEdges(contId,edges,step){const cont=$(contId);const svg=cont.querySelector('svg');svg.innerHTML='';
+  edges.forEach(([p,c,at,id])=>{const P=$(p),C=$(c);const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',parseFloat(P.style.left));l.setAttribute('y1',parseFloat(P.style.top)+P.offsetHeight/2);
+    l.setAttribute('x2',parseFloat(C.style.left));l.setAttribute('y2',parseFloat(C.style.top)-C.offsetHeight/2);
+    if(id)l.id=id;l.style.transition='opacity .45s';l.style.opacity=(!at||step>=at)?1:0;svg.appendChild(l);});}
+/* T1 tour */
+const grW=waPhone('grPhone');
+H.grow={step(){const sec=[...document.querySelectorAll('#grSec > div')];const lit=i=>sec.forEach((d,j)=>d.classList.toggle('lit',j===i));
+  const loop=()=>{grW.reset();lit(-1);
+    later(()=>{grW.tapTab(1);},800);later(()=>{grW.sw(1);lit(0);},1000);
+    later(()=>{grW.tapTab(3);},2300);later(()=>{grW.sw(3);},2500);
+    later(()=>{grW.tapTab(0);},3700);later(()=>{grW.sw(0);lit(-1);},3900);
+    later(()=>tapRow(grW.navs[0],0),5000);later(()=>{grW.openChat(chat(0));lit(1);},5250);
+    later(()=>{grW.back();lit(-1);},7600);
+    later(loop,8800);};loop();}};
+/* T2 sort */
+const SORT=[['Chats','sw'],['Chat','st'],['Updates','sw'],['Contact info','st'],['Communities','sw'],['Status viewer','st'],['Calls','sw'],['Call info','st']];
+H.sort={step(){const src=$('sortSrc');
+  const loop=()=>{document.querySelectorAll('.bin .got').forEach(g=>g.innerHTML='');src.innerHTML=SORT.map(([t])=>`<span class="schip">${t}</span>`).join('');const chips=[...src.children];
+    SORT.forEach(([t,k],i)=>later(()=>{const c=chips[i],tgt=$(k==='sw'?'binSw':'binSt').querySelector('.got');const a=rel(c),b=rel(tgt);
+      const x=b.x+[...tgt.children].reduce((w,e)=>w+e.offsetWidth+10,0);
+      const f=c.cloneNode(true);f.classList.add('flyc');f.style.left=a.x+'px';f.style.top=a.y+'px';stage.appendChild(f);c.style.visibility='hidden';
+      const done=()=>{if(!f.isConnected)return;f.remove();const n=document.createElement('span');n.className='schip '+k;n.textContent=t;tgt.appendChild(n);};
+      if(D)f.animate([{transform:'translate(0,0)'},{transform:`translate(${x-a.x}px,${b.y-a.y}px)`}],{duration:650,easing:'cubic-bezier(.4,.1,.2,1)'}).onfinish=done;else done();
+      timers.push(setTimeout(done,1100));},700+i*850));
+    later(loop,700+SORT.length*850+2600);};loop();}};
+/* T3 arch */
+const AR_EDGES=[['aHome','aChats',1],['aHome','aUpd',1],['aHome','aCom',1],['aHome','aCalls',1],['aStack','aHome',2],['aStack','aChat',2,'eaChat'],['aStack','aInfo',2]];
+const AR_CAP=['<span class="amber">1 · The sections become one switch: HomeTabs.</span>','<span class="cyan">2 · Deeper screens go in a stack. The switch is its first screen.</span>','3 · Opening a chat pushes it on the root stack, <span class="cyan">over the tabs</span>.'];
+H.arch={step(n){$('archCap').innerHTML=AR_CAP[n-1];drawEdges('arTree',AR_EDGES,n);
+  ['aStack','aHome','aChat','aChats'].forEach(i=>$(i).classList.remove('hot'));
+  if(n>=3){const loop=()=>{['aStack','aChat','aHome','aChats'].forEach(i=>$(i).classList.remove('hot'));const e=$('eaChat');e&&e.classList.remove('on');
+      later(()=>{$('aChats').classList.add('hot');},300);later(()=>{$('aStack').classList.add('hot');},900);later(()=>{$('aChat').classList.add('hot');const e=$('eaChat');e&&e.classList.add('on');},1400);later(loop,3600);};loop();}}};
+/* T4 nest */
+const nWA=waPhone('nestA',{inTab:true}),nWB=waPhone('nestB');
+H.nest={step(){const loop=()=>{nWA.reset();nWB.reset();
+    later(()=>{tapRow(nWA.navs[0],0);tapRow(nWB.navs[0],0);},900);
+    later(()=>{nWA.openChat(chat(0));nWB.openChat(chat(0));},1150);
+    later(()=>{nWA.back();nWB.back();},3600);later(loop,4800);};loop();}};
+/* T5 route */
+const RT_EDGES=[['rStack','rHome'],['rStack','rChat'],['rStack','rInfo'],['rHome','rChats'],['rHome','rUpd']];
+function rPulse(path,cb){const tr=$('rtTree');const pts=path.map(id=>{const e=$(id);return[parseFloat(e.style.left),parseFloat(e.style.top)];});
+  if(!D){cb&&cb();return;}const d=document.createElement('div');d.className='rpulse';d.style.left=pts[0][0]+'px';d.style.top=pts[0][1]+'px';tr.appendChild(d);
+  d.animate(pts.map(p=>({transform:`translate(${p[0]-pts[0][0]}px,${p[1]-pts[0][1]}px)`})),{duration:Math.max(1,500*(pts.length-1)),easing:'ease-in-out'}).onfinish=()=>{d.remove();cb&&cb();};}
+const RIDS=['rStack','rHome','rChat','rInfo','rChats','rUpd'];
+function rHot(ids){RIDS.forEach(i=>$(i).classList.toggle('hot',ids.includes(i)));}
+function rShow(ids){['rChat','rInfo'].forEach(i=>$(i).classList.toggle('absent',!ids.includes(i)));}
+const EVTS=[
+ {evt:'tap the Updates tab',from:'rHome',path:['rHome'],msg:'The switch, HomeTabs, changes section.',show0:[],show1:[],hot:['rHome','rUpd']},
+ {evt:'navigate("Chat")',from:'rChats',path:['rChats','rHome','rStack'],msg:'HomeTabs doesn\'t know Chat, so it asks up. The Stack pushes it over the tabs.',show0:[],show1:['rChat'],hot:['rStack','rChat']},
+ {evt:'navigate("ContactInfo")',from:'rChat',path:['rChat','rStack'],msg:'The nearest navigator, the Stack, pushes it.',show0:['rChat'],show1:['rChat','rInfo'],hot:['rStack','rInfo']},
+ {evt:'Back',from:'rInfo',path:['rInfo','rStack'],msg:'The Stack pops. Back again, and the tabs with their bar return.',show0:['rChat','rInfo'],show1:['rChat'],hot:['rStack','rChat']}];
+H.route={step(n){const e=EVTS[n-1];drawEdges('rtTree',RT_EDGES,1);
+  const loop=()=>{$('rtEvt').textContent=e.evt;$('rtMsg').innerHTML='';rShow(e.show0);rHot([e.from]);
+    later(()=>rPulse(e.path,()=>{rShow(e.show1);rHot(e.hot);$('rtMsg').innerHTML=e.msg;}),800);
+    later(loop,800+500*e.path.length+3400);};loop();}};
+/* T6 headers */
+const hdWA=waPhone('hdA',{double:true}),hdWB=waPhone('hdB');hdWA.reset();hdWB.reset();
+/* T7, T8 code */
+const t1W=waPhone('t1Phone');H.tabcode1={step(n){t1W.reset();if(n<2)return;let k=0;const loop=()=>{k=(k+1)%4;t1W.tapTab(k);later(()=>t1W.sw(k),200);later(loop,1600);};later(loop,800);}};
+const t2W=waPhone('t2Phone');
+H.tabcode2={step(n){t2W.reset();
+  const loop=()=>{t2W.reset();later(()=>t2W.tapTab(1),800);later(()=>t2W.sw(1),1000);later(()=>t2W.tapTab(0),2200);later(()=>t2W.sw(0),2400);
+    later(()=>tapRow(t2W.navs[0],0),3400);later(()=>t2W.openChat(chat(0)),3650);later(()=>t2W.back(),5800);later(loop,7000);};loop();}};
 
 /* ---------- engine ---------- */
 const slides=[...document.querySelectorAll('.slide')];
