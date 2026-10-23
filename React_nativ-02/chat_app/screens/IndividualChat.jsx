@@ -1,7 +1,15 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TextInput,
+  Button,
+} from "react-native";
 
-export default function IndividualChat({route}) {
+export default function IndividualChat({ route }) {
   const chat = route.params.chat;
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -34,6 +42,21 @@ export default function IndividualChat({route}) {
 }
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#fff",
+    gap: 10,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+  },
   container: {
     flex: 1,
     backgroundColor: "#f6f8f9",

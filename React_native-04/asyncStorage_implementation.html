@@ -1,0 +1,1921 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Make Your App Remember</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+/* Light theme, single look by choice (projector). Layout: fixed 1280x720 stage scaled to the screen. Projector-first: phone on the left, one idea on the right, nothing under 15px. Cyan = navigation, amber = your code / the hard way, coral = problems. */
+:root{
+  color-scheme: light;
+  --bg:#e6ecef; --bench:#f8fafb; --panel:#ffffff; --line:#d2dce2; --fg:#122029; --muted:#4a5e6c; --dim:#8a9ba6;
+  --amber:#b06600; --amber-soft:rgba(214,138,20,.14);
+  --cyan:#0a8479; --cyan-soft:rgba(10,132,121,.11);
+  --coral:#cc3d33; --coral-soft:rgba(204,61,51,.11);
+  --code-bg:#f1f5f7; --code-fg:#1b2a33; --top-card:#e2f3f1; --nat:#e9f6f4; --on-accent:#ffffff;
+  --ios-bg:#f6f8f9; --ios-bar:#fbfcfd; --ios-fg:#13212b; --ios-muted:#6d7d87; --ios-line:#e3e8eb; --ios-blue:#1f7aec; --ios-bubble:#e7ecef;
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);overflow:hidden}
+.viewport{position:fixed;inset:0;bottom:calc(52px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:center;
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+.holder{position:relative;flex:none}
+#stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;background:var(--bench);border-radius:18px;overflow:hidden;
+  box-shadow:0 0 0 1px var(--line), 0 30px 70px -40px rgba(18,32,41,.35);
+  background-image:radial-gradient(circle at 1px 1px, rgba(18,32,41,.075) 1px, transparent 0);background-size:24px 24px}
+.slide{position:absolute;inset:0;padding:36px 56px;display:none}
+.slide.active{display:block;animation:enter .55s cubic-bezier(.2,.7,.2,1)}
+@keyframes enter{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.kicker{font:600 18px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.kicker b{color:var(--cyan);font-weight:700}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance}
+h2{font-size:50px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin-top:12px}
+h3{font-size:28px;font-weight:700}
+p{margin:0;line-height:1.4}
+.lead{font-size:28px;color:var(--muted);line-height:1.35}
+.amber{color:var(--amber)} .cyan{color:var(--cyan)} .coral{color:var(--coral)} .muted{color:var(--muted)}
+.ic{font-family:var(--f-mono);font-size:.85em;background:var(--panel);border:1px solid var(--line);padding:1px 8px;border-radius:6px;white-space:nowrap}
+[data-at]{opacity:0;transform:translateY(14px);transition:opacity .45s ease, transform .55s cubic-bezier(.2,.7,.2,1)}
+[data-at].on{opacity:1;transform:none}
+
+/* layout: phone left, content right */
+.split{display:grid;grid-template-columns:292px 1fr;gap:56px;height:100%}
+.split>.pw{align-self:center}
+.col{display:flex;flex-direction:column;gap:22px;min-width:0;padding-top:4px}
+.col>.head{display:flex;flex-direction:column}
+
+/* code */
+pre.code{margin:0;background:var(--code-bg);border:1px solid var(--line);border-radius:14px;padding:16px 20px;font:19px/1.5 var(--f-mono);color:var(--code-fg);overflow:auto;white-space:pre}
+.t-k{color:#7a3bc2} .t-s{color:#2c7a30} .t-c{color:#7f909b;font-style:italic} .t-tag{color:var(--cyan)} .t-a{color:var(--amber)} .t-n{color:#c2410c}
+.ctitle{font:600 15px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.codestack{background:var(--code-bg);border:1px solid var(--line);border-radius:14px;padding:10px 0}
+.codestack pre.code{border:none;border-radius:0;background:none;padding:3px 20px;overflow:visible;transition:background .4s, box-shadow .4s, opacity .45s, transform .55s}
+.codestack pre.code.now{background:var(--cyan-soft);box-shadow:inset 4px 0 0 var(--cyan)}
+.codestack .lbl{font:600 15px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 20px 2px}
+
+/* checkpoint */
+.cp{position:absolute;right:56px;bottom:26px;display:flex;align-items:center;gap:12px;background:var(--panel);border:2px solid rgba(10,132,121,.55);border-radius:999px;padding:9px 22px 9px 12px;font:600 21px var(--f-body)}
+.cp svg{flex:none}
+.cp b{color:var(--cyan);font:700 15px var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+
+/* phone (240x520 base, scaled by --s) */
+.pw{width:calc(240px * var(--s,1));height:calc(520px * var(--s,1));flex:none}
+.pw>.phone{transform:scale(var(--s,1));transform-origin:0 0}
+.phone{position:relative;width:240px;height:520px;border-radius:40px;background:#04080b;padding:8px;box-sizing:border-box;
+  box-shadow:0 0 0 2px #2c3d48, inset 0 0 0 1px #1a252c, 0 30px 50px -26px rgba(18,32,41,.55)}
+.screen{position:relative;width:100%;height:100%;border-radius:33px;overflow:hidden;background:var(--ios-bg);color:var(--ios-fg)}
+.island{position:absolute;top:9px;left:50%;width:76px;height:22px;border-radius:12px;background:#000;transform:translateX(-50%);z-index:30}
+.sbar{position:absolute;top:0;left:0;right:0;height:37px;display:flex;justify-content:space-between;align-items:center;padding:3px 20px 0 24px;font:600 11.5px var(--f-body);z-index:29;color:var(--ios-fg);pointer-events:none}
+.home-ind{position:absolute;bottom:6px;left:50%;width:88px;height:4px;border-radius:2px;background:#13212b;transform:translateX(-50%);z-index:31;opacity:.85;pointer-events:none}
+.host{position:absolute;inset:0;overflow:hidden}
+.scr{position:absolute;inset:0;background:var(--ios-bg);display:flex;flex-direction:column;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1), filter .45s;box-shadow:-10px 0 24px -14px rgba(0,0,0,.45)}
+.scr.under{transform:translateX(-30%);filter:brightness(.86)}
+.scr.off{transform:translateX(100%)}
+.scr.flash{animation:flash .3s}
+@keyframes flash{0%{filter:brightness(1.7) saturate(0)}100%{filter:none}}
+.nh{flex:none;height:79px;padding:37px 12px 0 8px;box-sizing:border-box;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--ios-bar);border-bottom:1px solid var(--ios-line);position:relative;z-index:2}
+.nh.inner{height:42px;padding-top:0}
+.nh.slidein{animation:hdrIn .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes hdrIn{from{transform:translateY(-100%);opacity:0}to{transform:none;opacity:1}}
+.nt{font:700 14px var(--f-body);max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .3s}
+.nt.ping{animation:ping .7s}
+@keyframes ping{30%{color:var(--ios-blue);transform:scale(1.12)}}
+.nb{color:var(--ios-blue);font:500 13px var(--f-body);display:flex;align-items:center;gap:1px;white-space:nowrap;overflow:hidden;min-width:0}
+.nr{justify-self:end;color:var(--ios-blue);font:600 13px var(--f-body)}
+.bigt{flex:none;padding:42px 14px 8px;font:800 23px/1 var(--f-display);letter-spacing:-.02em;border-bottom:1px solid var(--ios-line);background:var(--ios-bg)}
+.plain-h{flex:none;padding:42px 12px 9px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--ios-line)}
+.plain-h .pb{font:600 11.5px var(--f-body);color:var(--ios-blue);border:1px solid var(--ios-blue);border-radius:6px;padding:3px 7px}
+.plain-h b{font:700 14px var(--f-body)}
+.body{flex:1;overflow:hidden;min-height:0}
+.row{height:48px;display:flex;align-items:center;gap:9px;padding:0 12px;border-bottom:1px solid var(--ios-line);background:var(--ios-bg);transition:background .15s}
+.row.tap{background:#d9e2e7}
+.av{width:31px;height:31px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 11px var(--f-body);color:#fff}
+.rb{flex:1;min-width:0}
+.rn{font:700 12.5px/1.2 var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rm{font:400 11px/1.3 var(--f-body);color:var(--ios-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rt{display:flex;flex-direction:column;align-items:flex-end;gap:3px;font:500 9.5px var(--f-body);color:var(--ios-muted)}
+.ub{min-width:15px;height:15px;border-radius:8px;background:var(--ios-blue);color:#fff;font:700 8.5px/15px var(--f-body);text-align:center;padding:0 4px}
+.msgs{display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:6px}
+.day{align-self:center;font:600 9.5px var(--f-body);color:var(--ios-muted);background:#eaeef1;border-radius:6px;padding:2px 8px;margin:4px 0}
+.bub{max-width:78%;padding:7px 11px;border-radius:14px;font:12px/1.35 var(--f-body);margin:3px 10px}
+.bub.in{background:var(--ios-bubble);align-self:flex-start;border-bottom-left-radius:4px}
+.bub.out{background:var(--ios-blue);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.inbar{flex:none;padding:6px 10px 18px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--ios-line);background:var(--ios-bar)}
+.inbar i{flex:1;height:26px;border-radius:13px;border:1px solid var(--ios-line);background:#fff;font:normal 11px/26px var(--f-body);color:#a1adb4;padding-left:10px}
+.inbar b{width:26px;height:26px;border-radius:50%;background:var(--ios-blue)}
+.pf{display:flex;flex-direction:column;align-items:center;padding:18px 0 12px;gap:4px;border-bottom:1px solid var(--ios-line)}
+.pf .av{width:62px;height:62px;font-size:20px}
+.pf b{font:700 15px var(--f-body);margin-top:6px} .pf span{font:400 11px var(--f-body);color:var(--ios-muted)}
+.prow{height:41px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid var(--ios-line);font:500 12.5px var(--f-body)}
+.prow::after{content:"›";color:#a1adb4;font-size:16px}
+.prow.red{color:#d64a40}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:52px;display:flex;border-top:1px solid var(--ios-line);background:var(--ios-bar);z-index:25;padding-bottom:12px}
+.tabbar button{flex:1;appearance:none;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:600 9.5px var(--f-body);color:#8a98a1;cursor:pointer;padding:0}
+.tabbar button.act{color:var(--ios-blue)}
+.tapdot{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(204,61,51,.35);border:2px solid var(--coral);z-index:40;pointer-events:none;animation:tap .55s ease-out forwards}
+@keyframes tap{0%{transform:scale(.4);opacity:0}30%{transform:scale(1);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.swipedot{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:rgba(10,132,121,.35);border:2px solid var(--cyan);z-index:40;pointer-events:none}
+.qbubble{position:absolute;z-index:41;background:var(--coral);color:#fff;font:800 26px var(--f-display);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;transform:scale(0);transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.qbubble.show{transform:scale(1)}
+.cutflash{position:absolute;inset:0;z-index:35;background:#fff;opacity:0;pointer-events:none}
+.cutflash.go{animation:cutf .35s ease}
+@keyframes cutf{0%{opacity:.85}100%{opacity:0}}
+.cutlbl{position:absolute;left:50%;top:44%;z-index:36;transform:translate(-50%,-50%) rotate(-6deg) scale(.6);background:var(--coral);color:#fff;font:800 22px var(--f-display);padding:6px 14px;border-radius:8px;opacity:0;transition:all .25s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+.cutlbl.go{opacity:1;transform:translate(-50%,-50%) rotate(-6deg) scale(1)}
+
+/* bottom bar */
+.bar{position:fixed;left:0;right:0;bottom:0;height:calc(52px + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));
+  display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);background:var(--bg)}
+.btn{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--fg);font:600 13px var(--f-body);padding:7px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn:focus-visible,.op:focus-visible,.node:focus-visible,.tabbar button:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.bar .title{font:600 13px var(--f-body);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.prog{flex:none;display:flex;gap:4px}
+.prog i{display:block;width:10px;height:4px;border-radius:2px;background:var(--line)}
+.prog i.done{background:var(--dim)} .prog i.now{background:var(--cyan)}
+.count{font:600 12px var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+@media (max-width:640px){.prog,.bar .hide-sm{display:none}}
+.notes{position:fixed;right:max(16px, env(safe-area-inset-right,0px));bottom:calc(64px + env(safe-area-inset-bottom,0px));width:min(460px, calc(100vw - 32px));background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:15px;line-height:1.5;color:var(--fg);box-shadow:0 20px 40px -20px rgba(18,32,41,.4)}
+.notes h4{margin:0 0 6px;font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--amber)}
+.hint{font:500 15px var(--f-mono);color:var(--dim);position:absolute;right:30px;bottom:22px}
+
+/* shared */
+.tag{font:700 15px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:6px;white-space:nowrap}
+.tag.c{background:var(--cyan-soft);color:var(--cyan)} .tag.a{background:var(--amber-soft);color:var(--amber)} .tag.r{background:var(--coral-soft);color:var(--coral)}
+.xlist{display:flex;flex-direction:column;gap:18px}
+.xlist div{display:flex;gap:16px;align-items:center;font:600 28px/1.25 var(--f-body);opacity:0;transform:translateX(-14px);transition:all .4s ease}
+.xlist.show div{opacity:1;transform:none}
+.xlist i{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font:800 20px var(--f-mono);font-style:normal}
+.xlist.bad i{background:var(--coral-soft);color:var(--coral)}
+.xlist.good i{background:var(--cyan-soft);color:var(--cyan)}
+.term{background:#0f1a21;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.term .tb{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid #22323c;align-items:center}
+.term .tb i{width:12px;height:12px;border-radius:50%;background:#2b3d49}
+.term .tb i:nth-child(1){background:#f0675d}.term .tb i:nth-child(2){background:#f2a93b}.term .tb i:nth-child(3){background:#47d1c3}
+.term .tb span{margin-left:8px;font:600 15px var(--f-mono);color:#7d93a0}
+.term .tbody{padding:14px 18px;font:19px/1.6 var(--f-mono);color:#d6e1e6;white-space:pre-wrap;word-break:break-word}
+.term .p{color:#47d1c3} .term .ok{color:#8fd694} .term .lg{color:#f2a93b;font-weight:700} .term .d{color:#6b8290} .term .caret{background:#47d1c3}
+.caret{display:inline-block;width:10px;height:20px;background:var(--cyan);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.logline{animation:logIn .3s ease}
+@keyframes logIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.callout{font:700 30px/1.25 var(--f-display);border-left:5px solid var(--cyan);padding:6px 0 6px 20px}
+.callout.a{border-color:var(--amber)}
+
+/* title */
+.title-wrap{display:grid;grid-template-columns:1fr 292px;gap:60px;height:100%;align-items:center}
+.title-wrap h1{font-size:108px;font-weight:800;line-height:.92;letter-spacing:-.035em;margin-top:22px}
+.title-wrap h1 em{font-style:normal;color:var(--cyan)}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+.chip{font:600 19px var(--f-mono);border:1px solid var(--line);padding:8px 14px;border-radius:999px;color:var(--muted)}
+
+/* roadmap */
+.road{position:absolute;left:56px;right:56px;top:190px;height:480px}
+.road svg{position:absolute;left:0;top:0;overflow:visible}
+.road .track-line{fill:none;stroke:var(--line);stroke-width:4}
+.road .draw{fill:none;stroke:var(--cyan);stroke-width:5;stroke-linecap:round;opacity:.7}
+.node{position:absolute;transform:translate(-50%,-50%) scale(0);width:60px;height:60px;border-radius:50%;background:var(--panel);border:3px solid var(--cyan);display:grid;place-items:center;font:800 26px var(--f-display);color:var(--fg);cursor:pointer;transition:transform .5s cubic-bezier(.3,1.6,.5,1);padding:0}
+.node.hard{border-color:var(--amber)}
+.node.stretch{border-style:dashed}
+.node.pop{transform:translate(-50%,-50%) scale(1)}
+.node:hover{background:var(--cyan);color:var(--on-accent)}
+.node .lbl{position:absolute;top:72px;width:190px;left:50%;transform:translateX(-50%);font:600 21px/1.2 var(--f-body);color:var(--fg);text-align:center;pointer-events:none}
+.legend-row{position:absolute;right:56px;top:52px;display:flex;gap:12px}
+
+/* problem map */
+.appmap{position:relative;width:800px;height:330px}
+.appmap svg{position:absolute;inset:0}
+.appmap path{fill:none;stroke:var(--cyan);stroke-width:3;stroke-dasharray:400;stroke-dashoffset:400;transition:stroke-dashoffset .8s ease}
+.appmap path.show{stroke-dashoffset:0}
+.mscr{position:absolute;width:190px;height:108px;border-radius:14px;background:var(--panel);border:2px solid var(--line);padding:14px 16px;display:flex;flex-direction:column;gap:8px;transform:scale(.6);opacity:0;transition:all .45s cubic-bezier(.3,1.5,.5,1)}
+.mscr.show{transform:none;opacity:1}
+.mscr b{font:700 26px var(--f-display)}
+.mscr i{display:block;height:8px;border-radius:4px;background:var(--line)}
+.mscr i:nth-child(3){width:70%}
+.mscr.here{border-color:var(--cyan)}
+.ways{display:flex;gap:16px;flex-wrap:wrap}
+.way{font:700 24px var(--f-body);padding:12px 20px;border-radius:12px;border:2px solid}
+.way.a{color:var(--amber);border-color:rgba(176,102,0,.5);background:var(--amber-soft)}
+.way.c{color:var(--cyan);border-color:rgba(10,132,121,.5);background:var(--cyan-soft)}
+
+/* folders */
+.fold{display:grid;grid-template-columns:500px 1fr;gap:48px;margin-top:30px;align-items:start}
+.tree{font:22px/1.85 var(--f-mono);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 24px}
+.tree div{transition:all .45s ease;white-space:nowrap}
+.tree .nw{color:var(--cyan)} .tree .hl{color:var(--amber)} .tree .mut{color:var(--dim)}
+.tree .new{max-height:0;opacity:0;overflow:hidden}
+.tree.after .new{max-height:44px;opacity:1}
+.tree .badge{font:700 14px var(--f-mono);background:var(--cyan);color:var(--on-accent);border-radius:5px;padding:2px 7px;margin-left:10px;vertical-align:3px}
+
+/* stack viz */
+.svz{display:grid;grid-template-columns:300px 1fr;gap:30px;align-items:start}
+.cards-cap{font:600 16px var(--f-mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px}
+.cards-cap b{color:var(--cyan)}
+.cards{position:relative;height:392px;border-left:2px dashed var(--line);border-right:2px dashed var(--line);border-bottom:3px solid var(--line);border-radius:0 0 14px 14px}
+.scard{position:absolute;left:12px;right:12px;height:54px;border-radius:12px;background:var(--panel);border:2px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 16px;transition:bottom .4s cubic-bezier(.2,.8,.2,1), transform .4s cubic-bezier(.2,.8,.2,1), opacity .35s, background .3s, border-color .3s}
+.scard b{font:700 23px var(--f-display)}
+.scard span{font:500 16px var(--f-mono);color:var(--muted);white-space:nowrap}
+.scard.top{border-color:var(--cyan);background:var(--top-card);box-shadow:0 8px 22px -12px rgba(10,132,121,.6)}
+.scard.in{transform:translateY(-60px);opacity:0}
+.scard.out{transform:translateX(120px);opacity:0}
+.scard.flashc{animation:flashc .6s}
+@keyframes flashc{40%{background:var(--cyan);color:var(--on-accent)}}
+.ops{display:grid;gap:10px}
+.ops.two{grid-template-columns:1fr 1fr}
+.op{appearance:none;border:2px solid var(--line);background:var(--panel);color:var(--fg);font:600 18px var(--f-mono);padding:11px 12px;border-radius:10px;cursor:pointer;text-align:left;transition:border-color .2s, transform .1s;white-space:nowrap}
+.op:hover{border-color:var(--cyan)} .op:active{transform:scale(.97)}
+.op .fn{color:var(--cyan)} .op .ar{color:#2c7a30}
+.op.reset{color:var(--muted);font-family:var(--f-body);text-align:center}
+.slog{margin-top:18px;min-height:96px;font-size:22px;line-height:1.4;border-left:4px solid var(--cyan);padding:4px 0 4px 16px;color:var(--fg)}
+.rules{display:flex;gap:12px;flex-wrap:wrap}
+.rules span{font:600 21px var(--f-body);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 14px}
+.rules b{color:var(--cyan)}
+
+/* install */
+.inst{display:grid;grid-template-columns:620px 1fr;gap:40px;margin-top:30px;align-items:start}
+.pkgs{display:flex;flex-direction:column;gap:14px}
+.pkg{background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:14px 18px;opacity:.3;transition:all .4s}
+.pkg.lit{opacity:1;border-color:rgba(10,132,121,.55)}
+.pkg code{font:600 18px var(--f-mono);color:var(--cyan);display:block;margin-bottom:4px}
+.pkg p{font-size:21px;color:var(--fg)}
+.layers{position:relative;display:flex;flex-direction:column;gap:30px;width:760px;margin:34px auto 0}
+.layer{position:relative;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:14px 22px;display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.layer small{font:600 16px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.layer b{font:600 25px var(--f-mono)}
+.layer.you{border-color:rgba(176,102,0,.6)} .layer.you b{color:var(--amber)}
+.layer.nat{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0;background:none;border:none}
+.layer.nat div{background:var(--nat);border:2px solid rgba(10,132,121,.45);border-radius:14px;padding:14px 22px;display:flex;flex-direction:column;gap:4px}
+.layer:not(:last-child)::after{content:"";position:absolute;left:50%;bottom:-32px;height:30px;border-left:3px dashed var(--line)}
+.pulse{position:absolute;left:50%;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 18px var(--cyan);z-index:3}
+
+/* compare */
+.cmp{display:grid;grid-template-columns:auto 1fr;gap:56px;height:100%;align-items:center}
+.pair{display:grid;grid-template-columns:240px 240px;gap:30px}
+.phlabel{margin-bottom:12px}
+
+/* params */
+.readout{font:19px/1.55 var(--f-mono);background:var(--code-bg);border:1px solid var(--line);border-radius:12px;padding:12px 18px;color:var(--muted)}
+.readout b{color:var(--amber);font-weight:700}
+.env{position:absolute;z-index:60;background:var(--amber);color:#fff;font:700 17px var(--f-mono);padding:8px 12px;border-radius:9px;pointer-events:none;box-shadow:0 10px 24px -8px rgba(176,102,0,.7);white-space:nowrap}
+
+/* tabs */
+.tree2{display:flex;flex-direction:column;gap:10px}
+.tree2 .tn{display:inline-block;align-self:flex-start;font:600 18px var(--f-mono);padding:7px 12px;border-radius:9px;border:2px solid var(--line);background:var(--panel);color:var(--muted);transition:all .3s}
+.tree2 .tn.mount{color:var(--fg);border-color:rgba(10,132,121,.55)}
+.tree2 .tn.act{background:var(--cyan);color:var(--on-accent);border-color:var(--cyan)}
+.tree2 .tk{margin-left:20px;padding-left:18px;border-left:3px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.tree2 .tk.h{flex-direction:row;flex-wrap:wrap}
+.tabsgrid{display:grid;grid-template-columns:1fr 290px;gap:28px;align-items:start}
+.tc{display:grid;grid-template-columns:1fr 414px;gap:40px;margin-top:26px;align-items:start}
+.minis{display:grid;grid-template-columns:195px 195px;gap:24px}
+.minis p{font:600 21px var(--f-body);margin-top:12px;text-align:center}
+.bracket{position:absolute;left:-12px;top:30px;height:70px;width:9px;border:3px solid var(--coral);border-right:none;border-radius:6px 0 0 6px;z-index:50}
+
+/* recap / try */
+.recap{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px}
+.rc{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:14px;min-height:200px}
+.rc h3{font-size:42px}
+.rc p{font-size:28px;color:var(--muted)}
+.steps{display:flex;flex-direction:column;gap:22px;margin-top:34px}
+.steps div{display:flex;gap:20px;align-items:center;font:600 30px/1.3 var(--f-body)}
+.steps b{flex:none;width:52px;height:52px;border-radius:50%;border:3px solid var(--amber);color:var(--amber);display:grid;place-items:center;font:800 24px var(--f-display)}
+.bonus{margin-top:34px;font-size:25px;color:var(--muted);border:2px dashed var(--dim);border-radius:14px;padding:16px 22px}
+.bonus b{color:var(--amber)}
+
+
+/* nav types */
+.types{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:28px;justify-items:center;text-align:center}
+.ty h3{font-size:32px;margin-top:16px}
+.ty p{font-size:22px;color:var(--muted);margin-top:4px}
+.drawer{position:absolute;top:0;bottom:0;left:0;width:78%;background:#fff;z-index:28;transform:translateX(-102%);transition:transform .4s cubic-bezier(.2,.8,.2,1);padding-top:44px;box-shadow:8px 0 24px -12px rgba(0,0,0,.4)}
+.drawer.open{transform:none}
+.dim{position:absolute;inset:0;background:rgba(10,20,26,.38);opacity:0;transition:opacity .4s;z-index:27;pointer-events:none}
+.dim.open{opacity:1}
+.drawer .dh{padding:8px 16px 14px;font:800 19px var(--f-display);color:var(--ios-fg);border-bottom:1px solid var(--ios-line);margin-bottom:8px}
+.drawer .dh small{display:block;font:500 10.5px var(--f-body);color:var(--ios-muted);margin-top:3px}
+.ditem{padding:10px 16px;font:600 13px var(--f-body);color:var(--ios-fg);margin-right:14px;border-radius:0 20px 20px 0;transition:background .2s,color .2s}
+.ditem.act{background:#e6f0fd;color:var(--ios-blue)}
+.ham{color:var(--ios-fg)!important;padding-left:6px}
+.tt{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--ios-bg)}
+.tt-h{padding:42px 14px 8px;font:800 22px/1 var(--f-display);letter-spacing:-.02em;background:var(--ios-bar);color:var(--ios-fg)}
+.tt-tabs{display:flex;position:relative;background:var(--ios-bar);border-bottom:1px solid var(--ios-line)}
+.tt-tabs span{flex:1;text-align:center;padding:10px 0;font:700 12px var(--f-body);color:#8a98a1;transition:color .3s}
+.tt-tabs span.act{color:var(--ios-blue)}
+.tt-ind{position:absolute;bottom:-1px;left:0;width:33.3333%;height:3px;background:var(--ios-blue);border-radius:2px;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.tt-pager{flex:1;overflow:hidden;min-height:0}
+.tt-track{display:flex;width:300%;height:100%;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.tt-page{width:33.3333%;overflow:hidden}
+.which{display:flex;flex-direction:column;gap:14px;margin-top:26px}
+.wr{display:grid;grid-template-columns:52px 230px 1fr;align-items:center;gap:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 22px}
+.wr svg{display:block;fill:none;stroke:var(--cyan);stroke-width:2.5}
+.wr b{font:800 30px var(--f-display)}
+.wr span{font:500 26px var(--f-body);color:var(--muted)}
+
+
+/* method walkthrough */
+.wk-code{font:700 46px/1.1 var(--f-mono)!important;color:var(--cyan);letter-spacing:-.01em}
+.wk-say{font-size:27px;line-height:1.35}
+.wk-say small{display:block;font-size:22px;color:var(--muted);margin-top:4px}
+.wk-say small b{color:var(--amber)}
+.cards.short{height:300px}
+.mlist{display:flex;flex-direction:column;gap:4px}
+.mitem{appearance:none;text-align:left;background:none;border:2px solid transparent;border-radius:9px;padding:5px 12px;font:600 18px var(--f-mono);color:var(--dim);cursor:pointer}
+.mitem .fn{color:inherit}
+.mitem.done{color:var(--muted)}
+.mitem.now{background:var(--cyan-soft);border-color:var(--cyan);color:var(--fg)}
+.mitem.now .fn{color:var(--cyan)}
+.mitem:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.replay{margin-top:12px}
+
+
+/* part 1: sending + keyboard */
+.kbd{position:absolute;left:0;right:0;bottom:0;height:190px;background:#d3d8dc;z-index:26;transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);padding:8px 4px 28px;box-sizing:border-box;display:grid;grid-template-rows:repeat(4,1fr);gap:7px}
+.kbd.up{transform:none}
+.kbd .kr{display:flex;gap:4px;justify-content:center}
+.kbd .kr i{flex:1;max-width:19px;background:#fff;border-radius:4px;box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.kbd .kr i.w{max-width:120px} .kbd .kr i.g{background:#aeb6bd;max-width:30px}
+.need{display:flex;flex-direction:column;gap:12px}
+.need div{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 18px;font:600 23px var(--f-body)}
+.need code{font:700 21px var(--f-mono);color:var(--cyan)}
+
+@media (prefers-reduced-motion: reduce){
+  .slide.active,.caret,.tapdot,.scr.flash,.nh.slidein,.cutflash.go,.scard.flashc,.nt.ping{animation:none!important}
+  [data-at],.node,.scr,.scard,.xlist div,.mscr,.appmap path,.tree div{transition:none!important}
+}
+/* ---------- first principles ---------- */
+.sbox{display:inline-block;font:600 30px/1.4 var(--f-mono);background:var(--code-bg);border:2px solid var(--line);border-radius:14px;padding:14px 22px;color:var(--code-fg);transition:background .3s,border-color .3s;white-space:pre;align-self:flex-start}
+.sbox .k{color:var(--muted)} .sbox .v{color:var(--amber)} .sbox .n{color:#c2410c}
+.sbox.flash{background:var(--cyan-soft);border-color:var(--cyan)}
+.sbox.sm{font-size:21px;padding:10px 18px}
+.cap{font:600 16px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.arr{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font:600 22px var(--f-mono);min-height:56px}
+.arr .br{color:var(--muted);font-size:30px}
+.pill{border:2px solid var(--line);background:var(--panel);border-radius:10px;padding:6px 14px;transition:all .35s;white-space:nowrap}
+.pill.top{border-color:var(--cyan);background:var(--top-card)}
+.pill.in{animation:pin .4s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pin{from{transform:scale(.5);opacity:0}}
+.pill.gone{text-decoration:line-through;color:var(--dim);border-style:dashed;background:none}
+.opline{font:700 26px var(--f-mono);color:var(--cyan);min-height:36px}
+.principle{font:700 30px/1.3 var(--f-display);background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--cyan);border-radius:12px;padding:16px 22px}
+.principle.c{border-left-color:var(--coral)}
+.principle small{display:block;font:500 21px/1.4 var(--f-body);color:var(--muted);margin-top:6px}
+.tagp{position:absolute;z-index:45;font:700 13px var(--f-body);padding:6px 10px;border-radius:8px;color:#fff;opacity:0;transition:opacity .3s;white-space:nowrap}
+.tagp.c{background:var(--coral)} .tagp.g{background:var(--cyan)} .tagp.show{opacity:1}
+.pipe{display:flex;align-items:stretch;margin-top:56px}
+.pbox{flex:1;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:24px 22px;font:800 34px var(--f-display);opacity:0;transform:translateY(16px);transition:all .45s}
+.pbox small{display:block;font:500 21px/1.3 var(--f-body);color:var(--muted);margin-top:8px}
+.pbox.code{border-style:dashed;color:var(--muted)}
+.pbox.on{opacity:1;transform:none}
+.parr{flex:none;width:54px;align-self:center;height:4px;background:var(--cyan);position:relative;transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.parr.on{transform:none}
+.parr::after{content:"";position:absolute;right:-4px;top:-7px;border-style:solid;border-width:9px 0 9px 12px;border-color:transparent transparent transparent var(--cyan)}
+.comps{display:flex;gap:18px}
+.comp{flex:1;background:var(--code-bg);border:2px solid var(--line);border-radius:14px;padding:16px 20px;font:700 24px var(--f-mono)}
+.comp small{display:block;font:500 19px var(--f-body);color:var(--muted);margin-top:4px}
+.seen{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:28px}
+.sp h3{font-size:28px} .sp p{font-size:19px;color:var(--muted);margin:2px 0 14px}
+.ms{position:relative;height:200px;border:2px dashed var(--line);border-top:none;border-bottom:3px solid var(--line);border-radius:0 0 14px 14px}
+.mcard{position:absolute;left:10px;right:10px;height:50px;border-radius:10px;border:2px solid var(--line);background:var(--panel);font:600 19px var(--f-mono);display:flex;align-items:center;padding:0 14px;box-sizing:border-box;transition:transform .35s,opacity .35s,background .3s,border-color .3s;white-space:nowrap;overflow:hidden}
+.mcard.in{transform:translateY(-50px);opacity:0}
+.mcard.out{transform:translateX(80px);opacity:0}
+.mcard.top{border-color:var(--cyan);background:var(--top-card)}
+.msop{margin-top:12px;font:600 21px var(--f-mono);min-height:30px;color:var(--muted)}
+.msop b{color:var(--fg)}
+.inp{position:relative;width:1168px;height:450px;margin-top:18px}
+.inp svg{position:absolute;inset:0}
+.inp path{stroke:var(--line);stroke-width:3;fill:none;stroke-dasharray:8 8}
+.ibox{position:absolute;left:0;width:320px;height:84px;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:12px 18px;font:700 23px var(--f-body);box-sizing:border-box;transition:border-color .3s,background .3s}
+.ibox small{display:block;font:500 17px var(--f-body);color:var(--muted)}
+.ibox.act{border-color:var(--cyan);background:var(--top-card)}
+.pbx{position:absolute;left:500px;top:165px;width:220px;height:110px;border-radius:18px;background:var(--code-bg);border:3px solid var(--cyan);display:grid;place-items:center;font:700 36px var(--f-mono);color:var(--cyan)}
+.pbx.flash{animation:pflash .5s}
+@keyframes pflash{40%{background:var(--cyan);color:#fff;transform:scale(1.06)}}
+.istack{position:absolute;left:860px;top:80px;width:290px;height:280px;border:2px dashed var(--line);border-top:none;border-bottom:3px solid var(--line);border-radius:0 0 14px 14px}
+.istack .mcard{height:54px;font-size:21px}
+.ipulse{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan);z-index:3}
+.icap{position:absolute;font:600 16px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.scols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.sc{background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:12px 14px;transition:border-color .3s,box-shadow .3s}
+.sc.act{border-color:var(--cyan);box-shadow:0 8px 22px -14px rgba(10,132,121,.6)}
+.sc h3{font-size:24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sc .on-tag{visibility:hidden} .sc.act .on-tag{visibility:visible}
+.scc{position:relative;height:126px}
+.shapes{display:grid;grid-template-columns:360px 1fr;gap:30px;margin-top:22px}
+.shp{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 22px}
+.shp h3{font-size:32px} .shp p{font-size:20px;color:var(--muted);margin:4px 0 14px}
+.swrow{display:flex;gap:10px;margin-bottom:14px}
+.swb{flex:1;text-align:center;font:600 19px var(--f-mono);padding:10px 0;border:2px solid var(--line);border-radius:10px;transition:all .3s;background:var(--bench)}
+.swb.act{border-color:var(--cyan);background:var(--top-card)}
+.minis3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center;text-align:center}
+.minis3 p{font:600 18px var(--f-body);margin-top:6px}
+.tree3{position:relative;width:1168px;height:330px;margin-top:6px}
+.tree3 svg{position:absolute;inset:0}
+.tree3 line{stroke:var(--line);stroke-width:3;transition:stroke .3s,stroke-width .3s}
+.tree3 line.on{stroke:var(--cyan);stroke-width:5}
+.tn3{position:absolute;transform:translate(-50%,-50%);min-width:170px;text-align:center;padding:8px 14px;border-radius:12px;border:2px solid var(--line);background:var(--panel);font:700 20px var(--f-body);transition:all .3s;box-sizing:border-box}
+.tn3 small{display:block;font:600 13px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tn3.on{border-color:var(--cyan);background:var(--top-card)}
+.tn3.absent{opacity:.15;border-style:dashed}
+.tfoot{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.lock{position:absolute;inset:0;background:linear-gradient(160deg,#2b5876,#4e4376);color:#fff;text-align:center;padding-top:74px}
+.lock .lt{font:700 54px/1 var(--f-display)} .lock .ld{font:500 13px var(--f-body);opacity:.85;margin-top:6px}
+.notif{position:absolute;left:10px;right:10px;top:44px;z-index:32;background:rgba(255,255,255,.94);border-radius:16px;padding:10px 12px;display:flex;gap:10px;align-items:center;transform:translateY(-150%);opacity:0;transition:all .45s cubic-bezier(.2,.8,.2,1);color:var(--ios-fg);box-shadow:0 10px 24px -10px rgba(0,0,0,.4)}
+.notif.show{transform:none;opacity:1}
+.notif b{display:block;font:700 12.5px var(--f-body)} .notif span{font:400 11.5px var(--f-body);color:#4b5a63}
+.lnk{font:700 28px var(--f-mono);color:var(--amber);background:var(--code-bg);border:2px solid var(--line);border-radius:12px;padding:10px 18px;align-self:flex-start;opacity:.25;transition:opacity .3s,border-color .3s}
+.lnk.on{opacity:1;border-color:var(--amber)}
+.down-arr{font:800 30px var(--f-display);color:var(--cyan);padding-left:20px}
+.scr.mod{top:22px;border-radius:14px 14px 0 0;transition:transform .45s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 30px -10px rgba(0,0,0,.35);z-index:5}
+.scr.mod.down{transform:translateY(105%)}
+.scr.mod .nh{height:46px;padding-top:0}
+.newb{animation:pin .45s cubic-bezier(.3,1.5,.5,1)}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;margin-top:24px}
+.q{display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 16px;opacity:0;transform:translateY(12px);transition:all .4s}
+.q.on{opacity:1;transform:none}
+.q b.n{width:44px;height:44px;border-radius:50%;border:3px solid var(--cyan);color:var(--cyan);display:grid;place-items:center;font:800 20px var(--f-display);box-sizing:border-box}
+.q h3{font-size:25px} .q p{font-size:19px;color:var(--muted);margin-top:2px}
+.opc{font:700 30px/1.2 var(--f-mono)!important;color:var(--cyan)}
+.pt{width:100%;border-collapse:collapse;margin-top:22px}
+.pt th{font:700 16px var(--f-mono);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:left;padding:10px 10px;border-bottom:2px solid var(--line)}
+.pt th.rn{color:var(--cyan)}
+.pt td{padding:14px 10px;border-bottom:1px solid var(--line);font:600 17px var(--f-mono);color:var(--code-fg);vertical-align:top}
+.pt td:first-child{font:700 22px var(--f-display);color:var(--fg);width:150px}
+.pt td.rn{color:var(--cyan)}
+.map{display:flex;flex-direction:column;gap:14px;margin-top:26px}
+.mr{display:grid;grid-template-columns:360px 60px 1fr;align-items:center;gap:14px}
+.mr .req{font:700 23px var(--f-body);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 18px}
+.mr .ar{height:3px;background:var(--cyan);position:relative}
+.mr .ar::after{content:"";position:absolute;right:-2px;top:-7px;border-style:solid;border-width:8px 0 8px 11px;border-color:transparent transparent transparent var(--cyan)}
+.mr code{font:600 21px var(--f-mono);background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;color:var(--code-fg)}
+.recap3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px}
+.recap3 .rc{min-height:300px}
+.fp-title{font-size:96px!important}
+
+/* ---------- persistence ---------- */
+.home{position:absolute;inset:0;z-index:20;background:linear-gradient(160deg,#2b5876,#4e4376);display:grid;grid-template-columns:repeat(4,1fr);align-content:start;gap:16px 0;padding:58px 10px 0;opacity:0;pointer-events:none;transition:opacity .3s}
+.home.show{opacity:1}
+.app1{display:flex;flex-direction:column;align-items:center;gap:4px;font:500 9px var(--f-body);color:#fff}
+.appicon{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;color:#fff;font:800 15px var(--f-display);box-shadow:0 4px 10px -4px rgba(0,0,0,.4)}
+.inbar i .ph{color:#a1adb4}
+.inbar i.typing{color:var(--ios-fg);font-style:normal}
+.mem{display:flex;flex-direction:column}
+.membox{border:2px solid var(--line);border-radius:16px;padding:12px 16px;background:var(--panel);position:relative;transition:border-color .3s,background .3s}
+.membox h4{margin:0 0 6px;font:700 15px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
+.membox h4 span{font-weight:700;letter-spacing:.02em}
+.membox.dead{border-style:dashed;border-color:var(--coral);background:var(--coral-soft)}
+.membox.disk{background:#eef2f4}
+.mrow{font:600 21px var(--f-mono);padding:6px 10px;border-radius:8px;background:var(--code-bg);margin-top:6px;transition:opacity .35s,transform .35s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .k{color:var(--muted)} .mrow .v{color:var(--amber)}
+.mrow.empty{color:var(--dim);background:none;font-style:italic}
+.mrow.gone{opacity:0;transform:translateX(-24px)}
+.lane{height:64px;position:relative}
+.lane::before{content:"";position:absolute;left:50%;top:6px;bottom:6px;border-left:3px dashed var(--line)}
+.lane .ll{position:absolute;top:50%;transform:translateY(-50%);font:700 18px var(--f-mono);color:var(--muted)}
+.lane .ll.l{right:calc(50% + 18px)} .lane .ll.r{left:calc(50% + 18px)}
+.lane .ll.lit{color:var(--cyan)}
+.sflow{display:grid;grid-template-columns:260px 1fr 460px 1fr 170px;align-items:center;gap:10px;margin-top:22px}
+.snode{border:2px solid var(--line);border-radius:14px;background:var(--panel);padding:12px 16px;font:600 20px/1.4 var(--f-mono);white-space:pre;transition:border-color .3s,background .3s,box-shadow .3s}
+.snode.str{color:var(--amber);border-style:dashed;white-space:nowrap}
+.snode.dsk{text-align:center;font:800 22px var(--f-display);white-space:normal}
+.snode.lit{border-color:var(--cyan);background:var(--top-card);box-shadow:0 8px 22px -14px rgba(10,132,121,.6)}
+.sarr{position:relative;height:4px;background:var(--line);transition:background .3s}
+.sarr.lit{background:var(--cyan)}
+.sarr::after{content:"";position:absolute;right:-3px;top:-7px;border-style:solid;border-width:9px 0 9px 12px;border-color:transparent transparent transparent var(--line)}
+.sarr.lit::after{border-left-color:var(--cyan)}
+.sarr.rev::after{right:auto;left:-3px;border-width:9px 12px 9px 0;border-color:transparent var(--line) transparent transparent}
+.sarr.rev.lit::after{border-right-color:var(--cyan)}
+.sarr b{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font:700 17px var(--f-mono);color:var(--muted);white-space:nowrap}
+.sarr.lit b{color:var(--cyan)}
+.lockers{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.locker{border:2px solid var(--line);border-radius:12px;background:var(--panel);padding:12px 14px;height:84px;box-sizing:border-box;transition:all .3s}
+.locker b{display:block;font:700 20px var(--f-mono)}
+.locker span{display:block;font:500 17px var(--f-mono);color:var(--amber);margin-top:6px;opacity:0;transition:opacity .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.locker.open{border-color:var(--cyan);background:var(--top-card);transform:translateY(-4px)}
+.locker.open span{opacity:1}
+.req{display:inline-flex;gap:12px;align-items:center;font:700 22px var(--f-body);background:var(--amber-soft);border:2px solid rgba(176,102,0,.4);color:var(--fg);border-radius:12px;padding:10px 16px}
+.req code{font:700 21px var(--f-mono);color:var(--amber)}
+.lanes{display:flex;flex-direction:column;gap:16px;margin-top:22px}
+.lane2{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:center}
+.lane2 > b{font:700 22px var(--f-body)}
+.lane2 > b small{display:block;font:500 16px var(--f-body);color:var(--muted)}
+.ticks{height:48px;border-radius:10px;border:2px solid var(--line);background-color:var(--panel);background-image:repeating-linear-gradient(90deg,var(--cyan) 0 8px,transparent 8px 30px);animation:tick .8s linear infinite;transition:border-color .3s,filter .3s}
+.ticks.frozen{animation-play-state:paused;filter:grayscale(1);border-color:var(--coral)}
+@keyframes tick{to{background-position:30px 0}}
+.rbar{height:48px;border-radius:10px;border:2px solid var(--line);overflow:hidden;background:var(--panel)}
+.rbar i{display:block;height:100%;width:0;background:var(--amber-soft);border-right:3px solid var(--amber)}
+.status{font:700 24px var(--f-body);min-height:34px}
+.shelves{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:20px}
+.shelf{border:2px solid var(--line);border-radius:16px;padding:14px 16px;min-height:230px;background:var(--panel);box-sizing:border-box}
+.shelf h3{font-size:26px} .shelf p{font-size:18px;color:var(--muted);margin:2px 0 12px}
+.shelf .got{display:flex;flex-direction:column;gap:8px}
+.chip2{display:inline-block;font:700 18px var(--f-body);padding:8px 14px;border-radius:999px;border:2px solid var(--amber);background:var(--amber-soft);white-space:nowrap}
+.srcrow{display:flex;gap:12px;flex-wrap:wrap;min-height:46px;margin-top:18px}
+.flyc{position:absolute;z-index:70;pointer-events:none}
+.syncrow{display:grid;grid-template-columns:1fr 90px 1fr;align-items:center;gap:10px;margin-top:20px}
+.syncrow .sbox{align-self:stretch;text-align:center}
+.neq{font:800 52px var(--f-display);text-align:center;color:var(--coral);opacity:0;transition:opacity .3s}
+.neq.show{opacity:1}
+.neq.ok{color:var(--cyan)}
+.bugs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.bug{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;flex-direction:column;gap:8px}
+.bug h3{font-size:24px;color:var(--coral)}
+.bug pre{margin:0;font:600 17px/1.45 var(--f-mono);background:var(--code-bg);border-radius:8px;padding:8px 12px;white-space:pre;overflow:hidden}
+.bug .res{font:600 17px var(--f-mono);color:var(--coral)}
+.bug .fix{font:600 17px var(--f-mono);color:var(--cyan)}
+.dbp{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+.dbc{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.dbc h3{font-size:26px}
+.dbc pre{margin:0;font:600 16px/1.45 var(--f-mono);background:var(--code-bg);border-radius:8px;padding:10px 12px;white-space:pre-wrap}
+.dbc .rbar{height:30px}
+.dbc .lbl2{font:600 17px var(--f-body);color:var(--muted)}
+.dbrows{display:flex;flex-direction:column;gap:6px;min-height:120px}
+.dbrows div{font:600 16px var(--f-mono);background:var(--top-card);border:1px solid rgba(10,132,121,.4);border-radius:8px;padding:6px 10px;animation:pin .35s ease}
+
+/* ---------- back-bench sizes (override) ---------- */
+.kicker{font-size:20px}
+h2{font-size:56px}
+.lead{font-size:31px}
+pre.code{font-size:20px}
+.codestack .lbl,.ctitle,.cap{font-size:17px}
+.principle{font-size:33px}
+.principle small{font-size:23px}
+.xlist div{font-size:31px}
+.cp{font-size:23px} .cp b{font-size:16px}
+.tag{font-size:16px}
+.op{font-size:19px}
+.slog{font-size:24px}
+.need div{font-size:25px} .need code{font-size:23px}
+.tn3{font-size:22px} .tn3 small{font-size:15px}
+.tree4 .tn3{font-size:21px}
+.anno{font-size:18px}
+.q h3{font-size:27px} .q p{font-size:21px}
+.pt td{font-size:18px} .pt td:first-child{font-size:24px} .pt th{font-size:17px}
+.mr .req{font-size:25px} .mr code{font-size:22px}
+.readout{font-size:21px}
+.sbox.sm{font-size:23px}
+.rules span{font-size:23px}
+.cards-cap{font-size:17px}
+.scard b{font-size:25px} .scard span{font-size:17px}
+.wsec div{font-size:25px} .wsec div b{font-size:16px}
+.pbox{font-size:37px} .pbox small{font-size:23px}
+.comp{font-size:26px} .comp small{font-size:21px}
+.sp h3{font-size:30px} .sp p{font-size:21px}
+.msop{font-size:23px}
+.mcard{font-size:21px}
+.ibox{font-size:25px} .ibox small{font-size:19px}
+.sc h3{font-size:26px}
+.shp p{font-size:22px}
+.bin h3{font-size:30px} .bin p{font-size:21px}
+.schip{font-size:22px}
+.qline{font-size:28px}
+.evt{font-size:24px}
+.mtree{font-size:21px}
+.steps div{font-size:32px}
+.ty h3{font-size:34px} .ty p{font-size:24px}
+.minis3 p{font-size:20px}
+.term .tbody{font-size:21px}
+/* persistence */
+.mrow{font-size:23px}
+.membox h4{font-size:17px}
+.snode{font-size:22px}
+.sarr b{font-size:19px}
+.locker b{font-size:22px} .locker span{font-size:19px}
+.req{font-size:24px} .req code{font-size:23px}
+.lane2 > b{font-size:25px} .lane2 > b small{font-size:18px}
+.status{font-size:27px}
+.shelf h3{font-size:28px} .shelf p{font-size:20px}
+.chip2{font-size:20px}
+.bug h3{font-size:27px} .bug pre{font-size:18px} .bug .res,.bug .fix{font-size:19px}
+.dbc h3{font-size:28px} .dbc pre{font-size:17px} .dbc .lbl2{font-size:19px}
+.dbrows div{font-size:17px}
+.lane .ll{font-size:20px}
+.pt td{word-break:normal} .pt td:first-child{width:130px}
+
+/* ---------- activity: where should data live ---------- */
+.s-L{--sc:#0a8479;--sc-soft:rgba(10,132,121,.12)} .s-R{--sc:#2563c9;--sc-soft:rgba(37,99,201,.11)}
+.s-RC{--sc:#7a3bc2;--sc-soft:rgba(122,59,194,.11)} .s-LB{--sc:#b06600;--sc-soft:rgba(214,138,20,.15)}
+.schip2{display:inline-flex;align-items:center;gap:8px;font:700 19px var(--f-body);color:var(--sc);background:var(--sc-soft);border:2px solid var(--sc);border-radius:999px;padding:4px 14px 4px 5px;white-space:nowrap}
+.schip2 i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--sc);color:#fff;display:grid;place-items:center;font:800 14px var(--f-mono)}
+/* intro */
+.acx{display:grid;grid-template-columns:260px 1fr 260px;align-items:center;gap:20px;margin-top:40px;height:330px}
+.acx .dev{display:flex;flex-direction:column;align-items:center;gap:14px;font:700 30px var(--f-display)}
+.acx .mid{position:relative;height:100%;display:flex;align-items:center;justify-content:center}
+.acx .mid::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:3px dashed var(--line)}
+.acchip{position:relative;font:700 40px var(--f-display);background:var(--panel);border:2px solid var(--fg);border-radius:16px;padding:16px 28px;animation:acwob 1.6s ease-in-out infinite;white-space:nowrap}
+.acchip b{position:absolute;top:-22px;right:-18px;width:44px;height:44px;border-radius:50%;background:var(--amber);color:#fff;display:grid;place-items:center;font:800 26px var(--f-display)}
+@keyframes acwob{0%,100%{transform:translateX(-70px)}50%{transform:translateX(70px)}}
+.acchip.swap{animation:acin .45s ease, acwob 1.6s ease-in-out .45s infinite}
+@keyframes acin{from{opacity:0;transform:scale(.7)}}
+.game{display:flex;gap:14px;margin-top:30px}
+.game div{flex:1;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:18px 18px;font:700 28px/1.2 var(--f-display);display:flex;gap:12px;align-items:center}
+.game div i{font-style:normal;flex:none;width:40px;height:40px;border-radius:50%;background:var(--fg);color:#fff;display:grid;place-items:center;font:800 21px var(--f-mono)}
+/* places */
+.owner{font:600 27px/1.3 var(--f-body);margin-top:16px;display:flex;align-items:center;gap:14px}
+.owner b{font-family:var(--f-display);font-size:30px}
+.places{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.place{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:center;background:var(--panel);border:2px solid var(--line);border-top:6px solid var(--sc);border-radius:16px;padding:22px 20px;min-height:200px;box-sizing:border-box}
+.place h3{font-size:33px;color:var(--sc);display:flex;align-items:center;gap:10px}
+.place h3 i{font-style:normal;flex:none;width:38px;height:38px;border-radius:50%;background:var(--sc);color:#fff;display:grid;place-items:center;font:800 21px var(--f-mono)}
+.place p{font-size:25px;line-height:1.3;margin-top:6px;color:var(--fg)}
+.mini svg{display:block;width:220px;height:auto}
+/* lens */
+.lens{display:grid;grid-template-columns:560px 1fr;gap:34px;margin-top:20px}
+.lensrows{display:flex;flex-direction:column;gap:11px}
+.lensrow{background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:11px 18px;transition:border-color .3s, box-shadow .3s, opacity .45s, transform .55s}
+.lensrow b{font:800 30px var(--f-display);display:block}
+.lensrow span{font:500 23px/1.3 var(--f-body);color:var(--muted)}
+.lensrow.now{border-color:var(--cyan);box-shadow:inset 6px 0 0 var(--cyan)}
+.lensrow.now b{color:var(--cyan)}
+.demo{position:relative;background:var(--panel);border:2px solid var(--line);border-radius:18px;height:470px;overflow:hidden;padding:24px 28px}
+.demo h4{margin:0;font:700 17px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dl{font:600 25px/1.3 var(--f-body);margin-top:16px;opacity:0;animation:dlin .5s ease forwards}
+.dl.bad{color:var(--coral)} .dl.ok{color:var(--cyan)}
+@keyframes dlin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.drop{position:absolute;left:50%;top:70px;margin-left:-30px;animation:drop 1.4s cubic-bezier(.5,0,.8,.4) .3s forwards}
+@keyframes drop{to{transform:translateY(170px) rotate(28deg);opacity:0}}
+.water{position:absolute;left:0;right:0;top:250px;height:60px;background:linear-gradient(#cfe6f5,#e8f3fa);border-top:3px solid #8cc0e3}
+.lossl{position:absolute;left:28px;right:28px;top:270px}
+.lossl .dl{margin-top:10px}
+.gem{font:700 34px var(--f-mono);background:var(--code-bg);border:2px solid var(--line);border-radius:14px;padding:14px 22px;margin-top:20px;display:flex;justify-content:space-between;align-items:center}
+.gem small{font:700 16px var(--f-mono);white-space:nowrap;margin-left:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.gem.hack{border-color:var(--coral);background:var(--coral-soft);color:var(--coral)}
+.gem.srv{border-color:var(--cyan);background:var(--cyan-soft);color:var(--cyan)}
+.shr{position:absolute;inset:60px 20px 20px}
+.shr .n{position:absolute;transform:translate(-50%,-50%);font:700 23px var(--f-body);background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 14px;opacity:0;animation:nin .4s ease forwards;white-space:nowrap}
+@keyframes nin{to{opacity:1}}
+.shr .n.c{border-color:var(--cyan);background:#e2f3f1;z-index:2;color:var(--cyan);font:800 26px var(--f-display);opacity:1;animation:none}
+.shr svg{position:absolute;inset:0;width:100%;height:100%}
+.shr line{stroke:var(--cyan);stroke-width:3;stroke-dasharray:300;stroke-dashoffset:300;animation:ln .5s ease forwards}
+@keyframes ln{to{stroke-dashoffset:0}}
+.bars{margin-top:14px;display:flex;flex-direction:column;gap:14px}
+.cbar{display:grid;grid-template-columns:170px 1fr;align-items:center;gap:12px;font:600 23px var(--f-body)}
+.cbar i{display:block;height:24px;border-radius:12px;background:var(--amber);width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+/* app slides */
+.ac-wrap{display:grid;grid-template-columns:230px 1fr;gap:40px;height:100%}
+.ac-wrap>.pw{align-self:center}
+.ac-r{display:flex;flex-direction:column;min-width:0}
+.ac-h{font-size:46px!important;margin-top:8px!important}
+.ac-h small{font:600 26px var(--f-body);color:var(--muted);letter-spacing:0;margin-left:8px}
+.ac-clues{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.ac-clue{font:600 17px var(--f-body);background:var(--panel);border:1.5px solid var(--line);border-radius:999px;padding:5px 13px;transition:all .3s}
+.ac-clue.hot{background:#fff4d6;border-color:var(--amber);color:#7a4700;box-shadow:0 0 0 3px rgba(214,138,20,.25)}
+.ac-app.meet .ac-clues{flex-direction:column;gap:14px;margin-top:26px}
+.ac-app.meet .ac-clue{font:600 30px/1.25 var(--f-body);border-radius:14px;border-width:2px;border-left:7px solid var(--amber);padding:14px 22px;animation:dlin .5s ease both}
+.ac-app.meet .ac-clue:nth-child(2){animation-delay:.12s}.ac-app.meet .ac-clue:nth-child(3){animation-delay:.24s}.ac-app.meet .ac-clue:nth-child(4){animation-delay:.36s}
+.ac-meetq{font:700 28px var(--f-display);color:var(--muted);margin-top:24px;display:none}
+.ac-app.meet .ac-meetq{display:block}
+.ac-app.meet .ac-items,.ac-app.meet .ac-panel{display:none}
+.ac-items{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.ac-row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:0 12px;height:47px;cursor:pointer;transition:border-color .25s, box-shadow .25s, opacity .25s}
+.ac-row>i{font-style:normal;width:30px;height:30px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font:700 16px var(--f-mono);color:var(--muted)}
+.ac-row>b{font:700 25px var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac-row .slot{font:700 19px var(--f-mono);color:var(--dim);border:2px dashed var(--line);border-radius:999px;padding:2px 16px}
+.ac-row.focus{border-color:var(--fg);box-shadow:inset 6px 0 0 var(--fg)}
+.ac-row.focus>i{background:var(--fg);color:#fff}
+.ac-row.later{opacity:.55}
+.ac-row .schip2.pop{animation:acin .4s ease}
+.ac-panel{margin-top:10px;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:12px 18px;min-height:128px;box-sizing:border-box}
+.ac-q{font:700 27px var(--f-display)}
+.ac-q span{color:var(--amber)}
+.ac-votes{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.ac-votes button{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font:700 18px var(--f-body);color:var(--sc);background:var(--panel);border:2px solid var(--sc);border-radius:999px;padding:4px 14px 4px 5px}
+.ac-votes button i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--sc);color:#fff;display:grid;place-items:center;font:800 15px var(--f-mono)}
+.ac-votes button.sel{background:var(--sc);color:#fff;box-shadow:0 0 0 4px var(--sc-soft)}
+.ac-votes button.sel i{background:#fff;color:var(--sc)}
+.ac-ans{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ac-ans .schip2{font-size:22px}
+.ac-by{font:600 17px var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:flex;gap:6px;align-items:center}
+.ac-by em{font-style:normal;background:var(--fg);color:#fff;border-radius:6px;padding:3px 9px;text-transform:none;letter-spacing:0;font:700 17px var(--f-body)}
+.ac-cls{font:700 18px var(--f-body);border-radius:8px;padding:3px 10px}
+.ac-cls.y{background:var(--cyan-soft);color:var(--cyan)} .ac-cls.n{background:var(--coral-soft);color:var(--coral)}
+.ac-deb{font:700 16px var(--f-mono);color:#7a4700;background:#fff4d6;border:1.5px solid var(--amber);border-radius:8px;padding:3px 9px;text-transform:uppercase;letter-spacing:.04em}
+.ac-why{font:500 23px/1.32 var(--f-body);margin-top:8px}
+/* app mockups */
+.mk{position:absolute;inset:0;padding-top:40px;display:flex;flex-direction:column;background:var(--ios-bg);font-family:var(--f-body);color:var(--ios-fg)}
+.mk .mt{font:800 21px var(--f-display);padding:6px 14px 8px;letter-spacing:-.01em}
+.mk .sub{font:600 10px var(--f-body);color:var(--ios-muted);padding:0 14px}
+.mk .card{margin:6px 12px;background:#fff;border:1px solid var(--ios-line);border-radius:12px;padding:9px 11px}
+.mk .lab{font:600 9.5px var(--f-body);color:var(--ios-muted);text-transform:uppercase;letter-spacing:.04em}
+.mk .big{font:800 17px var(--f-display)}
+.mk .li{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--ios-line);font:600 11.5px var(--f-body)}
+.mk .li small{display:block;font:400 9.5px var(--f-body);color:var(--ios-muted)}
+.mk .btn2{margin:8px 12px;border-radius:12px;padding:9px;text-align:center;font:700 12px var(--f-body);color:#fff;background:var(--ios-blue)}
+.mk .map{margin:4px 12px;height:150px;border-radius:14px;background:#e4efe6;background-image:linear-gradient(#d3e3d6 1px,transparent 1px),linear-gradient(90deg,#d3e3d6 1px,transparent 1px);background-size:22px 22px;position:relative;overflow:hidden}
+.mk .stats{display:grid;grid-template-columns:1fr 1fr 1fr;margin:6px 12px;gap:6px}
+.mk .stats div{background:#fff;border:1px solid var(--ios-line);border-radius:10px;padding:6px;text-align:center;font:800 13px var(--f-display)}
+.mk .stats small{display:block;font:600 8.5px var(--f-body);color:var(--ios-muted)}
+.mk .rest{display:flex;gap:9px;align-items:center;margin:5px 12px;background:#fff;border:1px solid var(--ios-line);border-radius:12px;padding:7px}
+.mk .rest i{width:44px;height:44px;border-radius:9px;flex:none}
+.mk .rest b{font:700 11.5px var(--f-body);display:block}
+.mk .rest small{font:400 9.5px var(--f-body);color:var(--ios-muted)}
+.mk .cartbar{position:absolute;left:10px;right:10px;bottom:22px;background:#e2552f;color:#fff;border-radius:12px;padding:9px 12px;display:flex;justify-content:space-between;font:700 11.5px var(--f-body)}
+.mk .search{margin:2px 12px 6px;background:#fff;border:1px solid var(--ios-line);border-radius:10px;padding:7px 10px;font:400 10.5px var(--f-body);color:#a1adb4}
+.mk .chips{display:flex;gap:5px;padding:2px 12px 6px}
+.mk .chips span{font:600 9.5px var(--f-body);border:1px solid var(--ios-line);background:#fff;border-radius:999px;padding:3px 8px}
+.mk .chips span.a{background:var(--ios-fg);color:#fff;border-color:var(--ios-fg)}
+.mk .fab{position:absolute;right:14px;bottom:26px;width:40px;height:40px;border-radius:50%;background:#e3a33b;color:#fff;display:grid;place-items:center;font:700 24px var(--f-body)}
+.mk .bal{margin:6px 12px;border-radius:14px;padding:12px;background:#0f5d55;color:#fff}
+.mk .bal .lab{color:#bfe3de}
+.mk .bal .big{font-size:20px;margin-top:3px;display:flex;justify-content:space-between;align-items:center}
+.mk .bal .big span{font:700 9.5px var(--f-body);background:rgba(255,255,255,.18);border-radius:999px;padding:4px 8px}
+.mk .acts{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 10px}
+.mk .acts div{text-align:center;font:600 8.5px var(--f-body);color:var(--ios-muted)}
+.mk .acts div i{display:block;width:34px;height:34px;margin:0 auto 4px;border-radius:11px;background:#e2f3f1;border:1px solid #bfe3de}
+.mk .art{margin:8px auto 0;width:170px;height:170px;border-radius:16px;background:linear-gradient(135deg,#7a3bc2,#e0736a 60%,#e3a33b)}
+.mk .song{text-align:center;margin-top:10px;font:800 15px var(--f-display)}
+.mk .song small{display:block;font:500 10.5px var(--f-body);color:var(--ios-muted)}
+.mk .prog2{margin:10px 18px 0;height:4px;border-radius:2px;background:var(--ios-line);position:relative}
+.mk .prog2 i{position:absolute;left:0;top:0;bottom:0;width:38%;background:var(--ios-fg);border-radius:2px}
+.mk .ctl{display:flex;justify-content:center;gap:22px;align-items:center;margin-top:12px}
+.mk .tag3{align-self:center;margin-top:12px;font:700 9.5px var(--f-body);background:#e2f3f1;color:#0a8479;border-radius:999px;padding:4px 10px}
+.mk .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -6px 20px -10px rgba(0,0,0,.3);padding:12px 14px 26px}
+.mk .sos{position:absolute;right:12px;top:48px;width:40px;height:40px;border-radius:50%;background:#cc3d33;color:#fff;display:grid;place-items:center;font:800 10px var(--f-body);box-shadow:0 0 0 5px rgba(204,61,51,.2)}
+.mk .car{position:absolute;width:14px;height:14px;border-radius:4px;background:#13212b;border:2px solid #fff}
+/* sort + rules + bridge */
+.bands{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.band{display:grid;grid-template-columns:270px 1fr;gap:14px;align-items:start;background:var(--panel);border:2px solid var(--line);border-left:8px solid var(--sc);border-radius:14px;padding:10px 14px}
+.band h3{font-size:25px;color:var(--sc);line-height:1.15}
+.band h3 small{display:block;font:700 17px var(--f-mono);color:var(--muted);margin-top:4px}
+.band .its{display:flex;flex-wrap:wrap;gap:6px}
+.band .its span{font:600 17px var(--f-body);background:var(--sc-soft);border:1.5px solid var(--sc);border-radius:8px;padding:3px 9px;animation:acin .35s ease both}
+.band .its span em{font-style:normal;font-weight:800;color:var(--sc)}
+.rules2{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.rule{display:grid;grid-template-columns:150px 1fr auto;gap:18px;align-items:center;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:12px 18px}
+.rule>em{font-style:normal;font:800 20px var(--f-mono);background:var(--fg);color:#fff;border-radius:8px;padding:6px 10px;text-align:center}
+.rule b{font:700 28px/1.2 var(--f-display);display:block}
+.rule small{font:500 20px var(--f-body);color:var(--muted)}
+.bridge{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+.bcard{background:var(--panel);border:2px solid var(--line);border-top:6px solid var(--sc);border-radius:16px;padding:12px 14px;text-align:center;transition:opacity .4s}
+.bcard h3{font-size:24px;color:var(--sc);margin-top:4px}
+.bcard .cnt{font:800 44px var(--f-display);margin-top:2px}
+.bcard .cnt small{font:600 18px var(--f-body);color:var(--muted)}
+.bcard .mini svg{margin:0 auto}
+.bridge.hl .bcard.bdim{opacity:.35}
+.bridge.hl .bcard.bkeep{box-shadow:0 0 0 4px var(--sc-soft)}
+.bridge.hl .bcard.bkeep .ph-ring{opacity:1}
+.ph-ring{opacity:0;transition:opacity .4s}
+
+
+.cut{display:none}
+/* asyncstorage api slide */
+.api{display:flex;flex-direction:column;gap:12px;margin-top:22px}
+.apir{display:grid;grid-template-columns:140px 1fr 260px;align-items:center;gap:16px;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:10px 18px;transition:opacity .45s, transform .55s, border-color .3s}
+.apir.now{border-color:var(--cyan);box-shadow:inset 6px 0 0 var(--cyan)}
+.apir>b{font:800 30px var(--f-display)}
+.apir code{font:600 23px var(--f-mono);color:var(--code-fg)}
+.apir code em{font-style:normal;color:#2c7a30}
+.apir span{font:600 21px var(--f-body);color:var(--muted);text-align:right}
+.nb2{margin-top:18px;display:grid;grid-template-columns:200px 1fr;gap:14px;align-items:start}
+.nb2 h4{margin:6px 0 0;font:700 17px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.kv{display:flex;flex-direction:column;gap:6px}
+.kv div{display:grid;grid-template-columns:200px 1fr;font:600 21px var(--f-mono);background:var(--code-bg);border:1px solid var(--line);border-radius:10px;overflow:hidden;transition:all .35s}
+.kv div b{background:var(--top-card);color:var(--cyan);padding:7px 14px;font-weight:700}
+.kv div span{padding:7px 14px;color:#2c7a30;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kv div.flash{box-shadow:0 0 0 4px var(--cyan-soft);border-color:var(--cyan)}
+.kv div.gone{opacity:.35;text-decoration:line-through}
+
+/* example 1 app */
+.ex1lab{font:600 10px var(--f-body);color:var(--ios-muted);padding:14px 14px 0;text-transform:uppercase;letter-spacing:.04em}
+.ex1in{margin:6px 14px;height:40px;border:1.5px solid var(--ios-line);border-radius:10px;background:#fff;font:500 13px/40px var(--f-body);padding:0 11px;color:var(--ios-fg);white-space:nowrap;overflow:hidden}
+.ex1in .ph{color:#a1adb4}
+.ex1btn{margin:6px 14px;height:40px;border-radius:10px;background:var(--ios-blue);color:#fff;font:700 13px/40px var(--f-body);text-align:center}
+.tagp.n{background:#13212b}
+.flow4{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.flow4 span{font:700 21px var(--f-body);background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:8px 14px}
+.flow4 span code{font:600 19px var(--f-mono);color:var(--cyan)}
+.flow4 i{font-style:normal;font:800 22px var(--f-body);color:var(--muted)}
+</style>
+
+<div class="viewport" id="vp"><div class="holder" id="holder"><div id="stage">
+
+<!-- 0 TITLE -->
+<section class="slide" data-id="title" data-steps="1" data-name="Make your app remember"
+  data-notes="Open with the phone demo running: a draft is typed, the app is closed, reopened, and the draft is still there. Ask: how many apps on your phone remember what you typed? Today we find out what that takes, from first principles, before touching any library.">
+  <div class="title-wrap">
+    <div>
+      <div class="kicker"><b>Mobile module</b> · Local data persistence</div>
+      <h1 class="fp-title">Make your app<br><em>remember</em></h1>
+      <p class="lead" style="margin-top:26px;font-size:30px">Close the app. Open it again.<br>Is your data still there?</p>
+    </div>
+    <div class="pw" style="--s:1.22"><div class="phone" id="tPhone"></div></div>
+  </div>
+  <div class="hint">→ next · N notes</div>
+</section>
+
+<!-- 1 HOW -->
+<section class="cut" data-id="how" data-steps="1" data-name="How we'll learn today"
+  data-notes="Same method as the navigation lecture. For each idea: see something break, say what must be true, find the simplest idea, and only then write code. Storage libraries change; memory versus disk has not changed in fifty years.">
+  <div class="kicker"><b>How we'll learn</b></div>
+  <h2>Same path as last time</h2>
+  <div class="pipe" id="pipe">
+    <div class="pbox">Problem<small>What breaks?</small></div><i class="parr"></i>
+    <div class="pbox">Requirement<small>What must be true?</small></div><i class="parr"></i>
+    <div class="pbox">Idea<small>The simplest thing that works</small></div><i class="parr"></i>
+    <div class="pbox code">Code<small>Last, and least</small></div>
+  </div>
+  <p class="principle" style="margin-top:48px">Storage libraries change. <span class="cyan">Memory vs disk doesn't.</span></p>
+</section>
+
+<!-- P1a SEND INTRO -->
+<section class="cut" data-id="sendIntro" data-steps="1" data-name="Part 1 · What does sending need?"
+  data-notes="Before we can save anything, the app needs something worth saving. Part 1 adds typing and sending, using only state. First principles: what does sending need? A place for the text being typed, a list of messages, and an action that adds the text to the list. That's two pieces of state and one function. Watch the two state boxes change as the phone types and sends.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="siPhone"></div></div>
+    <div class="col">
+      <div class="head"><div class="kicker"><b>Part 1</b> · Send a message</div><h2>What does sending<br><span class="cyan">a message need?</span></h2></div>
+      <div class="need">
+        <div><span>A place for what you type</span><code>draft</code></div>
+        <div><span>A list of messages</span><code>messages</code></div>
+        <div><span>An action that adds to the list</span><code>send()</code></div>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap"><div class="sbox sm" id="siDraft"></div><div class="sbox sm" id="siMsgs"></div></div>
+      <p class="principle">Two pieces of state + one function.</p>
+    </div>
+  </div>
+</section>
+
+<!-- P1b TYPE CODE -->
+<section class="cut" data-id="typeCode" data-steps="2" data-name="Part 1 · Code-along: type into state"
+  data-notes="Step 1: two pieces of state. messages starts with the chat's messages from chats.json; draft starts empty. Step 2: a TextInput whose value is the draft, and onChangeText updates it. This is a controlled input: the state is the single source of truth for what's in the box. Watch the draft box update on every keystroke.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="tcPhone"></div></div>
+    <div class="col" style="gap:16px">
+      <div class="head"><div class="kicker"><b>Part 1</b> · Send a message</div><h2>Step 1 · Type <span class="cyan">into state</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · two pieces of state · IndividualChat.js</div>
+<pre class="code" data-hl data-at="1">const [messages, setMessages] = useState(chat.messages);
+const [draft, setDraft] = useState("");</pre>
+        <div class="lbl">2 · the message box</div>
+<pre class="code" data-hl data-at="2">&lt;TextInput
+  value={draft}
+  onChangeText={setDraft}
+  placeholder="Message"
+/&gt;</pre>
+      </div>
+      <div class="sbox sm" id="tcDraft"></div>
+    </div>
+  </div>
+  <div class="cp" data-at="2">Typing shows in the box</div>
+</section>
+
+<!-- P1c SEND CODE -->
+<section class="cut" data-id="sendCode" data-steps="2" data-name="Part 1 · Code-along: send"
+  data-notes="Step 1: send makes a new message object and a NEW array with it at the end. We never push into the old array: React only re-renders when it gets a new value. Date.now() gives a unique id for the FlatList key. Then clear the draft. In the real file we also add a time field. Step 2: call send from the button, and from the keyboard's send key with returnKeyType and onSubmitEditing.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="scPhone"></div></div>
+    <div class="col" style="gap:16px">
+      <div class="head"><div class="kicker"><b>Part 1</b> · Send a message</div><h2>Step 2 · Send = <span class="cyan">add to the list</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · send()</div>
+<pre class="code" data-hl data-at="1" style="font-size:18px">function send() {
+  if (draft.trim() === "") return;
+  const newMessage = { id: Date.now(), sender: "me", text: draft };
+  setMessages([...messages, newMessage]);
+  setDraft("");
+}</pre>
+        <div class="lbl">2 · button and keyboard key</div>
+<pre class="code" data-hl data-at="2">&lt;Pressable onPress={send}&gt; … &lt;/Pressable&gt;
+&lt;TextInput … returnKeyType="send" onSubmitEditing={send} /&gt;</pre>
+      </div>
+      <div class="sbox sm" id="scMsgs"></div>
+    </div>
+  </div>
+  <div class="cp" data-at="2">Send adds a blue bubble</div>
+</section>
+
+<!-- P1d KEYBOARD -->
+<section class="cut" data-id="keyboard" data-steps="3" data-name="Part 1 · Don't let the keyboard cover it"
+  data-notes="Step 1, the problem: the keyboard is drawn on top of the app, so the input box at the bottom disappears behind it. Step 2, fix 1: KeyboardAvoidingView adds padding equal to the keyboard's height so the screen moves up. On iOS we use padding; Android normally resizes the window itself. keyboardVerticalOffset is the header's height, because the stack header sits above this view. But now the list is shorter, and the newest messages are pushed out of view. Step 3, fix 2: scroll the list to the end when its size changes (keyboard opens) or its content grows (new message). Test on Android: on newer Expo versions, if the input is still covered, use behavior='padding' on both platforms.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="kbPhone"></div></div>
+    <div class="col" style="gap:14px">
+      <div class="head"><div class="kicker"><b>Part 1</b> · Send a message</div><h2>Step 3 · Don't let <span class="coral">the keyboard</span> cover it</h2></div>
+      <p class="principle c" id="kbProb">The keyboard is drawn on top of your app.</p>
+      <div class="codestack" data-at="2">
+        <div class="lbl">fix 1 · move the screen up</div>
+<pre class="code" data-hl data-at="2">&lt;KeyboardAvoidingView
+  behavior={Platform.OS === "ios" ? "padding" : undefined}
+  keyboardVerticalOffset={headerHeight}&gt;</pre>
+        <div class="lbl" data-at="3">fix 2 · keep the newest message in view</div>
+<pre class="code" data-hl data-at="3">&lt;FlatList ref={listRef}
+  onContentSizeChange={scrollToBottom}
+  onLayout={scrollToBottom} … /&gt;</pre>
+      </div>
+    </div>
+  </div>
+  <div class="cp" data-at="3" style="bottom:14px">Keyboard open: input and newest message visible</div>
+</section>
+
+<!-- ACTIVITY: LOCAL VS REMOTE -->
+<section class="cut" data-id="acIntro" data-steps="1" data-name="Activity · Where should this data live?"
+  data-notes="Bridge from Part 1. Everything we built lives in state, inside the running app. Before we save anything, ask a bigger question: where should each piece of data live, on the phone or on a server? Point at the chip moving between the phone and the server: draft message, bank balance, dark mode, leaderboard, card number. Ask the room for a couple of them right now, then say we will settle it properly. Getting it wrong has real consequences: you lose user data, you leak private data, or users cheat. Then explain the game out loud: I show an app, you read its clues, you vote with fingers (the next slide gives each answer a number), and we reveal the answer and name the question that decided it.">
+  <div class="kicker"><b>Activity</b> · Before we save anything</div>
+  <h2>Where should this data <span class="cyan">live?</span></h2>
+  <div class="acx">
+    <div class="dev"><svg width="110" height="180" viewBox="0 0 60 100"><rect x="2" y="2" width="56" height="96" rx="12" fill="#13212b"/><rect x="7" y="9" width="46" height="80" rx="7" fill="#e2f3f1"/></svg>The phone</div>
+    <div class="mid"><div class="acchip" id="acChip">Draft message<b>?</b></div></div>
+    <div class="dev"><svg width="150" height="150" viewBox="0 0 100 100"><rect x="10" y="12" width="80" height="22" rx="6" fill="#13212b"/><rect x="10" y="39" width="80" height="22" rx="6" fill="#13212b"/><rect x="10" y="66" width="80" height="22" rx="6" fill="#13212b"/><circle cx="24" cy="23" r="4" fill="#2bb3a3"/><circle cx="24" cy="50" r="4" fill="#2bb3a3"/><circle cx="24" cy="77" r="4" fill="#2bb3a3"/></svg>The server</div>
+  </div>
+  <p class="principle" style="margin-top:34px">The phone, the server, or both? <span class="cyan">You decide.</span></p>
+</section>
+
+<section class="cut" data-id="acPlaces" data-steps="5" data-name="Activity · Four homes for data"
+  data-notes="First the word owner. Whenever data exists in two places, the copies will one day disagree. The owner is the copy that wins. Then the four answers, one per step. Each has a number: students show that many fingers to vote. 1, Local only: only on the phone, the server never sees it. 2, Remote only: only on the server, the app fetches it and does not keep it. 3, Remote plus local cache: the server owns it, the phone keeps a throw-away copy for speed and offline use. The cache can be wiped any time and nothing is lost; on conflict the server wins. 4, Local plus remote backup: the phone owns it, the server keeps a sealed copy it cannot read, only for recovery. Read the diagrams: the star marks the owner.">
+  <div class="kicker"><b>Activity</b> · The four answers</div>
+  <h2>Four homes for data</h2>
+  <p class="owner" data-at="1"><b>Owner</b> = the copy that wins when two copies disagree. <svg width="26" height="26" viewBox="0 0 26 26"><text x="13" y="21" text-anchor="middle" font-size="22" fill="#122029">★</text></svg></p>
+  <div class="places">
+    <div class="place s-L" data-at="2"><div class="mini" data-sc="L"></div><div><h3><i>1</i>Local only</h3><p>Only on the phone. The server never sees it.</p></div></div>
+    <div class="place s-R" data-at="3"><div class="mini" data-sc="R"></div><div><h3><i>2</i>Remote only</h3><p>Only on the server. Fetched every time, never kept.</p></div></div>
+    <div class="place s-RC" data-at="4"><div class="mini" data-sc="RC"></div><div><h3><i>3</i>Remote + local cache</h3><p>Server owns it. The phone keeps a throw-away copy.</p></div></div>
+    <div class="place s-LB" data-at="5"><div class="mini" data-sc="LB"></div><div><h3><i>4</i>Local + remote backup</h3><p>Phone owns it. The server keeps a sealed copy.</p></div></div>
+  </div>
+</section>
+
+<section class="cut" data-id="acLens" data-steps="5" data-name="Activity · Five questions decide it"
+  data-notes="These five questions are the whole method; every answer in the activity comes from one or two of them. One per step, with a live example on the right. Loss: if the phone falls in a lake, is the data gone, and does that matter? A theme, no. Three years of runs, yes. Truth: can someone edit the local copy and gain something? Ask who has played a modded APK of Clash of Clans. The phone said 999999 gems, the server said 120, and the server won. Anything worth cheating belongs to the server. Sharing: does anyone else need it, another device, another person, or the server's own logic? Then the server must have it. Freshness: is an old copy harmless, or does it cause a wrong action? A stale balance makes a payment fail. Cost: every copy costs battery, data, storage, privacy or server money. Keep a copy only when it buys something.">
+  <div class="kicker"><b>Activity</b> · How to decide</div>
+  <h2>Five questions decide it</h2>
+  <div class="lens">
+    <div class="lensrows">
+      <div class="lensrow" data-at="1"><b>Loss</b><span>Phone lost. Is the data gone?</span></div>
+      <div class="lensrow" data-at="2"><b>Truth</b><span>Can someone edit it and gain?</span></div>
+      <div class="lensrow" data-at="3"><b>Sharing</b><span>Does anyone else need it?</span></div>
+      <div class="lensrow" data-at="4"><b>Freshness</b><span>Does an old copy cause wrong actions?</span></div>
+      <div class="lensrow" data-at="5"><b>Cost</b><span>What does the other place cost?</span></div>
+    </div>
+    <div class="demo" id="acDemo"></div>
+  </div>
+</section>
+
+<section class="cut" data-id="acSort" data-steps="1" data-name="Activity · All the answers"
+  data-notes="Every item from the seven apps, sorted. Ask what the items in each band have in common before showing the rules. Local only: preferences, drafts, screen state and secrets for this device. Remote only: things that are worth cheating or change constantly. Remote plus cache: shared data the user also wants fast or offline. This is the biggest band, which is why real apps have so much caching code. Local plus backup: rare, for private data the user must not lose.">
+  <div class="kicker"><b>Activity</b> · What we decided</div>
+  <h2>All the answers, sorted</h2>
+  <div class="bands" id="acBands"></div>
+</section>
+
+<section class="cut" data-id="acRules" data-steps="5" data-name="Activity · The rules we found"
+  data-notes="Have students state each rule before you reveal it. These rules transfer to any app, any platform, any framework. Note rule 4: secrets like tokens also stay local, but in the secure store, not plain storage. We see that shelf later today.">
+  <div class="kicker"><b>Activity</b> · The takeaway</div>
+  <h2>Five rules we just found</h2>
+  <div class="rules2">
+    <div class="rule" data-at="1"><em>Truth</em><div><b>Editing it gains something? The server owns it.</b><small>balance · fare · leaderboard · card</small></div><span><span class="schip2 s-R"><i>2</i>Remote only</span></span></div>
+    <div class="rule" data-at="2"><em>Sharing</em><div><b>Someone else needs it? Server owns, phone caches.</b><small>messages · playlists · ride · emergency contacts</small></div><span><span class="schip2 s-RC"><i>3</i>Remote + local cache</span></span></div>
+    <div class="rule" data-at="3"><em>Freshness</em><div><b>An old copy causes wrong actions? Fetch it fresh.</b><small>order status · live location · leaderboard</small></div><span><span class="schip2 s-R"><i>2</i>Remote only</span></span></div>
+    <div class="rule" data-at="4"><em>Loss</em><div><b>Cheap to lose, only for this phone? Keep it local.</b><small>theme · draft · scroll · equalizer · tokens (secure store)</small></div><span><span class="schip2 s-L"><i>1</i>Local only</span></span></div>
+    <div class="rule" data-at="5"><em>Privacy</em><div><b>Private but must survive? Phone owns, server seals.</b><small>raw heart rate · passcode hash</small></div><span><span class="schip2 s-LB"><i>4</i>Local + remote backup</span></span></div>
+  </div>
+</section>
+
+<section class="cut" data-id="acBridge" data-steps="3" data-name="Activity · Where the phone keeps a copy"
+  data-notes="Close the activity by counting. In three of the four answers the phone keeps a copy: Local only, Remote plus cache, and Local plus backup. Step 2 highlights them: most items need a copy on the phone. That copy has to survive the user closing the app and the phone restarting. Step 3: useState lives in the app's memory and is wiped when the app closes, so it cannot be that copy. AsyncStorage can. Next: how to use it.">
+  <div class="kicker"><b>Activity</b> · Why this lecture exists</div>
+  <h2>Where does the phone <span class="cyan">keep a copy?</span></h2>
+  <div class="bridge" id="acBridge"></div>
+  <p class="principle" data-at="2" style="margin-top:20px"><span data-acn="keep"></span> of <span data-acn="tot"></span> items need a copy on the phone that survives closing the app.</p>
+  <p class="principle" data-at="3" style="margin-top:14px">useState can't. <span class="cyan">AsyncStorage can.</span></p>
+</section>
+
+<!-- 2 PROBLEM -->
+<section class="cut" data-id="problem" data-steps="2" data-name="The problem: close the app, lose everything"
+  data-notes="Part 2 starts here, right after the activity: most data needs a copy on the phone, so now we see why useState cannot be that copy. Everything from Part 1 lives in state. Watch the phone: type a draft, swipe the app away, reopen. Have students also send a message, close the app and reopen: the message is gone too. Two things are lost: the draft, and even the screen we were on (the app opens on Chats again). Have students try it on their own chat app right now. Step 2: ask where the data went. Don't answer yet.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="pbPhone"></div></div>
+    <div class="col">
+      <div class="head"><div class="kicker"><b>Part 2</b> · Make it survive</div><h2>Now close the app.<br><span class="coral">It's all gone.</span></h2></div>
+      <div class="xlist bad show">
+        <div><i>✕</i><span>Sent messages are gone</span></div>
+        <div><i>✕</i><span>The draft is empty</span></div>
+        <div><i>✕</i><span>Even the open screen is forgotten</span></div>
+      </div>
+      <p class="principle" data-at="2">Where did the data go?</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 MEMORY -->
+<section class="cut" data-id="memory" data-steps="1" data-name="Requirement 1 · Survive a restart"
+  data-notes="Connect to OS fundamentals. Every useState value lives in the app's RAM, inside its process. When the user swipes the app away, or the OS kills it to free memory, the process ends and its RAM is handed back. Nothing in it survives. The disk belongs to the device, not the process, so it outlives the app. That's the whole reason persistence exists.">
+  <div class="kicker"><b>Requirement 1</b> · Survive a restart</div>
+  <h2>useState lives in memory. <span class="coral">Memory dies with the app.</span></h2>
+  <div style="display:grid;grid-template-columns:620px 1fr;gap:44px;margin-top:22px;align-items:start">
+    <div class="mem" id="memA">
+      <div class="membox ram"><h4>App process · RAM <span class="st"></span></h4><div class="rows"></div></div>
+      <div class="lane"></div>
+      <div class="membox disk"><h4>Device · Disk <span>survives</span></h4><div class="rows"></div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <p class="principle">RAM belongs to the running app.<small>Swipe the app away, or let the OS close it, and the memory is handed back. Empty.</small></p>
+      <p class="principle">Disk belongs to the device.<small>It is still there after a restart, even after the phone reboots.</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 SAVE LOAD -->
+<section class="cut" data-id="saveload" data-steps="2" data-name="Requirement 1 · Keep a copy on disk"
+  data-notes="The idea: keep a copy of anything important on disk. Two moments matter. Save: whenever the value changes, write it down. Load: when the app starts, read it back into memory. Watch the arrows: save goes down while typing; load goes up after the restart. Step 2 states the rule.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="slPhone"></div></div>
+    <div class="col">
+      <div class="head"><div class="kicker"><b>Requirement 1</b> · Survive a restart</div><h2>Keep a copy <span class="cyan">on disk</span></h2></div>
+      <div class="mem" id="memB">
+        <div class="membox ram"><h4>RAM <span class="st"></span></h4><div class="rows"></div></div>
+        <div class="lane"><span class="ll l">save ↓</span><span class="ll r">↑ load</span></div>
+        <div class="membox disk"><h4>Disk <span>survives</span></h4><div class="rows"></div></div>
+      </div>
+      <p class="principle" data-at="2">Save when it changes. Load when the app starts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 SERIALIZE -->
+<section class="cut" data-id="serialize" data-steps="2" data-name="Requirement 2 · Disk stores text"
+  data-notes="Disk stores bytes, and in practice we store text. A JavaScript object lives in memory as a web of references; it can't be written down directly. So we convert it to a string on the way in (JSON.stringify) and back to an object on the way out (JSON.parse). Step 2 shows the way out and the traps: a Date comes back as a string, functions disappear, and undefined values are dropped. The same conversion happens when you send data over the network, so this idea will come back.">
+  <div class="kicker"><b>Requirement 2</b> · The disk only understands text</div>
+  <h2>Convert on the way in, <span class="cyan">and on the way out</span></h2>
+  <div class="sflow" id="sfIn">
+    <div class="snode">{ id: 7,
+  sender: "me",
+  text: "Hi!" }</div>
+    <i class="sarr"><b>JSON.stringify</b></i>
+    <div class="snode str">'{"id":7,"sender":"me","text":"Hi!"}'</div>
+    <i class="sarr"><b>save</b></i>
+    <div class="snode dsk">Disk</div>
+  </div>
+  <div class="sflow" id="sfOut" data-at="2" style="margin-top:40px">
+    <div class="snode">{ id: 7,
+  sender: "me",
+  text: "Hi!" }</div>
+    <i class="sarr rev"><b>JSON.parse</b></i>
+    <div class="snode str">'{"id":7,"sender":"me","text":"Hi!"}'</div>
+    <i class="sarr rev"><b>load</b></i>
+    <div class="snode dsk">Disk</div>
+  </div>
+  <p class="principle" data-at="2" style="margin-top:36px">Text survives. <span class="coral">Dates become strings, functions disappear.</span></p>
+</section>
+
+<!-- 6 KEYS -->
+<section class="cut" data-id="keys" data-steps="1" data-name="Requirement 3 · Find it again"
+  data-notes="If everything goes onto one shelf, how do we find our draft for chat 2 tomorrow? Give every saved value a name: a key. Key-value storage works like lockers. The important design choice: build the key from something you already have when you need the value. On the chat screen we already have chatId from route.params, so the key is draft: plus the chatId.">
+  <div class="kicker"><b>Requirement 3</b> · Find it again</div>
+  <h2>Every saved value needs <span class="cyan">a name</span></h2>
+  <div class="req" id="keyReq" style="margin-top:22px"></div>
+  <div class="lockers" id="lockers">
+    <div class="locker" data-k="theme"><b>theme</b><span>"dark"</span></div>
+    <div class="locker" data-k="draft:1"><b>draft:1</b><span>"See you in the lab"</span></div>
+    <div class="locker" data-k="draft:2"><b>draft:2</b><span>"Same room?"</span></div>
+    <div class="locker" data-k="draft:5"><b>draft:5</b><span>"Try npx expo start -c"</span></div>
+    <div class="locker" data-k="messages:1"><b>messages:1</b><span>'[{…},{…},{…}]'</span></div>
+    <div class="locker" data-k="messages:2"><b>messages:2</b><span>'[{…},{…}]'</span></div>
+    <div class="locker" data-k="user"><b>user</b><span>'{"name":"Aadi"}'</span></div>
+    <div class="locker" data-k="lastChat"><b>lastChat</b><span>"2"</span></div>
+  </div>
+  <p class="principle" style="margin-top:24px">Build the key from what you already know.<small>The chat screen already has <span class="ic">chatId</span> from route.params, so the key is <span class="ic">draft:${chatId}</span>.</small></p>
+</section>
+
+<!-- 7 ASYNC -->
+<section class="cut" data-id="async" data-steps="2" data-name="Requirement 4 · Don't freeze the screen"
+  data-notes="Disk is thousands of times slower than RAM. The screen redraws about 60 times a second. Step 1: if we wait for the disk on the same thread, the screen stops drawing and the app feels frozen. Step 2: ask the disk, keep drawing, and fill in the value when it arrives. That's why storage APIs return a Promise. Consequence: on the first render the saved value isn't there yet, so the screen needs a sensible empty or loading state.">
+  <div class="kicker"><b>Requirement 4</b> · Don't freeze the screen</div>
+  <h2>Disk is slow. <span class="cyan">Ask, and keep drawing.</span></h2>
+  <div class="lanes">
+    <div class="lane2"><b>Screen<small>~60 frames a second</small></b><div class="ticks" id="ticks"></div></div>
+    <div class="lane2"><b>Disk read<small>takes a while</small></b><div class="rbar"><i id="rbar"></i></div></div>
+  </div>
+  <div class="status" id="asStatus" style="margin-top:20px"></div>
+  <pre class="code" id="asCode" style="margin-top:14px;font-size:21px"></pre>
+  <p class="principle" data-at="2" style="margin-top:20px">Reading returns a Promise.<small>The first render has no saved value yet, so start with an empty state.</small></p>
+</section>
+
+<!-- 8 KINDS -->
+<section class="cut" data-id="kinds" data-steps="1" data-name="Requirement 5 · The right shelf"
+  data-notes="Not all data has the same shape. Small named values like settings and drafts go in a key-value store. Many records you search or sort, like thousands of messages, belong in a database. Secrets like login tokens need encrypted storage backed by the OS (Keychain on iOS, Keystore on Android). Big binary things like photos go in files, and you store only their path. Ask students to place each item before it flies.">
+  <div class="kicker"><b>Requirement 5</b> · Different data, different shelf</div>
+  <h2>Pick storage by <span class="cyan">the shape of the data</span></h2>
+  <div class="srcrow" id="srcRow"></div>
+  <div class="shelves">
+    <div class="shelf" id="shKV"><h3>Key-value</h3><p>small named values</p><div class="got"></div></div>
+    <div class="shelf" id="shDB"><h3>Database</h3><p>many records you search</p><div class="got"></div></div>
+    <div class="shelf" id="shSec"><h3>Secure store</h3><p>secrets, encrypted</p><div class="got"></div></div>
+    <div class="shelf" id="shFile"><h3>Files</h3><p>big blobs: images, audio</p><div class="got"></div></div>
+  </div>
+</section>
+
+<!-- 9 SYNC -->
+<section class="cut" data-id="sync" data-steps="2" data-name="Requirement 6 · Keep both copies in step"
+  data-notes="Now there are two copies of the data: one in memory, one on disk. Step 1, the bug: we send a message and update only state. Everything looks fine until a restart, when the app loads the old copy from disk and the message is gone. Step 2, the rule: every change is written to both. Read from disk only at start-up; after that, memory is the copy you use, and disk follows it.">
+  <div class="kicker"><b>Requirement 6</b> · Two copies, one truth</div>
+  <h2>Every change goes to <span class="cyan">both copies</span></h2>
+  <div class="syncrow">
+    <div><div class="cap">memory (state)</div><div class="sbox" id="syM"></div></div>
+    <div class="neq" id="syNeq">≠</div>
+    <div><div class="cap">disk</div><div class="sbox" id="syD"></div></div>
+  </div>
+  <div class="status" id="syStatus" style="margin-top:22px"></div>
+  <pre class="code" data-hl id="syCode" style="margin-top:12px;font-size:21px"></pre>
+</section>
+
+<!-- 10 LIMITS -->
+<section class="cut" data-id="limits" data-steps="3" data-name="What local storage is not"
+  data-notes="Three things to say clearly. Not secure: a key-value store is plain text in the app's folder; never put passwords or tokens there, use the secure store. Not permanent: uninstalling the app or 'Clear data' in settings wipes it, so treat it like a cache and always handle 'nothing saved'. Not shared: it lives on one device; the same user on another phone sees nothing unless you sync through a server.">
+  <div class="kicker"><b>Limits</b></div>
+  <h2>What local storage is <span class="coral">not</span></h2>
+  <div class="recap3">
+    <div class="rc" data-at="1"><span class="tag r" style="align-self:flex-start">Not secure</span><h3>Plain text</h3><p>Anyone with the device's files can read it. Secrets go in the secure store.</p></div>
+    <div class="rc" data-at="2"><span class="tag r" style="align-self:flex-start">Not permanent</span><h3>A cache</h3><p>Uninstall or "Clear data" wipes it. Always handle "nothing saved".</p></div>
+    <div class="rc" data-at="3"><span class="tag r" style="align-self:flex-start">Not shared</span><h3>One device</h3><p>Your other phone sees nothing. Sharing needs a server.</p></div>
+  </div>
+</section>
+
+<!-- 11 QUESTIONS -->
+<section class="cut" data-id="questions" data-steps="1" data-name="Eight questions before you store anything"
+  data-notes="The takeaway that works on any platform. Before writing a single storage call, answer these eight questions. Students will use them again in the exercise at the end.">
+  <div class="kicker"><b>The takeaway</b></div>
+  <h2>Eight questions before you store anything</h2>
+  <div class="qgrid" id="qgrid">
+    <div class="q"><b class="n">1</b><div><h3>Must it survive a restart?</h3><p>if not, state is enough</p></div></div>
+    <div class="q"><b class="n">5</b><div><h3>Is it secret?</h3><p>secure store, never plain text</p></div></div>
+    <div class="q"><b class="n">2</b><div><h3>What shape is it?</h3><p>text, object, list, or a file</p></div></div>
+    <div class="q"><b class="n">6</b><div><h3>When do I load it?</h3><p>once, when the screen starts</p></div></div>
+    <div class="q"><b class="n">3</b><div><h3>What's its key?</h3><p>built from what you already know</p></div></div>
+    <div class="q"><b class="n">7</b><div><h3>When do I save it?</h3><p>every time it changes</p></div></div>
+    <div class="q"><b class="n">4</b><div><h3>How big will it grow?</h3><p>many records means a database</p></div></div>
+    <div class="q"><b class="n">8</b><div><h3>What if nothing is saved?</h3><p>always have a default</p></div></div>
+  </div>
+</section>
+
+<!-- 12 PLATFORMS -->
+<section class="cut" data-id="platforms" data-steps="3" data-name="Same ideas, every platform"
+  data-notes="One row per step. Every platform has the same three shelves; only the names change. The web row for secrets is deliberately 'no safe place': browsers have no equivalent of the Keychain, which is why web apps keep secrets on the server.">
+  <div class="kicker"><b>Transfer</b></div>
+  <h2>Same shelves, every platform</h2>
+  <table class="pt">
+    <thead><tr><th>Shelf</th><th>Web</th><th>iOS</th><th>Android</th><th>Flutter</th><th class="rn">React Native</th></tr></thead>
+    <tbody>
+      <tr data-at="1"><td>Key-value</td><td>localStorage</td><td>UserDefaults</td><td>DataStore</td><td>shared_<wbr>preferences</td><td class="rn">AsyncStorage</td></tr>
+      <tr data-at="2"><td>Database</td><td>IndexedDB</td><td>SQLite</td><td>Room (SQLite)</td><td>sqflite</td><td class="rn">expo-sqlite</td></tr>
+      <tr data-at="3"><td>Secrets</td><td>no safe place</td><td>Keychain</td><td>Keystore</td><td>flutter_<wbr>secure_<wbr>storage</td><td class="rn">expo-secure-<wbr>store</td></tr>
+    </tbody>
+  </table>
+  <p class="principle" style="margin-top:26px">Learn the shelves once. Look up the names when you switch.</p>
+</section>
+
+<!-- 13 MAP -->
+<section class="cut" data-id="map" data-steps="5" data-name="Each requirement has a line of code"
+  data-notes="Now the syntax, mapped to the requirements we already understand. Ask students which requirement each line answers before revealing it.">
+  <div class="kicker"><b>Now, the syntax</b> · requirement → code</div>
+  <h2>Each requirement has a line of code</h2>
+  <div class="map">
+    <div class="mr" data-at="1"><div class="req2 req" style="background:var(--panel);border:1px solid var(--line)">Survive a restart</div><i class="ar"></i><code>AsyncStorage.setItem(key, value)</code></div>
+    <div class="mr" data-at="2"><div class="req" style="background:var(--panel);border:1px solid var(--line)">Read it back</div><i class="ar"></i><code>await AsyncStorage.getItem(key)</code></div>
+    <div class="mr" data-at="3"><div class="req" style="background:var(--panel);border:1px solid var(--line)">Disk stores text</div><i class="ar"></i><code>JSON.stringify(obj) · JSON.parse(text)</code></div>
+    <div class="mr" data-at="4"><div class="req" style="background:var(--panel);border:1px solid var(--line)">A name to find it</div><i class="ar"></i><code>`draft:${chatId}`</code></div>
+    <div class="mr" data-at="5"><div class="req" style="background:var(--panel);border:1px solid var(--line)">Load once, at start</div><i class="ar"></i><code>useEffect(() =&gt; { … }, [])</code></div>
+  </div>
+</section>
+
+<!-- ASYNCSTORAGE API -->
+<section class="slide" data-id="asApi" data-steps="4" data-name="AsyncStorage in three calls"
+  data-notes="Last class's activity told us what has to stay on the phone. In React Native the simplest place for it is AsyncStorage: a notebook on the phone that survives closing the app and restarting the phone. Every entry is a key (a name) and a value (some text). Step 1, save: setItem writes the value under the key. Step 2, read: getItem gives it back. Disk is slower than memory, so it does not return the text straight away; it returns a Promise, so we await it. If nothing was saved, we get null. Step 3, delete: removeItem. Step 4: values are text only. To store an object or an array, turn it into text with JSON.stringify before saving and back with JSON.parse after reading. Keys can carry ids, like draft:1 for chat 1. One rule from the activity: secrets such as auth tokens do not go here; they go in a secure store (expo-secure-store). Then straight into the code-along.">
+  <div class="kicker"><b>React Native</b> · AsyncStorage</div>
+  <h2>A notebook on the phone <span class="cyan">that survives restarts</span></h2>
+  <div class="api">
+    <div class="apir" data-at="1"><b>Save</b><code>AsyncStorage.setItem(<em>"theme"</em>, <em>"dark"</em>)</code><span>writes it down</span></div>
+    <div class="apir" data-at="2"><b>Read</b><code>await AsyncStorage.getItem(<em>"theme"</em>)</code><span>→ "dark", a moment later</span></div>
+    <div class="apir" data-at="3"><b>Delete</b><code>AsyncStorage.removeItem(<em>"theme"</em>)</code><span>→ gone</span></div>
+  </div>
+  <div class="nb2" data-at="1">
+    <h4>On the phone's disk</h4>
+    <div class="kv" id="asKv">
+      <div><b>theme</b><span>"dark"</span></div>
+      <div><b>draft:1</b><span>"See you in the lab at 4"</span></div>
+      <div><b>messages:1</b><span>'[{"id":1,"text":"Hi"},{…}]'</span></div>
+    </div>
+  </div>
+  <p class="principle" data-at="4" style="margin-top:18px">Only text goes in.<small>Objects: <span class="ic">JSON.stringify</span> to save, <span class="ic">JSON.parse</span> to read.</small></p>
+</section>
+
+<!-- 14 SETUP -->
+<section class="slide" data-id="setup" data-steps="2" data-name="Code-along · Install the storage library"
+  data-notes="We start with a tiny example before touching the chat app: a fresh Expo app (npx create-expo-app storage-demo) or a scratch App.js. Step 1: install with npx expo install so the version matches the Expo SDK. Step 2: import it in every file that saves or loads. Example 2 later imports it in IndividualChat.js the same way.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="suPhone"></div></div>
+    <div class="col" style="gap:16px">
+      <div class="head"><div class="kicker"><b>Code-along</b> · Setup</div><h2>Install the <span class="amber">storage library</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · install</div>
+<pre class="code" data-at="1">npx expo install @react-native-async-storage/async-storage</pre>
+        <div class="lbl">2 · import</div>
+<pre class="code" data-hl data-at="2" style="font-size:17px">import AsyncStorage from "@react-native-async-storage/async-storage";</pre>
+      </div>
+      <p class="principle">Install once.<small>Import it in every file that saves or loads.</small></p>
+    </div>
+  </div>
+  <div class="cp" data-at="2">App still runs after install</div>
+</section>
+
+<!-- EX1 A -->
+<section class="slide" data-id="ex1Save" data-steps="2" data-name="Example 1 · A box and a Save button"
+  data-notes="Example 1: the smallest possible app that saves something. Step 1: one piece of state and a TextInput bound to it, plus a Save button. Imports: useState from react; View, TextInput, Button from react-native; AsyncStorage from the library. Run it: typing works, but reload (press r in the Expo terminal) and the box is empty. That's state living in memory. Step 2: save() writes the text to disk under the key note. setItem is async, so the function is async and we await it. Watch the demo: type, tap Save, the disk box shows note. Then reload: the box is EMPTY again, even though the disk has the value. Ask why before moving on. Answer: we save, but nothing reads it back when the app starts.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="e1Phone"></div></div>
+    <div class="col" style="gap:14px">
+      <div class="head"><div class="kicker"><b>Example 1</b> · App.js</div><h2>A box and a <span class="cyan">Save</span> button</h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · a box and a button</div>
+<pre class="code" data-hl data-at="1">const [text, setText] = useState("");
+
+&lt;TextInput value={text} onChangeText={setText} /&gt;
+&lt;Button title="Save" onPress={save} /&gt;</pre>
+        <div class="lbl">2 · save on press</div>
+<pre class="code" data-hl data-at="2">async function save() {
+  await AsyncStorage.setItem("note", text);
+}</pre>
+      </div>
+      <div class="sbox sm" id="e1Disk"></div>
+      <p class="principle c" data-at="2">Saved. But after a reload the box is empty.<small>The disk has it. Nothing reads it back.</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- EX1 B -->
+<section class="slide" data-id="ex1Load" data-steps="2" data-name="Example 1 · Load it when the app starts"
+  data-notes="Step 1: load once when the app starts. useEffect with an empty dependency array runs once, after the first render. getItem returns a Promise, so we use .then (or await inside an async function). If nothing was ever saved, getItem gives null, so only set the text when there is something. Step 2: the order of events. The app starts with an empty box (useState starts with an empty string), asks the disk, and fills the box when the answer arrives. Checkpoint: type, tap Save, reload: the text is still there. Bonus question: what happens if you type, do NOT tap Save, and reload? (It's lost. Saving only happens on the button.) That's the hook for Example 2.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="e2Phone"></div></div>
+    <div class="col" style="gap:16px">
+      <div class="head"><div class="kicker"><b>Example 1</b> · App.js</div><h2>Load it <span class="cyan">when the app starts</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">3 · load once, at start</div>
+<pre class="code" data-hl data-at="1">useEffect(() =&gt; {
+  AsyncStorage.getItem("note").then((saved) =&gt; {
+    if (saved !== null) setText(saved);
+  });
+}, []);</pre>
+      </div>
+      <div class="flow4" data-at="2"><span>App starts</span><i>→</i><span><code>getItem("note")</code></span><i>→</i><span><code>setText(saved)</code></span><i>→</i><span>Box shows it</span></div>
+      <div class="sbox sm" id="e2Disk"></div>
+    </div>
+  </div>
+  <div class="cp" data-at="2" style="bottom:14px">Type, Save, reload: still there</div>
+</section>
+
+<!-- EX2 A -->
+<section class="slide" data-id="draftSave" data-steps="2" data-name="Example 2 · The draft: save as you type"
+  data-notes="Example 2 moves into the chat app. Goal: type a message, reload, and the half-typed message is still in the box. Ask: what is different from Example 1? There is no Save button. The user never says save, so we save on every keystroke. Step 1: each chat needs its own draft, so the key includes chatId, which we already read from route.params: draft:1, draft:2 and so on. Step 2: replace onChangeText={setDraft} with our own function that updates state AND writes to disk. Writing a short string on every key press is cheap. Watch the disk box update with every letter.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="dsPhone"></div></div>
+    <div class="col" style="gap:14px">
+      <div class="head"><div class="kicker"><b>Example 2</b> · IndividualChat.js</div><h2>The draft: <span class="cyan">save as you type</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · one key per chat</div>
+<pre class="code" data-hl data-at="1">const key = `draft:${chatId}`;</pre>
+        <div class="lbl">2 · save on every change</div>
+<pre class="code" data-hl data-at="2">function onChange(text) {
+  setDraft(text);
+  AsyncStorage.setItem(key, text);
+}
+
+&lt;TextInput value={draft} onChangeText={onChange} /&gt;</pre>
+      </div>
+      <div class="sbox sm" id="dsDisk"></div>
+      <p class="principle" data-at="2">No Save button.<small>Example 1 saved on a tap. A draft saves on every key.</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- 15 DRAFT -->
+<section class="slide" data-id="draft" data-steps="2" data-name="Example 2 · Load it back, clear it on send"
+  data-notes="What a draft means: I start typing in a chat, do not send, close the app. When I reopen the app and open that same chat, the half-typed text is back in its input box. Other chats are unaffected because each has its own key. Step 1: the same load-once pattern as Example 1, just with the chat's key. It runs when the chat screen opens, so the draft appears as soon as you enter that chat. getItem gives null when nothing is saved, so only set the draft if there is something. Demo: type, reload, the draft is back. Step 2: the bug students will hit next. Send a message, reload, and the sent text reappears in the box, because the disk still holds the old draft. When we send, clear the draft in state AND remove it from disk. Refresh means press r in the Expo terminal, or close and reopen the app; both work.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="drPhone"></div></div>
+    <div class="col" style="gap:14px">
+      <div class="head"><div class="kicker"><b>Example 2</b> · IndividualChat.js</div><h2>Load it back. <span class="cyan">Clear it on send.</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">3 · load once</div>
+<pre class="code" data-hl data-at="1">useEffect(() =&gt; {
+  AsyncStorage.getItem(key).then((saved) =&gt; {
+    if (saved !== null) setDraft(saved);
+  });
+}, []);</pre>
+        <div class="lbl">4 · clear on send</div>
+<pre class="code" data-hl data-at="2">function send() {
+  …
+  setDraft("");
+  AsyncStorage.removeItem(key);
+}</pre>
+      </div>
+      <div class="sbox sm" id="drDisk"></div>
+    </div>
+  </div>
+  <div class="cp" data-at="1" style="bottom:14px">Type, don't send, reopen: it's back in that chat</div>
+</section>
+
+<!-- 16 MESSAGES -->
+<section class="cut" data-id="msgs" data-steps="3" data-name="Code-along · Keep sent messages"
+  data-notes="Now an object, not a string. Step 1: sending creates a new array in state. Step 2: save the whole array, converted to text with JSON.stringify, under messages: plus chatId. Step 3: on open, read it back. If nothing is saved yet, fall back to the messages from chats.json; that is the 'what if nothing is saved' question. Remind students why we write to both state and disk.">
+  <div class="split">
+    <div class="pw" style="--s:1.22"><div class="phone" id="msPhone"></div></div>
+    <div class="col" style="gap:14px">
+      <div class="head"><div class="kicker"><b>Code-along</b> · IndividualChat.js</div><h2>Keep sent messages: <span class="amber">objects as text</span></h2></div>
+      <div class="codestack">
+        <div class="lbl">1 · send(), from Part 1</div>
+<pre class="code" data-hl data-at="1">const next = [...messages,
+  { id: Date.now(), sender: "me", text: draft }];
+setMessages(next);</pre>
+        <div class="lbl">2 · save as text</div>
+<pre class="code" data-hl data-at="2">AsyncStorage.setItem(`messages:${chatId}`, JSON.stringify(next));</pre>
+        <div class="lbl">3 · load as objects, with a default</div>
+<pre class="code" data-hl data-at="3">async function load() {
+  const saved = await AsyncStorage.getItem(`messages:${chatId}`);
+  setMessages(saved ? JSON.parse(saved) : chat.messages);
+}</pre>
+      </div>
+      <div class="sbox sm" id="msDisk"></div>
+    </div>
+  </div>
+  <div class="cp" data-at="3" style="bottom:14px">Send, close, reopen: still there</div>
+</section>
+
+<!-- 17 BUGS -->
+<section class="cut" data-id="bugs" data-steps="4" data-name="Four bugs everyone hits"
+  data-notes="One card per step. Forgot await: you get a Promise, not the text, because reading takes a moment. Forgot stringify: an object is saved as the text '[object Object]', because only text goes in. Forgot parse: you get a string back and .map or FlatList fails. Saved in state only: works until a restart, because state lives in memory. Ask students to predict the symptom before revealing it.">
+  <div class="kicker"><b>Debugging</b> · predict the symptom</div>
+  <h2>Four bugs everyone hits</h2>
+  <div class="bugs">
+    <div class="bug" data-at="1"><h3>Forgot await</h3><pre>const saved = AsyncStorage.getItem(key);</pre><div class="res">saved is a Promise, not the text</div><div class="fix">await it, or use .then()</div></div>
+    <div class="bug" data-at="2"><h3>Forgot stringify</h3><pre>AsyncStorage.setItem(key, messages);</pre><div class="res">disk holds "[object Object]"</div><div class="fix">JSON.stringify(messages)</div></div>
+    <div class="bug" data-at="3"><h3>Forgot parse</h3><pre>setMessages(saved);</pre><div class="res">messages.map is not a function</div><div class="fix">JSON.parse(saved)</div></div>
+    <div class="bug" data-at="4"><h3>Saved in state only</h3><pre>setMessages(next);  // and nothing else</pre><div class="res">works until the next restart</div><div class="fix">write to state and disk</div></div>
+  </div>
+</section>
+
+<!-- 18 DB -->
+<section class="cut" data-id="db" data-steps="1" data-name="When a list grows: a database"
+  data-notes="Key-value is perfect for small things. But imagine 10,000 messages saved as one big string. To find messages in chat 1 containing 'lab', the app must read the whole string, parse all of it, then filter in JavaScript, every time. A database stores rows and can find just the matching ones. In React Native that's expo-sqlite, and it's the topic of the next lecture. The animation speeds are illustrative, not measurements.">
+  <div class="kicker"><b>Requirement 5, again</b> · when the list grows</div>
+  <h2>10,000 messages? <span class="cyan">Use a database.</span></h2>
+  <div class="dbp">
+    <div class="dbc">
+      <h3>Key-value: one big string</h3>
+      <pre>const all = JSON.parse(await getItem("messages"));
+all.filter((m) =&gt; m.text.includes("lab"));</pre>
+      <div class="lbl2" id="dbL1">reads and parses everything</div>
+      <div class="rbar"><i id="dbBar1"></i></div>
+      <div class="dbrows" id="dbR1"></div>
+    </div>
+    <div class="dbc">
+      <h3>Database: ask for what you need</h3>
+      <pre>SELECT * FROM messages
+WHERE chat_id = 1 AND text LIKE '%lab%';</pre>
+      <div class="lbl2" id="dbL2">reads only the matches</div>
+      <div class="rbar"><i id="dbBar2"></i></div>
+      <div class="dbrows" id="dbR2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 RECAP -->
+<section class="slide" data-id="recap" data-steps="1" data-name="Recap"
+  data-notes="Three ideas. State dies with the app. AsyncStorage keeps text under a key: save it on a tap or on every key press. Load it once when the screen opens. Everything else is lookup.">
+  <div class="kicker"><b>Recap</b></div>
+  <h2>Remember the ideas. Look up the syntax.</h2>
+  <div class="recap3">
+    <div class="rc"><span class="tag r" style="align-self:flex-start">Memory</span><h3>Dies with the app</h3><p>State is only for while the app is running.</p></div>
+    <div class="rc"><span class="tag c" style="align-self:flex-start">Save</span><h3>Key + text</h3><p>On a tap (Example 1) or on every key (the draft).</p></div>
+    <div class="rc"><span class="tag a" style="align-self:flex-start">Load</span><h3>Once, at start</h3><p>useEffect with [] reads it back when the screen opens.</p></div>
+  </div>
+</section>
+
+<!-- 20 TRY -->
+<section class="cut" data-id="try" data-steps="1" data-name="Your turn · Remember what's been read"
+  data-notes="15 minutes. First decide where unread counts live using the five questions. In a real app with a server, the server owns them (Sharing: the web client needs them), so it is Remote plus local cache; in our app there is no server yet, so the phone keeps them. Key: unread:chatId, or one object for all chats. Load in ChatList; save when a chat opens; the default is the count from chats.json. Bonus ties back to the navigation lecture: save the id of the last open chat and navigate to it on start-up.">
+  <div class="kicker"><b>Your turn</b> · 15 minutes</div>
+  <h2>Remember which chats you've read</h2>
+  <div class="steps">
+    <div><b>1</b><span>Decide where unread counts live: the five questions</span></div>
+    <div><b>2</b><span>When a chat opens, set its unread count to 0 and save it</span></div>
+    <div><b>3</b><span>ChatList loads the saved counts, with chats.json as the default</span></div>
+    <div><b>4</b><span>Test it: open, close the app, reopen</span></div>
+  </div>
+  <div class="bonus"><b>Bonus:</b> save the last open <span class="ic">chatId</span> and reopen that chat on start-up.</div>
+</section>
+
+</div></div></div>
+
+<div class="bar">
+  <button class="btn" id="prevBtn" aria-label="Previous">←</button>
+  <button class="btn" id="nextBtn" aria-label="Next">→</button>
+  <span class="count" id="count">1/25</span>
+  <span class="title" id="barTitle"></span>
+  <div class="prog" id="prog"></div>
+  <button class="btn hide-sm" id="notesBtn">Notes</button>
+  <button class="btn hide-sm" id="fsBtn">Fullscreen</button>
+</div>
+<div class="notes" id="notes" hidden><h4>Speaker notes</h4><div id="notesText"></div></div>
+
+<script>
+(function(){
+const stage=document.getElementById('stage'),holder=document.getElementById('holder'),vpEl=document.getElementById('vp');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const D=reduce?0:1;
+
+/* ---------- data ---------- */
+const BASE=[
+ ["Priya Sharma","Did you push the lab code?","10:42",2,"#e0736a"],
+ ["Rohan Verma","Viva is shifted to Friday","10:30",0,"#5b8def"],
+ ["CS-2B Class Group","Aman: who has the Expo QR?","10:12",14,"#2bb3a3"],
+ ["Ananya Iyer","Sent the Figma link","09:58",0,"#b072d6"],
+ ["Kabir Singh","bro the simulator is stuck","09:41",1,"#e3a33b"],
+ ["Meera Nair","Thanks! That fixed it","Yesterday",0,"#4fa36b"],
+ ["Arjun Patel","FlatList or ScrollView?","Yesterday",3,"#d65f8f"],
+ ["Hostel Block C","Water off till 6pm","Yesterday",0,"#6a7f8c"],
+ ["Ishita Rao","Capstone standup at 4","Mon",0,"#3f9fc9"],
+ ["Dev Malhotra","Check the PR comments","Mon",0,"#c9733f"]
+];
+const REPLIES=[["Yes, pushing in 5 mins","Done. Check the PR"],["Oh nice, more time","Same room?"],["I have it, sharing now","Sent"],["Opening it now","Looks good"],["Restart Metro with -c","Try that"],["Glad it worked","Anytime"],["Depends how long the list is","FlatList for the inbox"],["Noted","Ugh"],["I'll be there","Joining"],["On it","Fixed both"]];
+const chat=i=>{const b=BASE[i%BASE.length];return{id:String(i+1),name:b[0],message:b[1],time:b[2],unread:b[3],color:b[4],i:i%BASE.length};};
+const initials=n=>n.split(/[\s-]+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const CHEV='<svg width="9" height="14" viewBox="0 0 9 14"><path d="M7.5 1.5L2 7l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const SICONS='<svg width="50" height="10" viewBox="0 0 54 11"><g fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="3" width="3" height="8" rx="1"/><rect x="13.5" y="1" width="3" height="10" rx="1"/></g><rect x="31" y="1" width="20" height="9.5" rx="2.5" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="33" y="3" width="14" height="5.5" rx="1.2" fill="currentColor"/></svg>';
+const CHECK='<svg width="28" height="28" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="var(--cyan)" stroke-width="2"/><path d="M6.5 11.5l3 3 6-6.5" fill="none" stroke="var(--cyan)" stroke-width="2.2" stroke-linecap="round"/></svg><b>Checkpoint</b>';
+document.querySelectorAll('.cp').forEach(c=>c.insertAdjacentHTML('afterbegin',CHECK));
+
+function rowHTML(c){return `<div class="row"><div class="av" style="background:${c.color}">${initials(c.name)}</div><div class="rb"><div class="rn">${esc(c.name)}</div><div class="rm">${esc(c.message)}</div></div><div class="rt">${c.time}${c.unread?`<span class="ub">${c.unread}</span>`:''}</div></div>`;}
+const hdr=(title,back,right,cls='')=>`<div class="nh ${cls}"><span class="nb">${back?CHEV+'&nbsp;'+esc(back):''}</span><span class="nt">${esc(title)}</span><span class="nr">${right||''}</span></div>`;
+function sList(o={}){let r='';for(let i=0;i<(o.rows||9);i++)r+=rowHTML(chat(i));
+  const top=o.header===false?'<div class="bigt">Chats</div>':(o.double?hdr('Chats','')+hdr('Chats','','','inner'):hdr('Chats','',o.right||'',o.hcls||''));
+  return top+`<div class="body">${r}</div>`;}
+function sChat(c,o={}){const rp=REPLIES[c.i];
+  const top=o.plain?`<div class="plain-h"><span class="pb">← Back</span><b>${esc(c.name)}</b></div>`:hdr(o.title===undefined?c.name:o.title,o.back===undefined?'Chats':o.back);
+  return top+`<div class="body msgs"><span class="day">Today</span><div class="bub in">${esc(c.message)}</div><div class="bub out">${esc(rp[0])}</div><div class="bub in">Okay, ping me</div><div class="bub out">${esc(rp[1])}</div></div><div class="inbar"><i>Message</i><b></b></div>`;}
+function sProfile(c,back){return hdr('Profile',back||'Back')+`<div class="body"><div class="pf"><div class="av" style="background:${c.color}">${initials(c.name)}</div><b>${esc(c.name)}</b><span>last seen today</span></div><div class="prow">Media, links and docs</div><div class="prow">Mute notifications</div><div class="prow">Starred messages</div><div class="prow red">Block ${esc(c.name.split(' ')[0])}</div></div>`;}
+function sSettings(){return hdr('Settings','')+`<div class="body"><div class="pf"><div class="av" style="background:#13212b">A</div><b>Aadi</b><span>Learning React Native</span></div><div class="prow">Account</div><div class="prow">Privacy</div><div class="prow">Notifications</div><div class="prow">Storage and data</div><div class="prow">Help</div></div>`;}
+
+/* ---------- phone + nav ---------- */
+const TABBAR=a=>`<div class="tabbar"><button data-tab="chats" class="${a==='chats'?'act':''}"><svg width="20" height="18" viewBox="0 0 20 18"><path d="M3 2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H8l-4 3v-3H3a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="currentColor"/></svg>Chats</button><button data-tab="settings" class="${a==='settings'?'act':''}"><svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 1v3M9 14v3M1 9h3M14 9h3M3.3 3.3l2.1 2.1M12.6 12.6l2.1 2.1M3.3 14.7l2.1-2.1M12.6 5.4l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Settings</button></div>`;
+function phone(el,{tabs=false}={}){
+  el.innerHTML=`<div class="screen"><div class="island"></div><div class="sbar"><span>9:41</span>${SICONS}</div>${tabs?'<div class="host" style="bottom:52px"></div><div class="host" style="bottom:52px" hidden></div>'+TABBAR('chats'):'<div class="host"></div>'}<div class="home-ind"></div></div>`;
+  return el.querySelector('.screen');}
+class Nav{
+  constructor(host){this.host=host;this.screen=host.parentNode;this.st=[];}
+  _add(html,anim){const e=document.createElement('div');e.className='scr';e.innerHTML=html;if(anim&&D)e.classList.add('off');this.host.appendChild(e);if(anim&&D){void e.offsetWidth;e.classList.remove('off');}this.st.push(e);return e;}
+  top(){return this.st[this.st.length-1];}
+  reset(html){this.host.querySelectorAll('.scr').forEach(e=>e.remove());this.st=[];return this._add(html,false);}
+  push(html){const p=this.top();const e=this._add(html,true);if(p)p.classList.add('under');return e;}
+  popMany(k=1){if(this.st.length<2||k<1)return;const t=this.st.pop();for(let j=1;j<k&&this.st.length>1;j++)this.st.pop().remove();
+    t.classList.add('off');this.top().classList.remove('under');setTimeout(()=>t.remove(),450*D);}
+  pop(){this.popMany(1);}
+  replace(html){const o=this.st.pop();this._add(html,true);setTimeout(()=>o.remove(),460*D);}
+  cut(html){const e=this.reset(html);e.classList.add('flash');return e;}
+}
+const newNav=id=>new Nav(phone(document.getElementById(id)).querySelector('.host'));
+function dot(screen,x,y,cls='tapdot'){const d=document.createElement('div');d.className=cls;d.style.left=x+'px';d.style.top=y+'px';screen.appendChild(d);if(cls==='tapdot')setTimeout(()=>d.remove(),600);return d;}
+function tapRow(nav,i){const r=nav.top().querySelectorAll('.row')[i];if(!r)return null;r.classList.add('tap');setTimeout(()=>r.classList.remove('tap'),320);dot(nav.screen,112,r.offsetTop+24);return r;}
+function tapEl(nav,el){const r=el.getBoundingClientRect(),s=nav.screen.getBoundingClientRect(),k=s.width/224;dot(nav.screen,(r.left-s.left+r.width/2)/k,(r.top-s.top+r.height/2)/k);}
+function swipeBack(nav,done){const t=nav.top();if(!t)return;
+  if(!D){nav.pop();done&&done();return;}
+  const d=dot(nav.screen,8,260,'swipedot');t.style.transition='none';const start=performance.now();
+  (function f(now){const p=Math.min(1,(now-start)/650);d.style.left=(8+p*120)+'px';t.style.transform=`translateX(${p*55}%)`;
+    if(p<1)requestAnimationFrame(f);else{t.style.transition='';t.style.transform='';d.remove();nav.pop();done&&done();}})(start);}
+
+/* highlighter */
+function hl(src){const re=/(\/\/.*$)|('[^']*'|"[^"]*")|(<\/?[A-Z][\w.]*|(?<!=)\/?>)|\b(import|from|export|default|function|return|const|if)\b|\b([a-zA-Z]+)(?==[{'"])|\b(\d+)\b/gm;
+  let out='',last=0,m;while((m=re.exec(src))){out+=esc(src.slice(last,m.index));const t=esc(m[0]);
+    out+=m[1]?`<span class="t-c">${t}</span>`:m[2]?`<span class="t-s">${t}</span>`:m[3]?`<span class="t-tag">${t}</span>`:m[4]?`<span class="t-k">${t}</span>`:m[5]?`<span class="t-a">${t}</span>`:`<span class="t-n">${t}</span>`;last=m.index+m[0].length;}
+  return out+esc(src.slice(last));}
+document.querySelectorAll('pre[data-hl]').forEach(p=>{p.innerHTML=hl(p.textContent);});
+
+/* stage scale */
+function fit(){const r=vpEl.getBoundingClientRect();const K=Math.min((r.width-32)/1280,(r.height-16)/720);holder.style.width=1280*K+'px';holder.style.height=720*K+'px';stage.style.transform=`scale(${K})`;}
+addEventListener('resize',fit);fit();
+function rel(el){const a=el.getBoundingClientRect(),s=stage.getBoundingClientRect(),k=s.width/1280;return{x:(a.left-s.left)/k,y:(a.top-s.top)/k,w:a.width/k,h:a.height/k};}
+
+let timers=[];const later=(f,ms)=>timers.push(setTimeout(f,ms*D));const clearT=()=>{timers.forEach(clearTimeout);timers=[];};
+const H={};
+function stagger(list,on){list.classList.remove('show');[...list.children].forEach((d,i)=>d.style.transitionDelay=(i*220*D)+'ms');if(on)later(()=>list.classList.add('show'),150);}
+
+/* ---------- persistence hooks ---------- */
+const $=id=>document.getElementById(id);
+function setBox(el,html){el.innerHTML=html;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),650);}
+function mkTag(scr,c,t,x,y){const e=document.createElement('div');e.className='tagp '+c;e.textContent=t;e.style.left=x+'px';e.style.top=y+'px';scr.appendChild(e);return e;}
+const DRAFT='See you in the lab at 4';
+const APPS=[['Chats','#1f7aec','C'],['Camera','#5d6b73','◉'],['Maps','#3aa76d','M'],['Music','#e0445a','♪'],['Notes','#e3a33b','N'],['Photos','#b072d6','P'],['Clock','#13212b','◷'],['Settings','#8a98a1','⚙']];
+function makeHome(scr){const h=document.createElement('div');h.className='home';h.innerHTML=APPS.map(([n,c,g])=>`<div class="app1"><div class="appicon" style="background:${c}">${g}</div>${n}</div>`).join('');scr.appendChild(h);return h;}
+function sChatIn(c,extra=[],draft=''){const rp=['Yes, pushing in 5 mins','Done. Check the PR'];
+  return hdr(c.name,'Chats')+`<div class="body msgs"><span class="day">Today</span><div class="bub in">${esc(c.message)}</div><div class="bub out">${rp[0]}</div><div class="bub in">Okay, ping me</div>${extra.map(t=>`<div class="bub out">${esc(t)}</div>`).join('')}</div><div class="inbar"><i class="${draft?'typing':''}">${draft?esc(draft):'<span class="ph">Message</span>'}</i><b></b></div>`;}
+function typeInto(nav,text,start,per,onEach){for(let k=1;k<=text.length;k++)later(()=>{const i=nav.top()&&nav.top().querySelector('.inbar i');if(i){i.className='typing';i.textContent=text.slice(0,k);}onEach&&onEach(text.slice(0,k));},start+k*per);}
+function clearInput(nav){const i=nav.top().querySelector('.inbar i');if(i){i.className='';i.innerHTML='<span class="ph">Message</span>';}}
+function resetHost(nav){nav.host.style.cssText='';}
+function killApp(nav,home,t){
+  later(()=>{nav.host.style.transformOrigin='50% 50%';nav.host.style.transition='transform .4s ease, border-radius .4s';nav.host.style.transform='scale(.8)';nav.host.style.borderRadius='26px';nav.host.style.boxShadow='0 20px 40px -10px rgba(0,0,0,.5)';},t);
+  later(()=>{nav.host.style.transition='transform .45s ease-in, opacity .45s';nav.host.style.transform='translateY(-115%) scale(.8)';nav.host.style.opacity='0';},t+700);
+  later(()=>home.classList.add('show'),t+1050);}
+function launchApp(nav,home,t,html){
+  later(()=>{const ic=home.querySelector('.appicon');ic&&tapEl(nav,ic);},t);
+  later(()=>{nav.host.style.transition='none';nav.host.style.opacity='1';nav.host.style.borderRadius='0';nav.host.style.boxShadow='none';nav.host.style.transformOrigin='18% 16%';nav.host.style.transform='scale(.12)';nav.reset(html);void nav.host.offsetWidth;
+    nav.host.style.transition='transform .45s cubic-bezier(.2,.8,.2,1)';nav.host.style.transform='none';home.classList.remove('show');},t+250);}
+class Mem{constructor(root){this.ram=root.querySelector('.ram .rows');this.disk=root.querySelector('.disk .rows');this.ramBox=root.querySelector('.ram');this.st=root.querySelector('.ram .st');this.lane=root.querySelector('.lane');}
+  rows(el,rows){el.innerHTML=rows.length?rows.map(r=>`<div class="mrow">${r}</div>`).join(''):'<div class="mrow empty">nothing saved</div>';}
+  setRam(r){this.rows(this.ram,r);} setDisk(r){this.rows(this.disk,r);}
+  status(t,c){this.st.textContent=t;this.st.style.color=c||'';}
+  dead(on){this.ramBox.classList.toggle('dead',on);if(on){this.ram.querySelectorAll('.mrow').forEach(r=>r.classList.add('gone'));}}
+  pulse(dir){if(!this.lane)return;const lbl=this.lane.querySelector(dir==='down'?'.ll.l':'.ll.r');lbl&&lbl.classList.add('lit');setTimeout(()=>lbl&&lbl.classList.remove('lit'),900);
+    if(!D)return;const d=document.createElement('div');d.className='ipulse';d.style.left='calc(50% - 8px)';d.style.top=(dir==='down'?0:48)+'px';this.lane.appendChild(d);
+    d.animate([{transform:'translateY(0)'},{transform:`translateY(${dir==='down'?48:-48}px)`}],{duration:600,easing:'ease-in-out'}).onfinish=()=>d.remove();}}
+const R=(k,v)=>`<span class="k">${k} =</span> <span class="v">${v}</span>`;
+const Dk=(k,v)=>`<span class="k">${k}</span> → <span class="v">${v}</span>`;
+
+/* story: type → kill → relaunch → open chat */
+function story(id,{persist,mem,diskBox,tagGood,tagBad}){const nav=newNav(id);const home=makeHome(nav.screen);
+  const good=tagGood?mkTag(nav.screen,'g',tagGood,14,96):null,bad=tagBad?mkTag(nav.screen,'c',tagBad,14,96):null;
+  const loop=()=>{resetHost(nav);home.classList.remove('show');good&&good.classList.remove('show');bad&&bad.classList.remove('show');
+    nav.reset(sChatIn(chat(0)));
+    if(mem){mem.dead(false);mem.status('running','var(--cyan)');mem.setRam([R('draft','""')]);mem.setDisk(persist?[]:[]);}
+    if(diskBox)diskBox.innerHTML=Dk('draft:1','nothing saved');
+    typeInto(nav,DRAFT,400,60,txt=>{mem&&mem.setRam([R('draft',`"${esc(txt)}"`)]);if(persist&&diskBox)diskBox.innerHTML=Dk('draft:1',`"${esc(txt)}"`);});
+    const tEnd=400+DRAFT.length*60;
+    if(persist&&mem)later(()=>{mem.pulse('down');later(()=>mem.setDisk([Dk('draft:1',`"${DRAFT}"`)]),500);},tEnd+100);
+    killApp(nav,home,tEnd+900);
+    if(mem)later(()=>{mem.dead(true);mem.status('closed','var(--coral)');},tEnd+1600);
+    const tL=tEnd+2700;launchApp(nav,home,tL,sList());
+    if(mem)later(()=>{mem.dead(false);mem.status('running','var(--cyan)');mem.setRam([R('draft','""')]);},tL+300);
+    if(persist&&mem)later(()=>{mem.pulse('up');later(()=>mem.setRam([R('draft',`"${DRAFT}"`)]),550);},tL+700);
+    later(()=>tapRow(nav,0),tL+1500);
+    later(()=>{nav.push(sChatIn(chat(0),[],persist?DRAFT:''));},tL+1750);
+    later(()=>{(persist?good:bad)&&(persist?good:bad).classList.add('show');},tL+2300);
+    later(loop,tL+5200);};
+  return{start:loop};}
+
+/* 0 title */
+const tSt=story('tPhone',{persist:true,tagGood:'✓ Draft restored'});H.title={step(){tSt.start();}};
+/* 1 how */
+H.how={step(){const ch=[...$('pipe').children];ch.forEach(c=>c.classList.remove('on'));ch.forEach((c,i)=>later(()=>c.classList.add('on'),200+i*320));}};
+/* 2 problem */
+const pbSt=story('pbPhone',{persist:false,tagBad:'✕ Back at the start. Draft gone.'});H.problem={step(){pbSt.start();}};
+/* 3 memory */
+const memA=new Mem($('memA'));
+H.memory={step(){const loop=()=>{memA.dead(false);memA.status('running','var(--cyan)');
+    memA.setRam([R('draft',`"${DRAFT}"`),R('messages','[ 12 items ]'),R('screen','"Chat"')]);memA.setDisk([]);
+    later(()=>{memA.dead(true);memA.status('closed','var(--coral)');},2200);
+    later(()=>{memA.dead(false);memA.status('restarted','var(--cyan)');memA.setRam([R('draft','""'),R('messages','[ ]'),R('screen','"Chats"')]);},4300);
+    later(loop,7600);};loop();}};
+/* 4 save / load */
+const memB=new Mem($('memB'));const slSt=story('slPhone',{persist:true,mem:memB,tagGood:'✓ Loaded from disk'});H.saveload={step(){slSt.start();}};
+/* 5 serialize */
+H.serialize={step(n){const run=(root,rev)=>{const items=[...root.children];const order=rev?[4,3,2,1,0]:[0,1,2,3,4];items.forEach(x=>x.classList.remove('lit'));
+    order.forEach((ix,i)=>later(()=>{items.forEach(x=>x.classList.remove('lit'));items[ix].classList.add('lit');},i*550));};
+  const loop=()=>{run($('sfIn'),false);if(n>=2)later(()=>run($('sfOut'),true),3000);later(loop,n>=2?6200:3400);};loop();}};
+/* 6 keys */
+H.keys={step(){const L=[...document.querySelectorAll('#lockers .locker')];const ids=[1,5,2];let k=0;
+  const cyc=()=>{const id=ids[k++%ids.length];L.forEach(l=>l.classList.remove('open'));$('keyReq').innerHTML=`Open chat ${id} → look in <code>draft:${id}</code>`;
+    later(()=>L.find(l=>l.dataset.k===`draft:${id}`).classList.add('open'),700);later(cyc,2600);};cyc();}};
+/* 7 async */
+H.async={step(n){const tk=$('ticks'),bar=$('rbar'),st=$('asStatus'),cd=$('asCode');
+  cd.innerHTML=hl(n<2?'const draft = readNow(key);   // wait for the disk':'const draft = await AsyncStorage.getItem(key);');
+  const loop=()=>{tk.classList.remove('frozen');bar.style.transition='none';bar.style.width='0';void bar.offsetWidth;st.innerHTML='';
+    later(()=>{bar.style.transition='width 1.8s linear';bar.style.width='100%';
+      if(n<2){tk.classList.add('frozen');st.innerHTML='<span class="coral">Waiting… the screen is frozen</span>';}
+      else st.innerHTML='<span class="cyan">Waiting… the screen keeps drawing</span>';},600);
+    later(()=>{tk.classList.remove('frozen');st.innerHTML=n<2?'Data arrives. <span class="coral">The user saw a frozen app.</span>':'Data arrives. <span class="cyan">Fill it in.</span>';},2450);
+    later(loop,4600);};loop();}};
+/* 8 kinds */
+const KINDS=[['Dark mode: on','shKV'],['Draft text','shKV'],['10,000 messages','shDB'],['Login token','shSec'],['Profile photo','shFile']];
+H.kinds={step(){const src=$('srcRow');
+  const loop=()=>{document.querySelectorAll('.shelf .got').forEach(g=>g.innerHTML='');src.innerHTML=KINDS.map(([t])=>`<span class="chip2">${t}</span>`).join('');
+    const chips=[...src.children];
+    KINDS.forEach(([t,sh],i)=>later(()=>{const c=chips[i];const tgt=$(sh).querySelector('.got');
+      const a=rel(c),b=rel(tgt);const f=c.cloneNode(true);f.classList.add('flyc');f.style.left=a.x+'px';f.style.top=a.y+'px';stage.appendChild(f);c.style.visibility='hidden';
+      const dy=b.y+tgt.children.length*48-a.y,dx=b.x-a.x;
+      const done=()=>{f.remove();const n=document.createElement('span');n.className='chip2';n.textContent=t;n.style.alignSelf='flex-start';tgt.appendChild(n);};
+      if(D)f.animate([{transform:'translate(0,0)'},{transform:`translate(${dx}px,${dy}px)`}],{duration:700,easing:'cubic-bezier(.4,.1,.2,1)'}).onfinish=done;else done();
+      timers.push(setTimeout(()=>{if(f.isConnected)done();},1200));},700+i*1100));
+    later(loop,700+KINDS.length*1100+2500);};loop();}};
+/* 9 sync */
+H.sync={step(n){const M=$('syM'),Dd=$('syD'),neq=$('syNeq'),st=$('syStatus'),cd=$('syCode');
+  cd.innerHTML=hl(n<2?'setMessages(next);   // and nothing else':'setMessages(next);\nAsyncStorage.setItem(key, JSON.stringify(next));');
+  const loop=()=>{neq.className='neq';M.innerHTML='4 messages';Dd.innerHTML='4 messages';st.innerHTML='';
+    later(()=>{st.innerHTML='You send a message…';setBox(M,'<b class="cyan">5</b> messages');if(n>=2)setBox(Dd,'<b class="cyan">5</b> messages');},900);
+    later(()=>{if(n<2){neq.className='neq show';st.innerHTML='<span class="coral">Memory and disk disagree.</span>';}else{neq.textContent='=';neq.className='neq show ok';st.innerHTML='<span class="cyan">Both copies match.</span>';}},1800);
+    later(()=>{st.innerHTML='Restart: memory is rebuilt from disk…';M.innerHTML='<span class="muted">loading…</span>';},3200);
+    later(()=>{if(n<2){setBox(M,'4 messages');st.innerHTML='<span class="coral">✕ The new message is gone.</span>';neq.className='neq';}else{setBox(M,'<b class="cyan">5</b> messages');st.innerHTML='<span class="cyan">✓ The message survived.</span>';}},4200);
+    later(()=>{neq.textContent='≠';},6400);later(loop,6600);};loop();}};
+/* 11 questions */
+H.questions={step(){const qs=[...document.querySelectorAll('#qgrid .q')];qs.forEach(q=>q.classList.remove('on'));[0,2,4,6,1,3,5,7].forEach((qi,i)=>later(()=>qs[qi].classList.add('on'),150+i*260));}};
+/* ---------- part 1: sending ---------- */
+const MSGS0=3;
+function mkKbd(scr){const k=document.createElement('div');k.className='kbd';const row=n=>'<div class="kr">'+'<i></i>'.repeat(n)+'</div>';
+  k.innerHTML=row(10)+row(9)+'<div class="kr"><i class="g"></i>'+'<i></i>'.repeat(7)+'<i class="g"></i></div><div class="kr"><i class="g"></i><i class="w"></i><i class="g"></i></div>';scr.appendChild(k);return k;}
+function sendBubble(nav,t){const m=nav.top().querySelector('.msgs');m&&m.insertAdjacentHTML('beforeend',`<div class="bub out newb">${esc(t)}</div>`);clearInput(nav);}
+function tapSend(nav){const b=nav.top().querySelector('.inbar b');b&&tapEl(nav,b);}
+const MS_=n=>`<span class="k">messages =</span> <span class="v">[ ${n} items ]</span>`;
+const DR_=t=>`<span class="k">draft =</span> <span class="v">"${esc(t)}"</span>`;
+const siNav=newNav('siPhone');
+H.sendIntro={step(){const d=$('siDraft'),m=$('siMsgs');const T='On my way';
+  const loop=()=>{siNav.reset(sChatIn(chat(0)));d.innerHTML=DR_('');m.innerHTML=MS_(MSGS0);
+    typeInto(siNav,T,500,90,t=>{d.innerHTML=DR_(t);});const e=500+T.length*90;
+    later(()=>tapSend(siNav),e+400);later(()=>{sendBubble(siNav,T);setBox(m,MS_(MSGS0+1));setBox(d,DR_(''));},e+600);
+    later(loop,e+3600);};loop();}};
+const tcNav=newNav('tcPhone');
+H.typeCode={step(n){const d=$('tcDraft');tcNav.reset(sChatIn(chat(0)));d.innerHTML=DR_('');if(n<2)return;const T='See you in the lab at 4';
+  const loop=()=>{tcNav.reset(sChatIn(chat(0)));d.innerHTML=DR_('');typeInto(tcNav,T,500,70,t=>{d.innerHTML=DR_(t);});later(loop,500+T.length*70+2200);};loop();}};
+const scNav=newNav('scPhone');
+H.sendCode={step(n){const m=$('scMsgs');scNav.reset(sChatIn(chat(0)));m.innerHTML=MS_(MSGS0);if(n<2)return;const T='On my way';
+  const loop=()=>{scNav.reset(sChatIn(chat(0)));m.innerHTML=MS_(MSGS0);typeInto(scNav,T,500,90);const e=500+T.length*90;
+    later(()=>tapSend(scNav),e+400);later(()=>{sendBubble(scNav,T);setBox(m,MS_(MSGS0+1));},e+600);later(loop,e+3400);};loop();}};
+const kbNav=newNav('kbPhone');const kbd=mkKbd(kbNav.screen);
+const kbBad=mkTag(kbNav.screen,'c','✕ Input is hidden',12,96),kbMid=mkTag(kbNav.screen,'c','✕ New messages hidden',12,96),kbGood=mkTag(kbNav.screen,'g','✓ Both visible',12,96);
+function sChatLong(c){const t=[['in',c.message],['out','Yes, pushing in 5 mins'],['in','Okay, ping me'],['out','Done. Check the PR'],['in','Merged it'],['out','Thanks!'],['in','Lab at 4?'],['out','Yes, see you there']];
+  return hdr(c.name,'Chats')+`<div class="body msgs" style="justify-content:flex-start">${t.map(([k,x])=>`<div class="bub ${k}">${esc(x)}</div>`).join('')}</div><div class="inbar"><i><span class="ph">Message</span></i><b></b></div>`;}
+function scrollBody(nav,to,ms){const b=nav.top()&&nav.top().querySelector('.body');if(!b)return;if(!D){b.scrollTop=to;return;}const from=b.scrollTop,st=performance.now();(function f(n){const p=Math.min(1,(n-st)/ms);b.scrollTop=from+(to-from)*(p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2);if(p<1)requestAnimationFrame(f);})(st);}
+function scrollMax(nav){const b=nav.top().querySelector('.body');if(b)scrollBody(nav,b.scrollHeight-b.clientHeight,500);}
+H.keyboard={step(n){const prob=$('kbProb');prob.style.display=n<2?'':'none';
+  const loop=()=>{[kbBad,kbMid,kbGood].forEach(t=>t.classList.remove('show'));kbd.classList.remove('up');kbNav.host.style.transition='none';kbNav.host.style.bottom='0';kbNav.reset(sChatLong(chat(0)));
+    later(()=>{const i=kbNav.top().querySelector('.inbar i');i&&tapEl(kbNav,i);},700);
+    later(()=>{kbd.classList.add('up');if(n>=2){kbNav.host.style.transition='bottom .35s cubic-bezier(.2,.8,.2,1)';kbNav.host.style.bottom='190px';}},900);
+    if(n===1)later(()=>kbBad.classList.add('show'),1500);
+    if(n===2)later(()=>kbMid.classList.add('show'),1600);
+    if(n>=3){later(()=>scrollMax(kbNav),1400);later(()=>{typeInto(kbNav,'On my way',0,80);},2000);later(()=>kbGood.classList.add('show'),2100);
+      later(()=>{tapSend(kbNav);},3000);later(()=>{sendBubble(kbNav,'On my way');scrollMax(kbNav);},3200);}
+    later(loop,n>=3?6200:4600);};loop();}};
+
+
+/* example 1 */
+const EX1=(t='')=>`<div class="mk"><div class="mt">My note</div><div class="ex1lab">Note</div><div class="ex1in">${t?esc(t):'<span class="ph">Type something</span>'}</div><div class="ex1btn">Save</div></div>`;
+function typeEx(nav,text,start,per,onEach){for(let k=1;k<=text.length;k++)later(()=>{const i=nav.top()&&nav.top().querySelector('.ex1in');if(i)i.textContent=text.slice(0,k);onEach&&onEach(text.slice(0,k));},start+k*per);}
+function reloadAt(nav,tag,t,html,after){later(()=>{tag.classList.add('show');nav.cut(html);},t);later(()=>tag.classList.remove('show'),t+900);after&&later(after,t+1);}
+const NOTE='Buy milk at 6';
+const e1Nav=newNav('e1Phone');const e1R=mkTag(e1Nav.screen,'n','↻ Reload',14,206);const e1Ok=mkTag(e1Nav.screen,'g','✓ Saved to disk',14,206);const e1Bad=mkTag(e1Nav.screen,'c','✕ Empty after reload',14,206);
+H.ex1Save={step(n){const box=$('e1Disk');const tags=[e1R,e1Ok,e1Bad];
+  const loop=()=>{tags.forEach(t=>t.classList.remove('show'));e1Nav.reset(EX1());box.innerHTML=Dk('note','nothing saved');
+    typeEx(e1Nav,NOTE,500,70);const e=500+NOTE.length*70;
+    if(n>=2){later(()=>{const b=e1Nav.top().querySelector('.ex1btn');b&&tapEl(e1Nav,b);},e+400);
+      later(()=>{setBox(box,Dk('note',`"${NOTE}"`));e1Ok.classList.add('show');},e+600);later(()=>e1Ok.classList.remove('show'),e+1700);}
+    const r=e+(n>=2?2000:900);reloadAt(e1Nav,e1R,r,EX1());later(()=>e1Bad.classList.add('show'),r+1000);
+    later(loop,r+3400);};loop();}};
+const e2Nav=newNav('e2Phone');const e2R=mkTag(e2Nav.screen,'n','↻ Reload',14,206);const e2Ok=mkTag(e2Nav.screen,'g','✓ Loaded from disk',14,206);
+H.ex1Load={step(n){const box=$('e2Disk');
+  const loop=()=>{[e2R,e2Ok].forEach(t=>t.classList.remove('show'));e2Nav.reset(EX1());box.innerHTML=Dk('note','nothing saved');
+    typeEx(e2Nav,NOTE,500,70);const e=500+NOTE.length*70;
+    later(()=>{const b=e2Nav.top().querySelector('.ex1btn');b&&tapEl(e2Nav,b);},e+400);
+    later(()=>setBox(box,Dk('note',`"${NOTE}"`)),e+600);
+    reloadAt(e2Nav,e2R,e+1600,EX1());
+    later(()=>{const i=e2Nav.top().querySelector('.ex1in');if(i)i.textContent=NOTE;e2Ok.classList.add('show');},e+2500);
+    later(loop,e+5200);};loop();}};
+/* example 2a: save as you type */
+const dsNav=newNav('dsPhone');
+H.draftSave={step(n){const box=$('dsDisk');
+  const loop=()=>{dsNav.reset(sChatIn(chat(0)));box.innerHTML=Dk('draft:1','nothing saved');
+    typeInto(dsNav,DRAFT,500,90,t=>{if(n>=2)box.innerHTML=Dk('draft:1',`"${esc(t)}"`);});
+    later(loop,500+DRAFT.length*90+2500);};loop();}};
+/* 14 setup */
+const suNav=newNav('suPhone');
+H.setup={step(){suNav.reset(EX1());}};
+/* 15 draft */
+const drNav=newNav('drPhone');const drHome=makeHome(drNav.screen);const drGood=mkTag(drNav.screen,'g','✓ Draft loaded from disk',14,96);
+H.draft={step(n){const box=$('drDisk');box.innerHTML=Dk('draft:1','nothing saved');resetHost(drNav);drHome.classList.remove('show');drGood.classList.remove('show');drNav.reset(sChatIn(chat(0)));
+  const loop=()=>{resetHost(drNav);drHome.classList.remove('show');drGood.classList.remove('show');drNav.reset(sChatIn(chat(0)));box.innerHTML=Dk('draft:1','nothing saved');
+    typeInto(drNav,DRAFT,400,60,t=>{box.innerHTML=Dk('draft:1',`"${esc(t)}"`);});const e=400+DRAFT.length*60;
+    killApp(drNav,drHome,e+800);launchApp(drNav,drHome,e+2600,sList());
+    later(()=>tapRow(drNav,0),e+3600);later(()=>{drNav.push(sChatIn(chat(0)));},e+3850);
+    later(()=>{const i=drNav.top().querySelector('.inbar i');if(i){i.className='typing';i.textContent=DRAFT;}setBox(box,Dk('draft:1',`"${DRAFT}"`));drGood.classList.add('show');},e+4500);
+    later(loop,e+7600);};loop();}};
+/* 16 messages */
+const msNav=newNav('msPhone');const msHome=makeHome(msNav.screen);const msGood=mkTag(msNav.screen,'g','✓ Loaded from disk',14,96);
+H.msgs={step(n){const box=$('msDisk');box.innerHTML=Dk('messages:1','nothing saved');resetHost(msNav);msHome.classList.remove('show');msGood.classList.remove('show');msNav.reset(sChatIn(chat(0)));if(n<3)return;
+  const T='On my way';
+  const loop=()=>{resetHost(msNav);msHome.classList.remove('show');msGood.classList.remove('show');msNav.reset(sChatIn(chat(0)));box.innerHTML=Dk('messages:1','nothing saved');
+    typeInto(msNav,T,400,70);const e=400+T.length*70;
+    later(()=>{const b=msNav.top().querySelector('.inbar b');b&&tapEl(msNav,b);},e+300);
+    later(()=>{const m=msNav.top().querySelector('.msgs');m&&m.insertAdjacentHTML('beforeend',`<div class="bub out newb">${T}</div>`);clearInput(msNav);setBox(box,Dk('messages:1',`'[{…},{…},{…},{"text":"${T}"}]'`));},e+500);
+    killApp(msNav,msHome,e+1600);launchApp(msNav,msHome,e+3400,sList());
+    later(()=>tapRow(msNav,0),e+4400);later(()=>{msNav.push(sChatIn(chat(0),[T]));},e+4650);
+    later(()=>msGood.classList.add('show'),e+5200);later(loop,e+8000);};loop();}};
+/* 18 db */
+H.db={step(){const b1=$('dbBar1'),b2=$('dbBar2'),r1=$('dbR1'),r2=$('dbR2');const ROWS=['chat 1 · "See you in the lab"','chat 1 · "lab code pushed?"','chat 1 · "lab at 4"'];
+  const loop=()=>{[b1,b2].forEach(b=>{b.style.transition='none';b.style.width='0';});void b1.offsetWidth;r1.innerHTML='';r2.innerHTML='';
+    later(()=>{b1.style.transition='width 3.2s linear';b1.style.width='100%';b2.style.transition='width .5s ease-out';b2.style.width='12%';},400);
+    ROWS.forEach((t,i)=>later(()=>{r2.insertAdjacentHTML('beforeend',`<div>${t}</div>`);},1000+i*150));
+    ROWS.forEach((t,i)=>later(()=>{r1.insertAdjacentHTML('beforeend',`<div>${t}</div>`);},3700+i*150));
+    later(loop,6800);};loop();}};
+
+
+
+/* ---------- activity: local vs remote ---------- */
+const SC={L:{n:1,name:'Local only',c:'#0a8479'},R:{n:2,name:'Remote only',c:'#2563c9'},RC:{n:3,name:'Remote + local cache',c:'#7a3bc2'},LB:{n:4,name:'Local + remote backup',c:'#b06600'}};
+const SCK=['L','R','RC','LB'];
+const schip=(k,cls='')=>`<span class="schip2 s-${k} ${cls}"><i>${SC[k].n}</i>${SC[k].name}</span>`;
+let miniN=0;function mini(k){const c=SC[k].c;const mid='ah'+k+(miniN++);const [ps,ss]={L:['own','none'],R:['pass','own'],RC:['copy','own'],LB:['own','seal']}[k];
+  const LBL={own:'owner',none:'never sees',pass:'fetches',copy:'cache',seal:'sealed'};
+  const sty=s=>s==='own'?`fill="${c}" stroke="${c}" stroke-width="3"`:s==='copy'?`fill="#fff" stroke="${c}" stroke-width="3" stroke-dasharray="7 5"`:s==='seal'?`fill="#fff" stroke="${c}" stroke-width="3"`:s==='pass'?`fill="none" stroke="${c}" stroke-opacity=".55" stroke-width="2.5" stroke-dasharray="3 5"`:`fill="none" stroke="#b8c4cb" stroke-width="2.5" stroke-dasharray="3 6"`;
+  const inner=(s,cx,cy)=>s==='own'?`<text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="24" fill="#fff">★</text>`:s==='seal'?`<g transform="translate(${cx-9},${cy-12})" fill="none" stroke="${c}" stroke-width="3"><path d="M3 11V7a6 6 0 0 1 12 0v4"/><rect x="0" y="11" width="18" height="13" rx="3" fill="${c}"/></g>`:s==='copy'?`<text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="16" font-weight="700" fill="${c}" font-family="monospace">copy</text>`:'';
+  const link=k==='L'?`<line x1="74" y1="52" x2="136" y2="52" stroke="#b8c4cb" stroke-width="3" stroke-dasharray="3 6"/><text x="105" y="58" text-anchor="middle" font-size="20" font-weight="800" fill="#b8c4cb">✕</text>`
+    :`<defs><marker id="${mid}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="${c}"/></marker></defs>`+(k==='LB'?`<line x1="74" y1="52" x2="132" y2="52" stroke="${c}" stroke-width="3" marker-end="url(#${mid})"/>`:`<line x1="136" y1="52" x2="78" y2="52" stroke="${c}" stroke-width="3" marker-end="url(#${mid})"/>`);
+  const lc=s=>s==='none'?'#8a9ba6':c;
+  return `<svg viewBox="0 0 220 126" class="msvg"><rect class="ph-ring" x="7" y="0" width="68" height="104" rx="15" fill="none" stroke="${c}" stroke-width="3"/><rect x="16" y="8" width="50" height="88" rx="10" ${sty(ps)}/>${inner(ps,41,52)}
+  <rect x="142" y="22" width="62" height="60" rx="8" ${sty(ss)}/>${ss==='none'||ss==='pass'?`<line x1="150" y1="42" x2="196" y2="42" stroke="#b8c4cb" stroke-width="2" stroke-dasharray="3 5"/><line x1="150" y1="62" x2="196" y2="62" stroke="#b8c4cb" stroke-width="2" stroke-dasharray="3 5"/>`:''}${inner(ss,173,52)}${link}
+  <text x="41" y="121" text-anchor="middle" font-size="14" font-weight="700" font-family="JetBrains Mono,monospace" fill="${lc(ps)}">${LBL[ps]}</text><text x="173" y="121" text-anchor="middle" font-size="14" font-weight="700" font-family="JetBrains Mono,monospace" fill="${lc(ss)}">${LBL[ss]}</text>
+  <text x="41" y="-2" text-anchor="middle"></text></svg>`;}
+document.querySelectorAll('.mini[data-sc]').forEach(m=>{m.innerHTML=mini(m.dataset.sc);});
+
+const ACTS=[
+{name:'NST Chat',kind:'messaging',mock:'chat',
+ clues:['Login by phone number','Phone + web client','Server can read messages','Read old chats offline'],
+ items:[
+  {name:'Auth token',short:'auth token',ans:'L',by:['Loss','Truth'],clue:[0],why:'A lost phone just logs in again, and the server checks every token. It is a secret, so it goes in the secure store.'},
+  {name:'Theme preference',short:'theme',ans:'L',by:['Loss','Cost'],clue:[],why:'Losing it costs one tap. Nobody else needs it, so a server copy is pure cost.'},
+  {name:'Draft message',short:'draft',ans:'L',by:['Sharing','Cost'],clue:[],why:'Unfinished and private. Syncing every keystroke burns battery and data.'},
+  {name:'Message history',short:'messages',ans:'RC',by:['Sharing','Loss'],clue:[1,2,3],why:'The other person and the web client need it, so the server owns it. The phone caches it to read offline.'},
+  {name:'Last opened chat',short:'last chat',ans:'L',by:['Loss'],clue:[],why:'Screen state for this phone only. If it is lost, the app opens on the chat list. Harmless.'}],
+ notes:'Read the four clues aloud first; every answer comes from a clue. Auth token: some students will say remote because the server issues it. The server keeps the session, but the token itself lives only on this phone, in the secure store (never plain AsyncStorage). The web client gets its own token. Theme and last chat: cheap to lose, only matter here. Someone may argue theme should follow you to the web client; fair, that makes it Local + remote backup, and it is a product choice. Draft: WhatsApp keeps drafts on the phone only. Message history: the clues decide it. The web client and the other person need it (Sharing) and a new phone should get old chats back (Loss), so the server owns it. Offline reading means the phone keeps a cache. The server can read messages because they are not end-to-end encrypted; ask what changes if they were (the server would only hold sealed copies).'},
+{name:'NST Run',kind:'running tracker',mock:'run',
+ clues:['GPS + watch heart rate','No signal in tunnels','Weekly friends leaderboard','Share a run as a link'],
+ items:[
+  {name:'In-progress GPS points',short:'GPS points',ans:'L',by:['Cost','Loss'],clue:[0,1],why:'Recorded where there is no signal, so the phone must hold them. They go up once, inside the finished run.'},
+  {name:'Completed workouts',short:'workouts',ans:'RC',by:['Truth','Sharing'],clue:[1,2,3],why:'The leaderboard and share links need them, and a faked run would cheat. Server owns; the phone uploads when signal returns.'},
+  {name:'Raw heart-rate samples',short:'heart rate',ans:'LB',by:['Loss','Cost'],clue:[0],why:'Private health data nobody else needs. The phone owns it; the server keeps a sealed copy so a lost phone does not erase years.'},
+  {name:'Distance-unit preference',short:'km / miles',ans:'L',by:['Loss','Cost'],clue:[],why:'km or miles is personal and takes one tap to set again.'},
+  {name:'Weekly leaderboard',short:'leaderboard',ans:'R',by:['Freshness','Sharing'],clue:[2],why:'Built by the server from everyone\'s runs and it changes all week. A stale rank is a wrong rank, so fetch it fresh.'}],
+ notes:'GPS points: during the run the phone is the only place they can live (tunnels, forests). Streaming every second would also cost battery and data. When the run ends they are packed into one workout. Workouts: before upload they wait on the phone; once the server accepts them the server owns them, because the leaderboard and share links depend on them and a modded app could fake a 2-minute marathon (Truth). Heart rate: this is the only clear Local + remote backup in the set. It is private (Cost includes privacy), the server logic does not need raw samples (only the summary goes with the workout), but users do not want to lose years of data. Sealed = encrypted so the server cannot read it. Leaderboard: computed by the server, valid for one week. Showing a cached copy labelled with a time is acceptable; the key point is that the phone never decides the rank.'},
+{name:'NST Eats',kind:'food delivery',mock:'eats',
+ clues:['Browse as a guest first','Prices change all day','Pay by card or UPI','Weak network, hungry user'],
+ items:[
+  {name:'Cart',short:'cart',ans:'L',by:['Truth','Sharing'],clue:[0,1],why:'It must work for guests with no account. Keep item ids and counts only; the server sets the price at checkout.'},
+  {name:'Saved addresses',short:'addresses',ans:'RC',by:['Loss','Sharing'],clue:[3],why:'The rider needs them and a new phone should have them. Server owns; the phone caches them for a fast checkout.'},
+  {name:'Payment card details',short:'card',ans:'R',by:['Truth','Cost'],clue:[2],why:'Never on the phone. The payment gateway keeps the card; the app only ever sees a token.'},
+  {name:'Order status',short:'order status',ans:'R',by:['Freshness'],clue:[],why:'The restaurant and rider change it every few minutes. A stale status makes the user act wrongly.'},
+  {name:'Restaurant menu',short:'menu',ans:'RC',by:['Freshness','Cost'],clue:[1,3],why:'Show the cached menu instantly on a weak network, then refresh. At checkout the server\'s price wins.'}],
+ notes:'Cart: the guest clue decides it, since there is no account to store it under. The Truth question matters too: if the cart stored prices, a user could edit the price. Store ids and quantities only and let the server price it at checkout, so tampering gains nothing. Once the user logs in, many apps sync the cart; that is a fine extension. Card details: not even your own server should store the card number. A payment gateway (Razorpay, Stripe and so on) stores it and gives you a token. This is security and law (PCI rules), not preference. Order status: the classic Freshness case; a wrong status makes the user wait at the door or cancel. Menu: the weak-network clue says cache, the prices clue says the server wins. This is the textbook Remote + local cache.'},
+{name:'NST Notes',kind:'offline-first notes',mock:'notes',
+ clues:['Everything works offline','Phone, tablet and web','Images and PDFs attached','Passcode lock per note'],
+ items:[
+  {name:'Note text',short:'note text',ans:'RC',by:['Sharing','Loss'],clue:[0,1],deb:1,why:'Three devices must agree, so the server is the meeting point. Offline edits wait in a local outbox until they are sent.'},
+  {name:'Attachments',short:'attachments',ans:'RC',by:['Cost','Sharing'],clue:[1,2],why:'Big files. The server owns them; each device downloads only what it opens and can drop them when space runs low.'},
+  {name:'Search index',short:'search index',ans:'L',by:['Loss','Cost'],clue:[0],why:'Built from the notes, so it can always be rebuilt. Search must work offline, on each device.'},
+  {name:'Note-lock passcode',short:'passcode',ans:'LB',by:['Truth','Cost'],clue:[3],deb:1,why:'Never store the passcode itself, only a hash. The server keeps that sealed copy and can never read the notes.'},
+  {name:'Last open note + scroll',short:'scroll position',ans:'L',by:['Loss'],clue:[],why:'Where you left off on this device. Losing it costs a scroll.'}],
+ notes:'This is the hardest app; let them argue. Note text: offline-first sounds like Local + remote backup, but the web client must read notes, so the server cannot hold only a sealed copy. The server is the meeting point for three devices. The twist: edits made on a flight are not yet on the server, so they sit in a local outbox that must never be wiped. That outbox is not a cache; it is data waiting to be sent. Real apps (Notion, Apple Notes, Google Keep) do exactly this. Attachments: big, so download on demand and evict when space runs low (Cost). Search index: derived data, rebuildable, per device. Passcode: storing the passcode would be a disaster if leaked. Store only a hash, which is enough to check a guess but not to recover the passcode. Accept "Local only, in the secure store" as an answer too; the trade-off is that other devices then need the passcode set again. Scroll position: UI state, local.'},
+{name:'NST Pay',kind:'UPI-style wallet',mock:'pay',
+ clues:['Real money moves','PIN or fingerprint login','Correctness beats speed','Linked bank account'],
+ items:[
+  {name:'Account balance',short:'balance',ans:'R',by:['Truth','Freshness'],clue:[0,2,3],why:'The bank owns it. A modded local balance, or a stale one, means paying with money you do not have.'},
+  {name:'Transaction history',short:'transactions',ans:'RC',by:['Truth','Loss'],clue:[3],why:'The bank\'s record wins every argument. The phone may cache it to show offline, and that cache can be wiped.'},
+  {name:'Session token',short:'session token',ans:'L',by:['Truth','Loss'],clue:[1],why:'A short-lived secret for this phone only, in the secure store. A lost phone just logs in again.'},
+  {name:'Biometric-enabled flag',short:'biometric flag',ans:'L',by:['Sharing'],clue:[1],why:'Your fingerprint is enrolled on this phone. Another device must ask again.'},
+  {name:'Saved payees',short:'payees',ans:'RC',by:['Loss','Truth'],clue:[0],why:'A new phone should have them, and the server checks payees for fraud. Server owns; the phone caches.'}],
+ notes:'Money: correctness beats speed, so the server and the bank are the truth. Balance: Truth (a mod APK could show any number) and Freshness (a balance from two hours ago leads to failed payments). Some apps show a last-known balance; it must be labelled and never used to decide anything. Transaction history: cache is fine for viewing, but on conflict the bank wins. Session token: secure store, short-lived, revocable by the server. Biometric flag: biometrics are per device; the flag only says "offer fingerprint here". The real check happens in the phone\'s secure hardware, so editing the flag gains nothing. Payees: server-side fraud checks need them.'},
+{name:'NST Tunes',kind:'music streaming',mock:'tunes',
+ clues:['Download for offline','Continue on speaker or laptop','Recommendations from plays','Downloads only while subscribed'],
+ items:[
+  {name:'Downloaded audio files',short:'downloads',ans:'RC',by:['Truth','Cost'],clue:[0,3],why:'The label owns the songs. The phone keeps a locked copy that is removed when the subscription ends.'},
+  {name:'Playlists',short:'playlists',ans:'RC',by:['Sharing','Loss'],clue:[0,1],why:'Every device and shared links need them. Server owns; the phone caches them to play offline.'},
+  {name:'Queue + playback position',short:'queue',ans:'RC',by:['Sharing','Freshness'],clue:[1],why:'Continuing on the speaker means another device needs it right now. Server owns; the phone keeps a copy to resume fast.'},
+  {name:'Listening history',short:'history',ans:'R',by:['Sharing'],clue:[2],why:'The server\'s recommendation engine needs it. Plays made offline wait in an outbox, then go up.'},
+  {name:'Equalizer settings',short:'equalizer',ans:'L',by:['Sharing','Cost'],clue:[],why:'Tuned for the headphones on this phone. The speaker has its own.'}],
+ notes:'Downloads: big files on the phone, but the server is still the owner. That is why they disappear when the subscription lapses (Truth: the app checks with the server). They are encrypted so they only play inside the app. Playlists and queue: the handoff clue (continue on speaker) is a Sharing clue. History: the phone rarely shows it; it exists for the server\'s recommendations. Offline plays wait in an outbox, the same idea as offline note edits. Equalizer: device-specific; some apps sync it, which makes it Local + remote backup. Either is defensible.'},
+{name:'NST Travels',kind:'ride hailing',mock:'travels',
+ clues:['Server matches and prices rides','Live driver tracking','SOS alerts your contacts','Review past trips'],
+ items:[
+  {name:'Live location during a ride',short:'live location',ans:'R',by:['Freshness','Sharing'],clue:[1,2],why:'The driver, the server and SOS need it every few seconds. An old location is a wrong location.'},
+  {name:'Active ride state',short:'ride state',ans:'RC',by:['Sharing','Loss'],clue:[0],why:'Rider, driver and server must agree, so the server owns it. The phone keeps a copy to reopen straight into the ride.'},
+  {name:'Final fare',short:'fare',ans:'R',by:['Truth'],clue:[0,3],why:'The server calculates it. If the phone could set it, a mod would make every ride cost ₹1.'},
+  {name:'Saved places',short:'saved places',ans:'RC',by:['Loss','Sharing'],clue:[],why:'Home and Work should follow you to a new phone. Server owns; the phone caches them for one-tap booking.'},
+  {name:'Recent searches',short:'recent searches',ans:'L',by:['Cost','Loss'],clue:[],why:'Private, cheap to lose, and only useful on this phone.'},
+  {name:'Emergency contacts',short:'emergency contacts',ans:'RC',by:['Sharing','Loss'],clue:[2],why:'The server sends the SOS alerts, so it must have them. The phone keeps a copy so SOS never waits for a download.'}],
+ notes:'Live location: produced on the phone but immediately sent; nobody needs old points on the phone. Freshness is everything. Ride state: if the app is killed mid-ride, it should reopen on the ride screen at once (local copy), but the server decides the state (driver arrived, ride ended). Fare: the server matches and prices rides, so Truth decides it. Past trips are fetched from the server. Recent searches: privacy plus cheap to lose. Emergency contacts: a nice safety twist. The server sends the alerts, so it must own them, and the phone keeps a copy so the SOS screen works instantly, even on a bad network.'}
+];
+
+/* build app slides */
+const acRef=document.querySelector('[data-id="acSort"]');
+const VOTES={};
+ACTS.forEach((A,ai)=>{const id='acApp'+(ai+1),m=A.items.length;
+  const s=document.createElement('section');s.className='cut ac-app meet';s.dataset.id=id;s.dataset.steps=1+2*m;
+  s.dataset.name=`Activity · App ${ai+1}: ${A.name}`;
+  s.dataset.notes=`Step 1: show the app and read the clues. Then, for each item: ask, let them vote with fingers (1 to 4), press 1 to 4 to record the class majority, then reveal. Click any item to jump to it. `+A.notes;
+  s.innerHTML=`<div class="ac-wrap"><div class="pw" style="--s:.96"><div class="phone" id="acPh${ai+1}"></div></div><div class="ac-r">
+    <div class="kicker"><b>Activity</b> · App ${ai+1} of ${ACTS.length}</div>
+    <h2 class="ac-h">${A.name} <small>${A.kind}</small></h2>
+    <div class="ac-clues">${A.clues.map(c=>`<span class="ac-clue">${c}</span>`).join('')}</div>
+    <p class="ac-meetq">It must keep ${m} things. Where should each one live?</p>
+    <div class="ac-items">${A.items.map((it,i)=>`<div class="ac-row" data-i="${i}"><i>${i+1}</i><b>${it.name}</b><span class="slot">?</span></div>`).join('')}</div>
+    <div class="ac-panel"></div></div></div>`;
+  acRef.parentNode.insertBefore(s,acRef);
+  s.querySelectorAll('.ac-row').forEach(r=>r.onclick=()=>go(cur,2+2*(+r.dataset.i)));
+  let last=1;
+  const render=n=>{last=n;s.classList.toggle('meet',n===1);const rows=s.querySelectorAll('.ac-row'),clues=s.querySelectorAll('.ac-clue'),panel=s.querySelector('.ac-panel');
+    clues.forEach(c=>c.classList.remove('hot'));
+    if(n===1){rows.forEach(r=>r.classList.remove('focus','later'));panel.innerHTML='';return;}
+    const k=Math.floor((n-2)/2),rev=(n-2)%2===1,it=A.items[k],v=VOTES[id+':'+k];
+    rows.forEach((r,i)=>{r.classList.toggle('focus',i===k);r.classList.toggle('later',i>k);
+      r.querySelector('.slot,.schip2').outerHTML=(i<k||(i===k&&rev))?schip(A.items[i].ans,i===k?'pop':''):'<span class="slot">?</span>';});
+    if(!rev){panel.innerHTML=`<div class="ac-q">Where should <span>${it.name.toLowerCase()}</span> live?</div>
+      <div class="ac-votes">${SCK.map(x=>`<button class="s-${x} ${v===x?'sel':''}" data-v="${x}"><i>${SC[x].n}</i>${SC[x].name}</button>`).join('')}</div>`;
+      panel.querySelectorAll('button').forEach(b=>b.onclick=e=>{e.stopPropagation();vote(SC[b.dataset.v].n);});}
+    else{it.clue.forEach(c=>clues[c]&&clues[c].classList.add('hot'));
+      panel.innerHTML=`<div class="ac-ans">${schip(it.ans)}${v?`<span class="ac-cls ${v===it.ans?'y':'n'}">${v===it.ans?'✓ Class got it':'Class said '+SC[v].n}</span>`:''}<span class="ac-by">Decided by ${it.by.map(b=>`<em>${b}</em>`).join('')}</span>${it.deb?'<span class="ac-deb">Debate it</span>':''}</div><p class="ac-why">${it.why}</p>`;}};
+  const vote=num=>{if(last<2)return;const k=Math.floor((last-2)/2);VOTES[id+':'+k]=SCK[num-1];render(last);};
+  H[id]={step:render,vote};
+});
+addEventListener('keydown',e=>{if(!/^[1-4]$/.test(e.key))return;const s=document.querySelector('.slide.active');if(s&&s.classList.contains('ac-app'))H[s.dataset.id].vote(+e.key);});
+
+/* phone mockups */
+const LOCK='<svg width="11" height="12" viewBox="0 0 18 22"><path d="M4 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="#6d7d87" stroke-width="2.5"/><rect x="1" y="10" width="16" height="11" rx="3" fill="#6d7d87"/></svg>';
+const MOCK={
+ chat:()=>sList(),
+ run:()=>`<div class="mk"><div class="mt">Morning run</div><div class="sub">Recording · GPS + watch</div>
+  <div class="map"><svg viewBox="0 0 200 150" width="100%" height="100%" preserveAspectRatio="none"><path d="M14 132 C40 100 30 72 70 68 S120 92 130 56 S168 22 184 30" fill="none" stroke="#e3552f" stroke-width="5" stroke-linecap="round"/><circle cx="184" cy="30" r="7" fill="#1f7aec" stroke="#fff" stroke-width="3"/></svg></div>
+  <div class="stats"><div>5.21<small>km</small></div><div>5'31"<small>per km</small></div><div>148<small>bpm</small></div></div>
+  <div class="btn2" style="background:#cc3d33">Pause</div>
+  <div class="card" style="padding:4px 0"><div class="lab" style="padding:4px 11px">This week · friends</div><div class="li">1 · Rohan<span>32 km</span></div><div class="li">2 · Priya<span>27 km</span></div><div class="li" style="border:0;color:#1f7aec">3 · You<span>21 km</span></div></div></div>`,
+ eats:()=>`<div class="mk"><div class="mt">NST Eats</div><div class="search">Search biryani, dosa, pizza</div>
+  ${[['Biryani House','#e3a33b'],['Dosa Corner','#4fa36b'],['Pizza Lab','#e0736a'],['Chai & Rolls','#5b8def']].map(([n,c],i)=>`<div class="rest"><i style="background:${c}"></i><div><b>${n}</b><small>₹${200+i*50} for one · ${20+i*5} min</small></div></div>`).join('')}
+  <div class="cartbar"><span>2 items · ₹420</span><span>View cart ›</span></div></div>`,
+ notes:()=>`<div class="mk"><div class="mt">Notes</div><div class="chips"><span class="a">All</span><span>Lab</span><span>Viva</span><span>Trips</span></div>
+  <div class="li"><div>Lab 5 checklist<small>☑ FlatList · ☐ Keyboard</small></div></div>
+  <div class="li"><div>Viva prep<small>Locked note</small></div>${LOCK}</div>
+  <div class="li"><div>Capstone ideas<small>2 PDFs · 1 image</small></div></div>
+  <div class="li"><div>Metro notes<small>Edited offline · will sync</small></div></div>
+  <div class="li"><div>Packing list<small>Charger, ID card</small></div></div><div class="fab">+</div></div>`,
+ pay:()=>`<div class="mk"><div class="mt">NST Pay</div><div class="bal"><div class="lab">Bank balance</div><div class="big">₹ •••••<span>Check</span></div></div>
+  <div class="acts"><div><i></i>Scan QR</div><div><i></i>Pay contact</div><div><i></i>To bank</div><div><i></i>History</div></div>
+  <div class="card" style="padding:4px 0"><div class="lab" style="padding:4px 11px">Recent</div><div class="li"><div>Chai Point<small>Today, 10:12</small></div><span>−₹40</span></div><div class="li"><div>Rohan Verma<small>Yesterday</small></div><span style="color:#0a8479">+₹500</span></div><div class="li" style="border:0"><div>Canteen<small>Mon</small></div><span>−₹85</span></div></div></div>`,
+ tunes:()=>`<div class="mk"><div class="mt">Now playing</div><div class="art"></div><div class="song">Lab Night Lo-fi<small>NST Beats · Downloaded</small></div><div class="prog2"><i></i></div>
+  <div class="ctl"><svg width="22" height="18" viewBox="0 0 22 18"><path d="M2 2v14M20 2L6 9l14 7z" stroke="#13212b" stroke-width="2.5" fill="#13212b"/></svg><svg width="46" height="46" viewBox="0 0 46 46"><circle cx="23" cy="23" r="22" fill="#13212b"/><path d="M18 14l14 9-14 9z" fill="#fff"/></svg><svg width="22" height="18" viewBox="0 0 22 18"><path d="M20 2v14M2 2l14 7-14 7z" stroke="#13212b" stroke-width="2.5" fill="#13212b"/></svg></div>
+  <div class="tag3">Playing on phone · switch to speaker</div></div>`,
+ travels:()=>`<div class="mk" style="padding-top:0"><div class="map" style="position:absolute;inset:0;margin:0;height:auto;border-radius:0">
+  <svg viewBox="0 0 224 504" width="100%" height="100%"><path d="M40 330 L40 250 L120 250 L120 160 L180 160" fill="none" stroke="#1f7aec" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="40" cy="330" r="8" fill="#13212b" stroke="#fff" stroke-width="3"/><circle cx="180" cy="160" r="8" fill="#0a8479" stroke="#fff" stroke-width="3"/></svg>
+  <i class="car" style="left:112px;top:192px"></i><i class="car" style="left:60px;top:110px"></i><i class="car" style="left:170px;top:280px"></i></div>
+  <div class="sos">SOS</div>
+  <div class="sheet"><div class="lab">Driver arriving</div><div class="big">3 min · White Swift</div><div class="li" style="padding:7px 0">KA 01 AB 1234<span>₹182</span></div><div class="btn2" style="margin:6px 0 0">Share trip status</div></div></div>`
+};
+ACTS.forEach((A,ai)=>{const el=document.getElementById('acPh'+(ai+1));const scr=phone(el);const host=scr.querySelector('.host');
+  if(A.mock==='chat'){new Nav(host).reset(MOCK.chat());}else host.innerHTML=MOCK[A.mock]();});
+
+/* intro */
+H.acIntro={step(n){const el=$('acChip');const W=['Draft message','Bank balance','Dark mode','Leaderboard','Card number','Playlist','Heart rate'];let i=0;
+  const tick=()=>{el.firstChild.textContent=W[i%W.length];el.classList.remove('swap');void el.offsetWidth;el.classList.add('swap');i++;later(tick,2400);};tick();}};
+/* lens demos */
+const PH_SVG='<svg width="60" height="100" viewBox="0 0 60 100"><rect x="2" y="2" width="56" height="96" rx="12" fill="#13212b"/><rect x="7" y="9" width="46" height="80" rx="7" fill="#e2f3f1"/></svg>';
+H.acLens={step(n){const d=$('acDemo');
+  if(n===1){d.innerHTML=`<h4>Loss · the phone falls in a lake</h4><div class="drop">${PH_SVG}</div><div class="water"></div><div class="lossl" style="top:300px">
+    <p class="dl ok" style="animation-delay:1.5s">Theme lost → one tap to set again</p><p class="dl ok" style="animation-delay:2s">Draft lost → retype one line</p><p class="dl bad" style="animation-delay:2.6s">3 years of runs lost → gone forever</p></div>`;}
+  if(n===2){d.innerHTML=`<h4>Truth · a modded APK</h4><div class="gem" id="acGem"><span>gems = 120</span><small>on the phone</small></div><div id="acGem2"></div>`;
+    later(()=>{const g=$('acGem');g.classList.add('hack');g.innerHTML='<span>gems = 999999</span><small>mod APK</small>';},1200);
+    later(()=>{$('acGem2').innerHTML='<div class="gem srv"><span>gems = 120</span><small>the server</small></div><p class="dl bad" style="animation-delay:.3s">Two copies disagree.</p><p class="dl ok" style="animation-delay:.9s">Anything worth cheating: the server owns it.</p>';},2600);}
+  if(n===3){const N=[['Your phone',16,14],['Tablet',84,14],['Web',16,74],['A friend',84,74],['Server logic',50,92]];
+    d.innerHTML=`<h4>Sharing · who else reads it?</h4><div class="shr"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${N.map((p,i)=>`<line x1="50" y1="44" x2="${p[1]}" y2="${p[2]}" vector-effect="non-scaling-stroke" style="animation-delay:${.3+i*.45}s"/>`).join('')}</svg>
+      <div class="n c" style="left:50%;top:44%">Server</div>${N.map((p,i)=>`<div class="n" style="left:${p[1]}%;top:${p[2]}%;animation-delay:${.5+i*.45}s">${p[0]}</div>`).join('')}</div>`;}
+  if(n===4){d.innerHTML=`<h4>Freshness · an old copy</h4><div class="gem" style="font-size:30px"><span>Balance ₹500</span><small>saved 2 h ago</small></div>
+    <p class="dl" style="animation-delay:.9s">Pay ₹400 to Chai Point →</p><p class="dl bad" style="animation-delay:1.9s">✕ Declined. Real balance: ₹50</p><p class="dl ok" style="animation-delay:2.8s">A stale copy caused a wrong action.</p>`;}
+  if(n===5){const B=[['Battery',55],['Mobile data',70],['Storage',40],['Privacy',85],['Server bill',60]];
+    d.innerHTML=`<h4>Cost · keeping it in the other place</h4><div class="bars">${B.map(b=>`<div class="cbar"><span>${b[0]}</span><i data-w="${b[1]}"></i></div>`).join('')}</div><p class="dl" style="animation-delay:1.4s">Every extra copy has a price. Pay it only when it buys something.</p>`;
+    later(()=>d.querySelectorAll('.cbar i').forEach((b,i)=>{b.style.transitionDelay=(i*.15)+'s';b.style.width=b.dataset.w+'%';}),60);}
+}};
+/* sort */
+H.acSort={step(){const host=$('acBands');let html='',t=0;
+  SCK.forEach(k=>{const its=[];ACTS.forEach(A=>A.items.forEach(it=>{if(it.ans===k)its.push(`<span style="animation-delay:${(t++)*0.04}s"><em>${A.name.replace('NST ','')}</em> ${it.short}</span>`);}));
+    html+=`<div class="band s-${k}"><h3>${SC[k].n} · ${SC[k].name}<small>${its.length} items</small></h3><div class="its">${its.join('')}</div></div>`;});host.innerHTML=html;}};
+/* bridge */
+(function(){const host=$('acBridge');if(!host)return;const cnt={L:0,R:0,RC:0,LB:0};let tot=0;ACTS.forEach(A=>A.items.forEach(it=>{cnt[it.ans]++;tot++;}));
+  host.innerHTML=SCK.map(k=>`<div class="bcard s-${k} ${k==='R'?'bdim':'bkeep'}"><div class="mini">${mini(k)}</div><h3>${SC[k].name}</h3><div class="cnt">${cnt[k]} <small>items</small></div></div>`).join('');
+  const keep=cnt.L+cnt.RC+cnt.LB;document.querySelectorAll('[data-acn]').forEach(e=>{e.textContent=e.dataset.acn==='keep'?keep:tot;});
+  H.acBridge={step(n){host.classList.toggle('hl',n>=2);}};})();
+
+H.asApi={step(n){const r=[...document.querySelectorAll('#asKv div')];r.forEach(d=>d.classList.remove('flash','gone'));
+  if(n===1||n===2)r[0].classList.add('flash');if(n>=3)r[0].classList.add('gone');if(n===4){r[2].classList.add('flash');}}};
+/* ---------- engine ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+const prog=document.getElementById('prog');slides.forEach(()=>prog.appendChild(document.createElement('i')));
+let cur=0,step=1,t0=performance.now();
+const stepsOf=i=>+slides[i].dataset.steps||1;const hookOf=i=>H[slides[i].dataset.id]||{};
+function builds(){slides[cur].querySelectorAll('[data-at]').forEach(e=>{e.classList.toggle('on',+e.dataset.at<=step);e.classList.toggle('now',+e.dataset.at===step&&stepsOf(cur)>1);});}
+function chrome(){document.getElementById('count').textContent=`${cur+1}/${slides.length}`;document.getElementById('barTitle').textContent=slides[cur].dataset.name;
+  [...prog.children].forEach((d,i)=>d.className=i<cur?'done':i===cur?'now':'');document.getElementById('notesText').textContent=slides[cur].dataset.notes||'';
+  try{history.replaceState(null,'','#s'+(cur+1));}catch(e){}}
+function runStep(){clearT();stage.querySelectorAll('.env').forEach(e=>e.remove());builds();hookOf(cur).step?.(step);}
+function go(i,st){slides[cur].classList.remove('active');cur=Math.max(0,Math.min(slides.length-1,i));step=st||1;slides[cur].classList.add('active');t0=performance.now();chrome();runStep();}
+function next(){if(step<stepsOf(cur)){step++;runStep();}else if(cur<slides.length-1)go(cur+1,1);}
+function prev(){if(step>1){step--;runStep();}else if(cur>0)go(cur-1,stepsOf(cur-1));}
+document.getElementById('nextBtn').onclick=next;document.getElementById('prevBtn').onclick=prev;
+const notes=document.getElementById('notes');document.getElementById('notesBtn').onclick=()=>{notes.hidden=!notes.hidden;};
+document.getElementById('fsBtn').onclick=()=>{try{const r=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();r&&r.catch&&r.catch(()=>{});}catch(e){}};
+addEventListener('keydown',e=>{if(e.target.tagName==='BUTTON'&&(e.key===' '||e.key==='Enter')&&e.target.closest('#stage'))return;
+  if(['ArrowRight','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();next();}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev();}
+  else if(e.key==='n'||e.key==='N')notes.hidden=!notes.hidden;else if(e.key==='Home')go(0,1);else if(e.key==='End')go(slides.length-1,1);});
+let tx=null;addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+addEventListener('touchend',e=>{if(tx==null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>60)(d<0?next:prev)();tx=null;});
+function loop(now){hookOf(cur).tick?.(now-t0,now);requestAnimationFrame(loop);}
+const m=/^#s(\d+)$/.exec(location.hash);
+slides[0].classList.add('active');go(m?(+m[1]-1):0,1);requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>
